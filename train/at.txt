@@ -1,0 +1,3 @@
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb1.jpg;1
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb2.jpg;2
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb3.jpg;3
