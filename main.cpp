@@ -14,10 +14,8 @@ int main()
 
     string sourceFile(curPwd);
     string targetFile(curPwd);
-
     sourceFile = sourceFile.append("at.txt");
-    targetFile = targetFile.append(Str::lToString(time(nullptr)));
-    targetFile = targetFile.append("_face_model.xml");
+    targetFile = targetFile.append(Str::lToString(time(nullptr))).append("_face_model.xml");
 
     FaceTrain* faceTrain = new FaceTrain();
     faceTrain->trainAndSave(sourceFile, targetFile);

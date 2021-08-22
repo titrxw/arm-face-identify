@@ -10,9 +10,3 @@ void ArmFaceIdentify::Train::trainAndSave(const string& sourceFile, const string
     this->loadSourceFile(sourceFile, mats, matLabels);
     this->trainMats(mats, matLabels, targetFile);
 }
-
-void ArmFaceIdentify::Train::loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels,
-                                            char separator) {}
-
-
-void ArmFaceIdentify::Train::trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile) {}

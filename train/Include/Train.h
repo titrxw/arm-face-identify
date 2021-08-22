@@ -18,8 +18,8 @@ namespace ArmFaceIdentify {
         void trainAndSave(const string& sourceFile, const string& targetFile);
         ~Train() {}
     protected:
-        virtual void loadSourceFile(const string& filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
-        virtual void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile);
+        virtual void loadSourceFile(const string& filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';') = 0;
+        virtual void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile) = 0;
     };
 }
 
