@@ -1,8 +1,30 @@
 cmake_minimum_required(VERSION 3.17)
-project(ArmFaceIdentify)
+set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_CXX_STANDARD 14)
+# Define project name
+project(arm_face_identify)
 
-add_executable(ArmFaceIdentify
-        identify/main.cpp
-        train/main.cpp)
+# Find OpenCV, you may need to set OpenCV_DIR variable
+# to the absolute path to the directory containing OpenCVConfig.cmake file
+# via the command line or GUI
+find_package(OpenCV REQUIRED)
+
+# If the package has been found,several variables will
+# be set, you can find the full list with descriptions
+# in the OpenCVConfig.cmake file.
+# Print some message showing some of them
+message(STATUS "OpenCV library status:")
+message(STATUS "    config: ${OpenCV_DIR}")
+message(STATUS "    version: ${OpenCV_VERSION}")
+message(STATUS "    libraries: ${OpenCV_LIBS}")
+message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
+
+INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+LINK_DIRECTORIES(${OpenCV_LIB_DIR})
+
+# Declare the executable target built from your sources
+add_executable(arm_face_identify
+        main.cpp train/Source/FaceTrain.cpp train/Include/FaceTrain.h train/Include/Train.h train/Source/Train.cpp helper/Include/Str.h helper/Source/Str.cpp)
+
+# Link your application with OpenCV libraries
+target_link_libraries(arm_face_identify PRIVATE ${OpenCV_LIBS})
