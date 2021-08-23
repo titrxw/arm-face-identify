@@ -10,14 +10,19 @@
 #include "opencv2/imgproc.hpp"
 #include "Train.h"
 
-namespace ArmFaceIdentify {
-    class FaceTrain : public Train {
+using namespace cv::face;
+
+namespace ArmFaceIdentify
+{
+    class FaceTrain : public Train
+    {
     public:
         FaceTrain() : Train() {}
         ~FaceTrain() {}
+
     protected:
-        void loadSourceFile(const string& filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
-        void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile);
+        void loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
+        void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
     };
 }
 
