@@ -5,12 +5,9 @@
 #ifndef ARM_FACE_IDENTIFY_FACETRAIN_H
 #define ARM_FACE_IDENTIFY_FACETRAIN_H
 
-#include "opencv2/face.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "Train.h"
-
-using namespace cv::face;
 
 namespace ArmFaceIdentify
 {
@@ -22,7 +19,7 @@ namespace ArmFaceIdentify
 
     protected:
         void loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
-        void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
+        Ptr<FaceRecognizer> trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
     };
 }
 

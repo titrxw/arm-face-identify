@@ -11,20 +11,18 @@
 using namespace cv;
 using namespace cv::face;
 
-namespace ArmFaceIdentify
-{
-    class Identify
-    {
+namespace ArmFaceIdentify {
+    class Identify {
     public:
-        Identify(CascadeClassifier cascade, Ptr<BasicFaceRecognizer> modelRecognizer);
+        Identify(CascadeClassifier cascade, Ptr<FaceRecognizer> modelRecognizer);
         int identify(Mat model);
         ~Identify() {}
 
     protected:
-        Ptr<BasicFaceRecognizer> modelRecognizer;
+        Ptr<FaceRecognizer> modelRecognizer;
         CascadeClassifier cascade;
 
-        virtual Mat *detectMat(Mat model) = 0;
+        virtual std::vector<Mat> detectMat(Mat model) = 0;
         virtual int predictMat(Mat model) = 0;
         virtual Mat pretreatmentMat(Mat model) = 0;
     };

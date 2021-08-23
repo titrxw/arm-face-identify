@@ -10,16 +10,14 @@
 
 using namespace std;
 
-namespace ArmFaceIdentify
-{
-    class FaceIdentify : public Identify
-    {
+namespace ArmFaceIdentify {
+    class FaceIdentify : public Identify {
     public:
-        using Identify::Identify;
-        ~FaceIdentify() {}
+        FaceIdentify(const CascadeClassifier& cascade, Ptr<FaceRecognizer> modelRecognizer) : Identify(cascade, modelRecognizer) {}
+        ~FaceIdentify() {};
 
     protected:
-        Mat *detectMat(Mat model);
+        vector<Mat> detectMat(Mat model);
         int predictMat(Mat model);
         Mat pretreatmentMat(Mat model);
     };
