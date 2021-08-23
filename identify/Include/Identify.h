@@ -16,7 +16,7 @@ namespace ArmFaceIdentify {
     public:
         Identify(CascadeClassifier cascade, Ptr<FaceRecognizer> modelRecognizer);
         int identify(Mat model);
-        ~Identify() {}
+        ~Identify();
 
     protected:
         Ptr<FaceRecognizer> modelRecognizer;

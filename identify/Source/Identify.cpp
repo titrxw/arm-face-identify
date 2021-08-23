@@ -14,3 +14,9 @@ int ArmFaceIdentify::Identify::identify(Mat model){
 
     return 1;
 }
+
+ArmFaceIdentify::Identify::~Identify() {
+    if (this->modelRecognizer) {
+        this->modelRecognizer.release();
+    }
+}
