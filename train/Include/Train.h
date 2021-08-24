@@ -17,11 +17,11 @@ namespace ArmFaceIdentify {
     class Train {
     public:
         Train(){}
-        Ptr<FaceRecognizer> trainAndSave(const string& sourceFile, const string& targetFile);
+        void trainAndSave(const string& sourceFile, const string& targetFile);
         ~Train() {}
     protected:
         virtual void loadSourceFile(const string& filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';') = 0;
-        virtual Ptr<FaceRecognizer> trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile) = 0;
+        virtual void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile) = 0;
     };
 }
 

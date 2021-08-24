@@ -8,12 +8,10 @@
 #include <sstream>
 #include "./Identify.h"
 
-using namespace std;
-
 namespace ArmFaceIdentify {
     class FaceIdentify : public Identify {
     public:
-        FaceIdentify(const CascadeClassifier& cascade, Ptr<FaceRecognizer> modelRecognizer) : Identify(cascade, modelRecognizer) {}
+        FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer) : Identify(cascade, modelRecognizer) {}
         ~FaceIdentify() {};
 
     protected:

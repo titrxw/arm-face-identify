@@ -5,7 +5,7 @@
 
 using namespace ArmFaceIdentify;
 
-Ptr<FaceRecognizer> trainFace()
+void trainFace()
 {
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
@@ -18,14 +18,12 @@ Ptr<FaceRecognizer> trainFace()
     targetFile = targetFile.append("_face_model.xml");
 
     FaceTrain *faceTrain = new FaceTrain();
-    Ptr<FaceRecognizer> model = faceTrain->trainAndSave(sourceFile, targetFile);
+    faceTrain->trainAndSave(sourceFile, targetFile);
 
     delete[] tmpCurPwd;
     tmpCurPwd = nullptr;
     delete faceTrain;
     faceTrain = nullptr;
-
-    return model;
 }
 
 void identifyFace()
@@ -35,7 +33,7 @@ void identifyFace()
 
     string curPwd(tmpCurPwd);
     curPwd = curPwd.append("/../test/").append("haarcascade_frontalface_alt2.xml");
-    CascadeClassifier cascade(curPwd);
+    Ptr<CascadeClassifier> cascade(CascadeClassifier(curPwd));
 
     string modelFile1(tmpCurPwd);
     modelFile1 = modelFile1.append("/../test/").append("_face_model.xml");
@@ -62,6 +60,9 @@ void identifyFace()
             break;
         }
     }
+
+    capture.release();
+    delete faceIdentify;
 }
 
 int main()

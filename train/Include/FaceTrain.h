@@ -19,7 +19,7 @@ namespace ArmFaceIdentify
 
     protected:
         void loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
-        Ptr<FaceRecognizer> trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
+        void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
     };
 }
 

@@ -8,9 +8,9 @@ Mat ArmFaceIdentify::FaceIdentify::pretreatmentMat(Mat model) {
     return model;
 }
 
-std::vector<Mat> ArmFaceIdentify::FaceIdentify::detectMat(Mat model) {
-    vector<Rect> faces(0); //建立用于存放人脸的向量容器
-    this->cascade.detectMultiScale(model, faces,
+vector<Mat> ArmFaceIdentify::FaceIdentify::detectMat(Mat model) {
+    vector<Rect> faces; //建立用于存放人脸的向量容器
+    this->cascade->detectMultiScale(model, faces,
                                   1.1, 4, 0
                                               //|CV_HAAR_FIND_BIGGEST_OBJECT
                                               | CV_HAAR_DO_ROUGH_SEARCH,
@@ -18,23 +18,22 @@ std::vector<Mat> ArmFaceIdentify::FaceIdentify::detectMat(Mat model) {
                                   Size(30, 30), Size(500, 500));
 
     Mat tmpModel;
-    vector<Mat> pMats(0);
-    for (int i = 0; i < faces.size(); i++)
-    {
+    vector<Mat> pMats;
+    for (int i = 0; i < faces.size(); i++) {
         tmpModel = model(faces[i]); //将所有的脸部保存起来
         if (tmpModel.empty())
             continue;
         pMats.push_back(tmpModel);
     }
 
+    faces.clear();
     return pMats;
 }
 
 int ArmFaceIdentify::FaceIdentify::predictMat(Mat model) {
     int predict = -1;
     resize(model, model, Size(92, 112));
-    if (!model.empty())
-    {
+    if (!model.empty()) {
         predict = this->modelRecognizer->predict(model);
     }
 
