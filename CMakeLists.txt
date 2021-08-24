@@ -25,7 +25,7 @@ LINK_DIRECTORIES(${OpenCV_LIB_DIR})
 
 # Declare the executable target built from your sources
 add_executable(arm_face_identify
-        main.cpp identify/Source/FaceIdentify.cpp identify/Include/FaceIdentify.h identify/Include/Identify.h identify/Source/Identify.cpp train/Source/FaceTrain.cpp train/Include/FaceTrain.h train/Include/Train.h train/Source/Train.cpp helper/Include/Str.h helper/Source/Str.cpp)
+        main.cpp identify/Source/FaceIdentify.cpp identify/Include/FaceIdentify.h identify/Include/Identify.h identify/Source/Identify.cpp train/Source/FaceTrain.cpp train/Include/FaceTrain.h train/Include/Train.h train/Source/Train.cpp helper/Include/Str.h helper/Source/Str.cpp train/Source/VideoFaceTrain.cpp train/Include/VideoFaceTrain.h Common/Source/Opencv.cpp Common/Include/Opencv.h helper/Source/File.cpp helper/Include/File.h)
 
 # Link your application with OpenCV libraries
 target_link_libraries(arm_face_identify PRIVATE ${OpenCV_LIBS})

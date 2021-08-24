@@ -1,4 +1,5 @@
 #include "train/Include/FaceTrain.h"
+#include "train/Include/VideoFaceTrain.h"
 #include "identify/Include/FaceIdentify.h"
 #include <unistd.h>
 #include "helper/Include/Str.h"
@@ -10,12 +11,12 @@ void trainFace()
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
     string curPwd(tmpCurPwd);
-    curPwd = curPwd.append("/../test/");
+    curPwd = curPwd.append("/../test/rxw/");
 
     string sourceFile(curPwd);
     string targetFile(curPwd);
-    sourceFile = sourceFile.append("at.txt");
-    targetFile = targetFile.append("_face_model.xml");
+    sourceFile = sourceFile.append("face_model.txt");
+    targetFile = targetFile.append("face_model.xml");
 
     FaceTrain *faceTrain = new FaceTrain();
     faceTrain->trainAndSave(sourceFile, targetFile);
@@ -24,6 +25,31 @@ void trainFace()
     tmpCurPwd = nullptr;
     delete faceTrain;
     faceTrain = nullptr;
+}
+
+void trainFaceFromVideo()
+{
+    char *tmpCurPwd = nullptr;
+    tmpCurPwd = getcwd(nullptr, 0);
+    string curPwd(tmpCurPwd);
+    curPwd = curPwd.append("/../test/");
+
+    string cascaedFile(curPwd);
+    cascaedFile = cascaedFile.append("haarcascade_frontalface_alt2.xml");
+    Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
+
+    string targetFile(curPwd);
+    targetFile = targetFile.append("rxw/");
+    VideoFaceTrain *faceTrain = new VideoFaceTrain();
+    VideoCapture capture(0);
+    faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
+
+    delete[] tmpCurPwd;
+    tmpCurPwd = nullptr;
+    delete faceTrain;
+    faceTrain = nullptr;
+    capture.release();
+    cascade.release();
 }
 
 void identifyFace()
@@ -36,7 +62,7 @@ void identifyFace()
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(curPwd));
 
     string modelFile1(tmpCurPwd);
-    modelFile1 = modelFile1.append("/../test/").append("_face_model.xml");
+    modelFile1 = modelFile1.append("/../test/rxw/").append("face_model.xml");
     Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
 //    //1.加载训练好的分类器
     modelRecognizer->read(modelFile1); // opencv2用load
@@ -59,14 +85,19 @@ void identifyFace()
         {
             break;
         }
+
+        imshow("FacesOfPrettyGirl", frame);
     }
 
     capture.release();
+    cascade.release();
     delete faceIdentify;
+    faceIdentify = nullptr;
 }
 
 int main()
 {
+//    trainFaceFromVideo();
 //    trainFace();
     identifyFace();
     return 0;

@@ -7,14 +7,12 @@
 
 #include <sstream>
 #include "opencv2/face.hpp"
-#include "opencv2/core/mat.hpp"
+#include "../../Common/Include/Opencv.h"
 
-using namespace cv;
 using namespace cv::face;
-using namespace std;
 
 namespace ArmFaceIdentify {
-    class Train {
+    class Train : public Opencv {
     public:
         Train(){}
         void trainAndSave(const string& sourceFile, const string& targetFile);

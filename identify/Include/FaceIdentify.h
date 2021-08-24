@@ -15,9 +15,7 @@ namespace ArmFaceIdentify {
         ~FaceIdentify() {};
 
     protected:
-        vector<Mat> detectMat(Mat model);
         int predictMat(Mat model);
-        Mat pretreatmentMat(Mat model);
     };
 }
 

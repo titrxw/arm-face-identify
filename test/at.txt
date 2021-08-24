@@ -1,3 +1,12 @@
 /Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb1.jpg;1
 /Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb2.jpg;2
-/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/fbb3.jpg;3
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/1.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/2.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/3.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/4.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/5.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/6.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/7.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/8.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/9.jpg;4
+/Users/rxwyun/Develop/c/ArmFaceIdentify/train/img/10.jpg;3
