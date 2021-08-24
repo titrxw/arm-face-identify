@@ -1,5 +1,4 @@
 #include "../Include/FaceIdentify.h"
-#include <opencv2/opencv.hpp>
 
 Mat ArmFaceIdentify::FaceIdentify::pretreatmentMat(Mat model) {
     cvtColor(model, model, CV_RGB2GRAY); //测试图像必须为灰度图

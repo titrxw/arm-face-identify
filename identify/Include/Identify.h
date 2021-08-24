@@ -8,6 +8,7 @@
 #include "vector"
 #include "opencv2/core/mat.hpp"
 #include "opencv2/face.hpp"
+#include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
@@ -21,8 +22,8 @@ namespace ArmFaceIdentify {
         ~Identify();
 
     protected:
-        Ptr<FaceRecognizer> modelRecognizer = nullptr;
-        Ptr<CascadeClassifier> cascade = nullptr;
+        Ptr<FaceRecognizer> modelRecognizer;
+        Ptr<CascadeClassifier> cascade;
 
         virtual vector<Mat> detectMat(Mat model) = 0;
         virtual int predictMat(Mat model) = 0;

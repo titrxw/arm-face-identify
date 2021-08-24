@@ -28,7 +28,7 @@ void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<M
 }
 
 void ArmFaceIdentify::FaceTrain::trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile) {
-    Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
+    Ptr<FaceRecognizer> modelRecognizer = createEigenFaceRecognizer();
     modelRecognizer->train(mats, matLabels);
     modelRecognizer->save(targetFile);
     modelRecognizer.release();
