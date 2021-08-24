@@ -3,17 +3,19 @@
 ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer) : cascade(cascade), modelRecognizer(modelRecognizer){
 }
 
-int ArmFaceIdentify::Identify::identify(Mat model){
+map<int, Mat> ArmFaceIdentify::Identify::identify(Mat model){
     model = this->pretreatmentMat(model);
     vector<Mat> pMats = this->detectMat(model);
 
+    map<int, Mat> predictMap;
     for(int i = 0; i < pMats.size(); i++) {
         int predict = this->predictMat(pMats[i]);
+        predictMap[predict] = pMats[i];
     }
 
     pMats.clear();
 
-    return 1;
+    return predictMap;
 }
 
 ArmFaceIdentify::Identify::~Identify() {

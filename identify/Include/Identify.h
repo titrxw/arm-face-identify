@@ -6,6 +6,7 @@
 #define ARM_FACE_IDENTIFY_IDENTIFY_H
 
 #include "vector"
+#include <map>
 #include "opencv2/core/mat.hpp"
 #include "opencv2/face.hpp"
 #include <opencv2/opencv.hpp>
@@ -18,7 +19,7 @@ namespace ArmFaceIdentify {
     class Identify {
     public:
         Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer);
-        int identify(Mat model);
+        map<int, Mat> identify(Mat model);
         ~Identify();
 
     protected:
