@@ -2,10 +2,11 @@
 
 int ArmFaceIdentify::FaceIdentify::predictMat(Mat model) {
     int predict = -1;
+    double confidence = 0;
     resize(model, model, Size(92, 112));
     if (!model.empty()) {
-        predict = this->modelRecognizer->predict(model);
+         this->modelRecognizer->predict(model, predict, confidence);
     }
-
+    cout<<"label: "<<predict << "cd " << confidence<<endl;
     return predict;
 }

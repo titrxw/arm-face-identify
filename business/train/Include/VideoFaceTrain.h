@@ -9,6 +9,9 @@
 
 class VideoFaceTrain : public ArmFaceIdentify::FaceTrain {
 public:
+    VideoFaceTrain(Ptr<FaceRecognizer> modelRecognizer) : ArmFaceIdentify::FaceTrain(modelRecognizer) {}
+    ~VideoFaceTrain() {}
+
     string getSampleVideoCapture(VideoCapture *vc, Ptr<CascadeClassifier> cascade, unsigned int label, string& targetDir);
 };
 

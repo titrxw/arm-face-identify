@@ -43,7 +43,7 @@ void trainFaceFromVideo()
     targetFile = targetFile.append("rxw/");
     VideoFaceTrain *faceTrain = new VideoFaceTrain(LBPHFaceRecognizer::create());
     VideoCapture capture(0);
-    faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
+//    faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
 
     delete[] tmpCurPwd;
     tmpCurPwd = nullptr;
@@ -59,7 +59,7 @@ void identifyFace()
     tmpCurPwd = getcwd(nullptr, 0);
 
     string curPwd(tmpCurPwd);
-    curPwd = curPwd.append("/../test/").append("haarcascade_frontalface_alt2.xml");
+    curPwd = curPwd.append("/../data/").append("lbpcascade_frontalface.xml");
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(curPwd));
 
     string modelFile1(tmpCurPwd);

@@ -11,6 +11,7 @@
 #include "opencv2/face.hpp"
 #include "opencv2/core/mat.hpp"
 #include "eventpp/eventdispatcher.h"
+#include "./Event/BaseEvent.h"
 
 using namespace cv;
 using namespace cv::face;
@@ -26,10 +27,10 @@ namespace ArmFaceIdentify {
 
         void setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer);
         Ptr<FaceRecognizer> getModelRecognizer();
-        void setEventDispatcher(EventDispatcher<int, void ()> *eventDispatcher);
-        EventDispatcher<int, void ()> *getEventDispatcher();
+        void setEventDispatcher(EventDispatcher<int, void (BaseEvent event)> *eventDispatcher);
+        EventDispatcher<int, void (BaseEvent event)> *getEventDispatcher();
     protected:
-        EventDispatcher<int, void ()> *eventDispatcher = nullptr;
+        EventDispatcher<int, void (BaseEvent event)> *eventDispatcher = nullptr;
         Ptr<FaceRecognizer> modelRecognizer;
 
         static Mat pretreatmentMat(Mat &model);
