@@ -14,7 +14,3 @@ void ArmFaceIdentify::Train::trainAndSave(const string& sourceFile, const string
     mats.clear();
     matLabels.clear();
 }
-
-ArmFaceIdentify::Train::Train(Ptr<FaceRecognizer> modelRecognizer) : Opencv(modelRecognizer) {
-
-}

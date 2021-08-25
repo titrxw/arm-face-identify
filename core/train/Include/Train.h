@@ -12,9 +12,10 @@
 namespace ArmFaceIdentify {
     class Train : public Opencv {
     public:
-        Train(Ptr<FaceRecognizer> modelRecognizer);
-        void trainAndSave(const string& sourceFile, const string& targetFile = "");
+        Train(Ptr<FaceRecognizer> modelRecognizer) : Opencv(modelRecognizer) {};
         ~Train() {};
+
+        void trainAndSave(const string& sourceFile, const string& targetFile = "");
     protected:
         virtual void loadSourceFile(const string& filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';') = 0;
         virtual void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string& targetFile) = 0;
