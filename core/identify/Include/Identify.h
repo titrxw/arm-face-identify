@@ -11,8 +11,9 @@ namespace ArmFaceIdentify {
     class Identify : public Opencv {
     public:
         Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer);
-        map<int, Mat> identify(Mat &model);
         ~Identify();
+
+        map<int, Mat> identify(Mat &model);
 
     protected:
         Ptr<CascadeClassifier> cascade;

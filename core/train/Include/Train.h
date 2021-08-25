@@ -12,8 +12,8 @@
 namespace ArmFaceIdentify {
     class Train : public Opencv {
     public:
-        Train(Ptr<FaceRecognizer> modelRecognizer) : Opencv(modelRecognizer) {};
-        ~Train() {};
+        Train(Ptr<FaceRecognizer> modelRecognizer) : Opencv(modelRecognizer) {}
+        ~Train() {}
 
         void trainAndSave(const string& sourceFile, const string& targetFile = "");
     protected:

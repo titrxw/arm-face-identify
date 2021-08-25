@@ -12,7 +12,7 @@ namespace ArmFaceIdentify {
     class FaceIdentify : public Identify {
     public:
         FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer) : Identify(cascade, modelRecognizer) {}
-        ~FaceIdentify() {};
+        ~FaceIdentify() {}
 
     protected:
         int predictMat(Mat model);
