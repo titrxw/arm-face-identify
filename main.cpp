@@ -1,8 +1,8 @@
-#include "train/Include/FaceTrain.h"
-#include "train/Include/VideoFaceTrain.h"
-#include "identify/Include/FaceIdentify.h"
+#include "core/train/Include/FaceTrain.h"
+#include "business/train/Include/VideoFaceTrain.h"
+#include "core/identify/Include/FaceIdentify.h"
 #include <unistd.h>
-#include "helper/Include/Str.h"
+#include "core/helper/Include/Str.h"
 
 using namespace ArmFaceIdentify;
 
@@ -18,7 +18,8 @@ void trainFace()
     sourceFile = sourceFile.append("face_model.txt");
     targetFile = targetFile.append("face_model.xml");
 
-    FaceTrain *faceTrain = new FaceTrain();
+    Ptr<FaceRecognizer> modelRecognizer = LBPHFaceRecognizer::create();
+    FaceTrain *faceTrain = new FaceTrain(modelRecognizer);
     faceTrain->trainAndSave(sourceFile, targetFile);
 
     delete[] tmpCurPwd;
@@ -40,7 +41,7 @@ void trainFaceFromVideo()
 
     string targetFile(curPwd);
     targetFile = targetFile.append("rxw/");
-    VideoFaceTrain *faceTrain = new VideoFaceTrain();
+    VideoFaceTrain *faceTrain = new VideoFaceTrain(LBPHFaceRecognizer::create());
     VideoCapture capture(0);
     faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
 
@@ -63,7 +64,7 @@ void identifyFace()
 
     string modelFile1(tmpCurPwd);
     modelFile1 = modelFile1.append("/../test/rxw/").append("face_model.xml");
-    Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
+    Ptr<FaceRecognizer> modelRecognizer = LBPHFaceRecognizer::create();
 //    //1.加载训练好的分类器
     modelRecognizer->read(modelFile1); // opencv2用load
 
