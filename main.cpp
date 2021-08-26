@@ -72,7 +72,7 @@ void identifyFace()
     DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, &capture);
     faceIdentify->identifyFromVideo();
 
-    cascade.release();
+//    cascade.release();
     delete faceIdentify;
     faceIdentify = nullptr;
 }

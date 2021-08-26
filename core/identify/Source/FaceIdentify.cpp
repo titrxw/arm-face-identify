@@ -2,7 +2,7 @@
 
 ArmFaceIdentify::PredictFace ArmFaceIdentify::FaceIdentify::predictMat(DetectedFace detectedFaceMap) {
     int label = -1;
-    double confidence = 99999;
+    double confidence = 0;
 
     Mat tmpMat;
     resize(detectedFaceMap.detectMat, tmpMat, Size(92, 112));

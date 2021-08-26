@@ -16,7 +16,7 @@ namespace ArmFaceIdentify {
         int label;
         double confidence;
 
-        PredictFace(Mat sourceMat, Mat detectMat, Rect face, int label, double confidence = 999999) : DetectedFace(sourceMat, detectMat, face), label(label), confidence(confidence) {}
+        PredictFace(Mat sourceMat, Mat detectMat, Rect face, int label, double confidence = -1) : DetectedFace(sourceMat, detectMat, face), label(label), confidence(confidence) {}
     };
 }
 

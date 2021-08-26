@@ -49,7 +49,6 @@ void DialogVideoFaceIdentify::identifyFromVideo() {
 DialogVideoFaceIdentify::~DialogVideoFaceIdentify() {
     if (this->vc) {
         this->vc->release();
-        delete this->vc;
         this->vc = nullptr;
     }
 }
