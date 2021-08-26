@@ -1,6 +1,6 @@
 #include "core/train/Include/FaceTrain.h"
 #include "business/train/Include/VideoFaceTrain.h"
-#include "core/identify/Include/FaceIdentify.h"
+#include "business/identify/Include/DialogVideoFaceIdentify.h"
 #include <unistd.h>
 #include "core/helper/Include/Str.h"
 
@@ -68,29 +68,10 @@ void identifyFace()
 //    //1.加载训练好的分类器
     modelRecognizer->read(modelFile1); // opencv2用load
 
-    FaceIdentify *faceIdentify = new FaceIdentify(cascade, modelRecognizer);
-
     VideoCapture capture(0);
-    Mat frame;
-    while (capture.read(frame)) //读取帧
-    {
-        if (frame.empty())
-        {
-            printf(" --(!) No captured frame -- Break!");
-            break;
-        }
+    DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, &capture);
+    faceIdentify->identifyFromVideo();
 
-        faceIdentify->identify(frame);
-
-        if (waitKey(10) == 'k')
-        {
-            break;
-        }
-
-        imshow("FacesOfPrettyGirl", frame);
-    }
-
-    capture.release();
     cascade.release();
     delete faceIdentify;
     faceIdentify = nullptr;

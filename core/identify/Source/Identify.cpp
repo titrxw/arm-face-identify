@@ -9,10 +9,8 @@ vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::Identify::identify(Mat &mo
 
     vector<PredictFace> predictMap;
     for(int i = 0; i < pMats.size(); i++) {
-        PredictFace predictFace = this->predictMat(pMats[i]);
-        predictMap.push_back(predictFace);
+        predictMap.push_back(this->predictMat(pMats[i]));
     }
-
     pMats.clear();
 
     return predictMap;

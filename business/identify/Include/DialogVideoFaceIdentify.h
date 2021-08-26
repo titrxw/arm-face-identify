@@ -13,14 +13,13 @@ public:
     DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc);
     ~DialogVideoFaceIdentify();
 
-    static bool stopIdentity;
-
     void identifyFromVideo();
-    void onDetectedFace(ArmFaceIdentify::DetectedFeatureMatEvent *event);
+    void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
 
 protected:
     VideoCapture *vc = nullptr;
-};
 
+    static bool ifNecessaryStop();
+};
 
 #endif //ARM_FACE_IDENTIFY_DIALOGVIDEOFACEIDENTIFY_H
