@@ -6,36 +6,39 @@
 #include "../Enum/Event.h"
 #include "../Include/Event/DetectedFeatureMatEvent.h"
 
-Mat ArmFaceIdentify::Opencv::pretreatmentMat(Mat &model) {
-    cvtColor(model, model, CV_RGB2GRAY); //测试图像必须为灰度图
-    equalizeHist(model, model);      //变换后的图像进行直方图均值化处理
+Mat ArmFaceIdentify::Opencv::pretreatmentMat(Mat model) {
+    Mat grayMat;
+    cvtColor(model, grayMat, CV_RGB2GRAY); //测试图像必须为灰度图
+    equalizeHist(grayMat, grayMat);      //变换后的图像进行直方图均值化处理
 
-    return model;
+    return grayMat;
 }
 
-vector<Mat> ArmFaceIdentify::Opencv::getFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model) {
+vector<ArmFaceIdentify::DetectedFace> ArmFaceIdentify::Opencv::detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model) {
+    Mat grayMat = Opencv::pretreatmentMat(model);
     vector<Rect> faces; //建立用于存放人脸的向量容器
-    cascade->detectMultiScale(model, faces,
+    cascade->detectMultiScale(grayMat, faces,
                                     1.1, 5, 0,
                               Size(80, 80), Size(500, 500));
 
-    Mat tmpModel;
-    vector<Mat> pMats;
+    Mat detectMat;
+    vector<DetectedFace> detectedFaceMap;
     for (int i = 0; i < faces.size(); i++) {
-        tmpModel = model(faces[i]); //将所有的脸部保存起来
-        if (tmpModel.empty())
+        detectMat = grayMat(faces[i]); //将所有的脸部保存起来
+        if (detectMat.empty())
             continue;
 
+        DetectedFace detectedFace(model, detectMat, faces[i]);
+        detectedFaceMap.push_back(detectedFace);
+
         if (this->eventDispatcher) {
-            DetectedFeatureMatEvent event(model, tmpModel, faces[i]);
+            DetectedFeatureMatEvent event(detectedFace);
             this->eventDispatcher->dispatch(Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, &event);
         }
-
-        pMats.push_back(tmpModel);
     }
-
     faces.clear();
-    return pMats;
+
+    return detectedFaceMap;
 }
 
 ArmFaceIdentify::Opencv::~Opencv() {

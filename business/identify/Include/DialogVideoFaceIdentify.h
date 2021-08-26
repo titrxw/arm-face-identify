@@ -7,6 +7,7 @@
 
 #include "../../../core/identify/Include/FaceIdentify.h"
 #include "../../../core/base/Include/Event/DetectedFeatureMatEvent.h"
+#include "../../../core/base/Include/Event/PredictFeatureMatEvent.h"
 
 class DialogVideoFaceIdentify : public ArmFaceIdentify::FaceIdentify {
 public:
@@ -15,6 +16,7 @@ public:
 
     void identifyFromVideo();
     void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
+    void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);
 
 protected:
     VideoCapture *vc = nullptr;

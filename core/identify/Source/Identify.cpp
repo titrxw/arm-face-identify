@@ -1,19 +1,26 @@
 #include "../Include/Identify.h"
+#include "../../base/Enum/Event.h"
+#include "../../base/Include/Event/PredictFeatureMatEvent.h"
 
 ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer) : cascade(cascade), Opencv(modelRecognizer){
 }
 
 vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::Identify::identify(Mat &model){
-    Mat tmpModel = ArmFaceIdentify::Identify::pretreatmentMat(model);
-    vector<Mat> pMats = this->getFaceMatFromMat(this->cascade, model);
+    vector<DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, model);
 
-    vector<PredictFace> predictMap;
-    for(int i = 0; i < pMats.size(); i++) {
-        predictMap.push_back(this->predictMat(pMats[i]));
+    vector<PredictFace> predictFaceMap;
+    for(int i = 0; i < detectedFaceMap.size(); i++) {
+        PredictFace predictFace = this->predictMat(detectedFaceMap[i]);
+        predictFaceMap.push_back(predictFace);
+
+        if (this->eventDispatcher) {
+            PredictFeatureMatEvent _predictMap(predictFace);
+            this->eventDispatcher->dispatch(Event::PREDICT_FEATURE_IMAGE_FROM_FRAME, &_predictMap);
+        }
     }
-    pMats.clear();
+    detectedFaceMap.clear();
 
-    return predictMap;
+    return predictFaceMap;
 }
 
 ArmFaceIdentify::Identify::~Identify() {

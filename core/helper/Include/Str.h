@@ -12,8 +12,10 @@ using namespace std;
 namespace ArmFaceIdentify {
     class Str {
     public:
-        static string lToString(long T1);
-        static string lToString(unsigned int T1);
+        static string toString(long T1);
+        static string toString(unsigned int T1);
+        static string toString(int T1);
+        static string toString(double T1);
     };
 }
 

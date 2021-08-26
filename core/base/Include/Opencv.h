@@ -12,6 +12,7 @@
 #include "opencv2/core/mat.hpp"
 #include "eventpp/eventdispatcher.h"
 #include "./Event/BaseEvent.h"
+#include "../../entity/Include/DetectedFace.h"
 
 using namespace cv;
 using namespace cv::face;
@@ -33,8 +34,8 @@ namespace ArmFaceIdentify {
         EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher = nullptr;
         Ptr<FaceRecognizer> modelRecognizer;
 
-        static Mat pretreatmentMat(Mat &model);
-        vector<Mat> getFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model);
+        static Mat pretreatmentMat(Mat model);
+        vector<DetectedFace> detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model);
     };
 }
 

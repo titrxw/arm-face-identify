@@ -17,18 +17,18 @@ string VideoFaceTrain::getSampleVideoCapture(VideoCapture *vc, Ptr<CascadeClassi
             break;
         }
 
-        frame = VideoFaceTrain::pretreatmentMat(frame);
-        vector<Mat> pMats = this->getFaceMatFromMat(cascade, frame);
-        if (pMats.size() == 1) {
+        vector<ArmFaceIdentify::DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(cascade, frame);
+        if (detectedFaceMap.size() == 1) {
             string matFileName(targetDir);
             matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
-            imwrite(matFileName, pMats[0]);//存在当前目录下
+            imwrite(matFileName, detectedFaceMap[0].detectMat);
 
-            modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::lToString(label)).append("\n");
+            modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
             ++picNum;
             waitKey(500);
         }
+        detectedFaceMap.clear();
 
         if (picNum == 30) {
             break;

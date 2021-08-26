@@ -6,17 +6,17 @@
 #define ARM_FACE_IDENTIFY_PREDICTFACE_H
 
 #include "opencv2/core/mat.hpp"
+#include "./DetectedFace.h"
 
 using namespace cv;
 
 namespace ArmFaceIdentify {
-    class PredictFace {
+    class PredictFace : public DetectedFace {
     public:
-        Mat model;
         int label;
         double confidence;
 
-        PredictFace(Mat model, int label, double confidence) : model(model), label(label), confidence(confidence) {}
+        PredictFace(Mat sourceMat, Mat detectMat, Rect face, int label, double confidence = 999999) : DetectedFace(sourceMat, detectMat, face), label(label), confidence(confidence) {}
     };
 }
 

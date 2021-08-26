@@ -6,14 +6,13 @@
 #define ARM_FACE_IDENTIFY_DETECTEDFEATUREMATEVENT_H
 
 #include "./BaseEvent.h"
+#include "../../../entity/Include/DetectedFace.h"
 
 namespace ArmFaceIdentify {
     class DetectedFeatureMatEvent : public BaseEvent {
     public:
-        Mat sourceMat;
-        Mat tmpMat;
-        Rect face;
-        DetectedFeatureMatEvent(Mat sourceMat, Mat tmpMat, Rect face) : sourceMat(sourceMat), tmpMat(tmpMat), face(face) {}
+        DetectedFace detectedFace;
+        DetectedFeatureMatEvent(DetectedFace detectedFace) : detectedFace(detectedFace) {}
     };
 }
 

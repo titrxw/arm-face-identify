@@ -4,6 +4,7 @@
 
 namespace ArmFaceIdentify {
     enum Event {
-        DETECTED_FEATURE_IMAGE_FROM_FRAME = 1
+        DETECTED_FEATURE_IMAGE_FROM_FRAME = 1,
+        PREDICT_FEATURE_IMAGE_FROM_FRAME = 2
     };
 }

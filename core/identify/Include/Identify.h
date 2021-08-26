@@ -6,6 +6,7 @@
 #define ARM_FACE_IDENTIFY_IDENTIFY_H
 
 #include "../../base/Include/Opencv.h"
+#include "../../entity/Include/DetectedFace.h"
 #include "../../entity/Include/PredictFace.h"
 
 namespace ArmFaceIdentify {
@@ -19,7 +20,7 @@ namespace ArmFaceIdentify {
     protected:
         Ptr<CascadeClassifier> cascade;
 
-        virtual PredictFace predictMat(Mat model) = 0;
+        virtual PredictFace predictMat(DetectedFace detectedFaceMap) = 0;
     };
 }
 
