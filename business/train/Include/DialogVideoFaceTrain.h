@@ -1,0 +1,14 @@
+//
+// Created by rxw on 2021/8/26.
+//
+
+#ifndef ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
+#define ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
+
+
+class DialogVideoFaceTrain {
+
+};
+
+
+#endif //ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H

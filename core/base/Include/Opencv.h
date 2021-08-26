@@ -27,10 +27,10 @@ namespace ArmFaceIdentify {
 
         void setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer);
         Ptr<FaceRecognizer> getModelRecognizer();
-        void setEventDispatcher(EventDispatcher<int, void (BaseEvent event)> *eventDispatcher);
-        EventDispatcher<int, void (BaseEvent event)> *getEventDispatcher();
+        void setEventDispatcher(EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher);
+        EventDispatcher<int, void (BaseEvent *event)> *getEventDispatcher();
     protected:
-        EventDispatcher<int, void (BaseEvent event)> *eventDispatcher = nullptr;
+        EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher = nullptr;
         Ptr<FaceRecognizer> modelRecognizer;
 
         static Mat pretreatmentMat(Mat &model);

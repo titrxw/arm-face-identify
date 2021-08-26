@@ -5,7 +5,6 @@
 #include "../Include/Opencv.h"
 #include "../Enum/Event.h"
 #include "../Include/Event/DetectedFeatureMatEvent.h"
-//#include<opencv2/highgui/highgui.hpp>
 
 Mat ArmFaceIdentify::Opencv::pretreatmentMat(Mat &model) {
     cvtColor(model, model, CV_RGB2GRAY); //测试图像必须为灰度图
@@ -28,10 +27,9 @@ vector<Mat> ArmFaceIdentify::Opencv::getFaceMatFromMat(Ptr<CascadeClassifier> ca
             continue;
 
         if (this->eventDispatcher) {
-            this->eventDispatcher->dispatch(Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, DetectedFeatureMatEvent(model, tmpModel, faces[i]));
+            DetectedFeatureMatEvent event(model, tmpModel, faces[i]);
+            this->eventDispatcher->dispatch(Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, &event);
         }
-//        rectangle(model, Point(faces[i].x, faces[i].y), Point(faces[i].x + faces[i].width, faces[i].y + faces[i].height),
-//                  Scalar(0, 255, 0), 1, 8);    //框出人脸位置
 
         pMats.push_back(tmpModel);
     }
@@ -44,6 +42,10 @@ ArmFaceIdentify::Opencv::~Opencv() {
     if (!this->modelRecognizer.empty()) {
         this->modelRecognizer.release();
     }
+    if (this->eventDispatcher) {
+        delete this->eventDispatcher;
+        this->eventDispatcher = nullptr;
+    }
 }
 
 void ArmFaceIdentify::Opencv::setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer) {
@@ -54,10 +56,10 @@ Ptr<FaceRecognizer> ArmFaceIdentify::Opencv::getModelRecognizer() {
     return this->modelRecognizer;
 }
 
-void ArmFaceIdentify::Opencv::setEventDispatcher(EventDispatcher<int, void(BaseEvent)> *eventDispatcher) {
+void ArmFaceIdentify::Opencv::setEventDispatcher(EventDispatcher<int, void(BaseEvent *)> *eventDispatcher) {
     this->eventDispatcher = eventDispatcher;
 }
 
-EventDispatcher<int, void(ArmFaceIdentify::BaseEvent)> *ArmFaceIdentify::Opencv::getEventDispatcher() {
+EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *ArmFaceIdentify::Opencv::getEventDispatcher() {
     return this->eventDispatcher;
 }
