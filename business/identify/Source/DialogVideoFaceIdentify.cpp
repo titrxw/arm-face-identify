@@ -44,6 +44,7 @@ void DialogVideoFaceIdentify::identifyFromVideo() {
 
         imshow(dialogName, frame);
     }
+    cvDestroyWindow(dialogName.c_str());
 }
 
 DialogVideoFaceIdentify::~DialogVideoFaceIdentify() {

@@ -1,5 +1,5 @@
 #include "core/train/Include/FaceTrain.h"
-#include "business/train/Include/VideoFaceTrain.h"
+#include "business/train/Include/DialogVideoFaceTrain.h"
 #include "business/identify/Include/DialogVideoFaceIdentify.h"
 #include <unistd.h>
 #include "core/helper/Include/Str.h"
@@ -41,7 +41,7 @@ void trainFaceFromVideo()
 
     string targetFile(curPwd);
     targetFile = targetFile.append("rxw/");
-    VideoFaceTrain *faceTrain = new VideoFaceTrain(LBPHFaceRecognizer::create());
+    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(LBPHFaceRecognizer::create());
     VideoCapture capture(0);
 //    faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
 

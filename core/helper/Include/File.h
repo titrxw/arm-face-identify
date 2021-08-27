@@ -7,13 +7,20 @@
 
 #include <sstream>
 #include <fstream>
+#include <vector>
+#include <sys/stat.h>
 
 using namespace std;
 
 namespace ArmFaceIdentify {
     class File {
     public:
-        static void write(const string& filePath, const string& content, unsigned int openmode = ios::trunc|ios::out);
+        static void write(const string& filePath, const string& content, unsigned int mode = ios::trunc|ios::out);
+        static string read(const string& filePath, unsigned int mode = ios::out|ios::in);
+        static vector<string> glob(const string &pattern);
+        static void unlink(const string &filePath);
+        static bool exists(const string &filePath);
+        static void mkdirs(const string &dir);
     };
 }
 

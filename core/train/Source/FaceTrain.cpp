@@ -3,7 +3,7 @@
 //
 
 #include "../Include/FaceTrain.h"
-#include <fstream>
+#include "../../helper/Include/File.h"
 
 void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator)
 {
@@ -19,6 +19,9 @@ void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<M
         getline(liness, path, separator);
         getline(liness, label);
         if (!path.empty() && !label.empty()) {
+            if (!File::exists(path)) {
+                throw path.append( "not exists!");
+            }
             Mat img = imread(path, 0);
             resize(img, img, Size(92, 112));
             mats.push_back(img);
