@@ -29,20 +29,21 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
             break;
         }
 
-        vector<ArmFaceIdentify::DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
-        if (detectedFaceMap.size() == 1) {
-            string matFileName(imgDir);
-            matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
-            imwrite(matFileName, detectedFaceMap[0].detectMat);
+        if (waitKey(10) == 'n') {
+            vector<ArmFaceIdentify::DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
+            if (detectedFaceMap.size() == 1) {
+                string matFileName(imgDir);
+                matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
+                imwrite(matFileName, detectedFaceMap[0].detectMat);
 
-            this->onDetectedFace(detectedFaceMap[0], picNum);
+                this->onDetectedFace(detectedFaceMap[0], picNum);
 
-            modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
+                modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
-            ++picNum;
-            waitKey(300);
+                ++picNum;
+            }
+            detectedFaceMap.clear();
         }
-        detectedFaceMap.clear();
 
         imshow(dialogName, frame);
 

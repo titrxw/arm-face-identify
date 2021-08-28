@@ -6,28 +6,6 @@
 
 using namespace ArmFaceIdentify;
 
-void trainFace()
-{
-    char *tmpCurPwd = nullptr;
-    tmpCurPwd = getcwd(nullptr, 0);
-    string curPwd(tmpCurPwd);
-    curPwd = curPwd.append("/../test/rxw/");
-
-    string sourceFile(curPwd);
-    string targetFile(curPwd);
-    sourceFile = sourceFile.append("face_model.txt");
-    targetFile = targetFile.append("face_model.xml");
-
-    Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
-    FaceTrain *faceTrain = new FaceTrain(modelRecognizer);
-    faceTrain->trainAndSave(sourceFile, targetFile);
-
-    delete[] tmpCurPwd;
-    tmpCurPwd = nullptr;
-    delete faceTrain;
-    faceTrain = nullptr;
-}
-
 void trainFaceFromVideo()
 {
     char *tmpCurPwd = nullptr;
@@ -81,8 +59,8 @@ void identifyFace()
 
 int main()
 {
-    trainFaceFromVideo();
+//    trainFaceFromVideo();
 //    trainFace();
-//    identifyFace();
+    identifyFace();
     return 0;
 }
