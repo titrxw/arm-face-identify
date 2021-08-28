@@ -20,12 +20,9 @@ void ArmFaceIdentify::File::write(const string &filePath, const string& content,
 
 string ArmFaceIdentify::File::read(const string &filePath, unsigned int mode) {
     ifstream infile(filePath, mode);
-    string content;
-    infile >> content;
-
-    infile.close();
-
-    return content;
+    std::stringstream buffer;
+    buffer << infile.rdbuf();
+    return std::string(buffer.str());
 }
 
 vector<string> ArmFaceIdentify::File::glob(const string &pattern) {

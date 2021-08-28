@@ -33,17 +33,19 @@ void trainFaceFromVideo()
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
     string curPwd(tmpCurPwd);
-    curPwd = curPwd.append("/../test/");
 
     string cascaedFile(curPwd);
-    cascaedFile = cascaedFile.append("haarcascade_frontalface_alt2.xml");
+    cascaedFile = cascaedFile.append("/../data/haarcascade_frontalface_alt.xml");
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
 
     string targetFile(curPwd);
-    targetFile = targetFile.append("rxw/");
-    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(LBPHFaceRecognizer::create());
+    targetFile = targetFile.append("/test/lyr/");
+    Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
+
     VideoCapture capture(0);
-//    faceTrain->trainFromVideoCapture(&capture, cascade, 3, targetFile);
+
+    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(cascade, modelRecognizer, &capture, targetFile);
+    faceTrain->train(18);
 
     delete[] tmpCurPwd;
     tmpCurPwd = nullptr;
@@ -79,8 +81,8 @@ void identifyFace()
 
 int main()
 {
-//    trainFaceFromVideo();
+    trainFaceFromVideo();
 //    trainFace();
-    identifyFace();
+//    identifyFace();
     return 0;
 }

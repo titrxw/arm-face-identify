@@ -31,7 +31,7 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
 
         vector<ArmFaceIdentify::DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
         if (detectedFaceMap.size() == 1) {
-            string matFileName(this->targetDir);
+            string matFileName(imgDir);
             matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
             imwrite(matFileName, detectedFaceMap[0].detectMat);
 
@@ -40,7 +40,7 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
             modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
             ++picNum;
-            waitKey(500);
+            waitKey(300);
         }
         detectedFaceMap.clear();
 
