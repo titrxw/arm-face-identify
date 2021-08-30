@@ -12,8 +12,9 @@ void trainFaceFromVideo()
     tmpCurPwd = getcwd(nullptr, 0);
     string curPwd(tmpCurPwd);
 
-    string cascaedFile(curPwd);
-    cascaedFile = cascaedFile.append("/../data/haarcascade_frontalface_alt.xml");
+    string cascaedFile(getenv("ARM_DACE_IDENTIFY_DATA_PATH"));
+    cascaedFile = cascaedFile.append("haarcascade_frontalface_alt.xml");
+    cout <<cascaedFile<<endl;
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
 
     string targetFile(curPwd);
@@ -38,8 +39,8 @@ void identifyFace()
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
 
-    string curPwd(tmpCurPwd);
-    curPwd = curPwd.append("/../data/").append("haarcascade_frontalface_alt.xml");
+    string curPwd("");
+    curPwd = curPwd.append("/use/local/arm-face-identify/data/").append("haarcascade_frontalface_alt.xml");
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(curPwd));
 
     string modelFile1(tmpCurPwd);
@@ -59,8 +60,8 @@ void identifyFace()
 
 int main()
 {
-//    trainFaceFromVideo();
+    trainFaceFromVideo();
 //    trainFace();
-    identifyFace();
+//    identifyFace();
     return 0;
 }
