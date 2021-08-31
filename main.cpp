@@ -2,6 +2,7 @@
 #include "business/train/Include/DialogVideoFaceTrain.h"
 #include "business/identify/Include/DialogVideoFaceIdentify.h"
 #include <unistd.h>
+#include <stdlib.h>
 #include "core/helper/Include/Str.h"
 
 using namespace ArmFaceIdentify;
@@ -12,13 +13,13 @@ void trainFaceFromVideo()
     tmpCurPwd = getcwd(nullptr, 0);
     string curPwd(tmpCurPwd);
 
-    string cascaedFile(getenv("ARM_DACE_IDENTIFY_DATA_PATH"));
-    cascaedFile = cascaedFile.append("haarcascade_frontalface_alt.xml");
-    cout <<cascaedFile<<endl;
+    //env OPENCV_SAMPLES_DATA_PATH OPENCV_DATA_PATH
+    //从env中获取设置好的OPENCV_SAMPLES_DATA_PATH 或者OPENCV_DATA_PATH
+    string cascaedFile = samples::findFile("haarcascade_frontalface_alt.xml").c_str();
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
 
     string targetFile(curPwd);
-    targetFile = targetFile.append("/test/lyr/");
+    targetFile = targetFile.append("/test/");
     Ptr<FaceRecognizer> modelRecognizer = EigenFaceRecognizer::create();
 
     VideoCapture capture(0);
@@ -39,9 +40,8 @@ void identifyFace()
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
 
-    string curPwd("");
-    curPwd = curPwd.append("/use/local/arm-face-identify/data/").append("haarcascade_frontalface_alt.xml");
-    Ptr<CascadeClassifier> cascade(new CascadeClassifier(curPwd));
+    string cascaedFile = samples::findFile("haarcascade_frontalface_alt.xml").c_str();
+    Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
 
     string modelFile1(tmpCurPwd);
     modelFile1 = modelFile1.append("/../test/rxw/").append("face_model.xml");

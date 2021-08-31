@@ -43,4 +43,6 @@ add_executable(arm_face_identify
 target_link_libraries(arm_face_identify PRIVATE ${OpenCV_LIBS})
 #target_link_libraries(arm_face_identify PRIVATE boost_filesystem)
 
+#cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify  ..
+# 在执行make install 的时候会把data目录下的文件复制到 CMAKE_INSTALL_PREFIX 目录下的data目录
 install(DIRECTORY data/ DESTINATION data)
