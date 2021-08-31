@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <cstring>
 
-void ArmFaceIdentify::File::write(const string &filePath, const string& content, unsigned int mode) {
+void ArmFaceIdentify::File::write(const string &filePath, const string& content, ios_base::openmode mode) {
     ofstream outfile(filePath, mode);
     if (!outfile.is_open()) {
         throw string("file ").append(filePath).append(" can not be open!");
@@ -18,7 +18,7 @@ void ArmFaceIdentify::File::write(const string &filePath, const string& content,
     outfile.close();
 }
 
-string ArmFaceIdentify::File::read(const string &filePath, unsigned int mode) {
+string ArmFaceIdentify::File::read(const string &filePath, ios_base::openmode mode) {
     ifstream infile(filePath, mode);
     std::stringstream buffer;
     buffer << infile.rdbuf();

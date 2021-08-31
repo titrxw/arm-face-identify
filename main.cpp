@@ -40,7 +40,9 @@ void identifyFace()
     char *tmpCurPwd = nullptr;
     tmpCurPwd = getcwd(nullptr, 0);
 
+//    string cascaedFile = "/usr/local/arm-face-identify/data/haarcascade_frontalface_alt.xml";
     string cascaedFile = samples::findFile("haarcascade_frontalface_alt.xml").c_str();
+//    samples::findFile("haarcascade_frontalface_alt.xml").c_str();
     Ptr<CascadeClassifier> cascade(new CascadeClassifier(cascaedFile));
 
     string modelFile1(tmpCurPwd);

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 11)
 
+
 # Define project name
 project(arm_face_identify)
 
@@ -41,8 +42,14 @@ add_executable(arm_face_identify
 
 # Link your application with OpenCV libraries
 target_link_libraries(arm_face_identify PRIVATE ${OpenCV_LIBS})
+# 树莓派
+#target_link_libraries(arm_face_identify PRIVATE atomic)
 #target_link_libraries(arm_face_identify PRIVATE boost_filesystem)
 
 #cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify  ..
 # 在执行make install 的时候会把data目录下的文件复制到 CMAKE_INSTALL_PREFIX 目录下的data目录
 install(DIRECTORY data/ DESTINATION data)
+
+
+#树莓派
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify -DCMAKE_CXX_STANDARD=11 -DCMAKE_SHARED_LINKER_FLAGS='-latomic'  ..

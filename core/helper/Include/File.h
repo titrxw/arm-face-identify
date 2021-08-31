@@ -15,8 +15,8 @@ using namespace std;
 namespace ArmFaceIdentify {
     class File {
     public:
-        static void write(const string& filePath, const string& content, unsigned int mode = ios::trunc|ios::out);
-        static string read(const string& filePath, unsigned int mode = ios::out|ios::in);
+        static void write(const string& filePath, const string& content, ios_base::openmode mode = ios::trunc|ios::out);
+        static string read(const string& filePath, ios_base::openmode mode = ios::out|ios::in);
         static vector<string> glob(const string &pattern);
         static void unlink(const string &filePath);
         static bool exists(const string &filePath);
