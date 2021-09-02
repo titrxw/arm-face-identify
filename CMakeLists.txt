@@ -14,7 +14,7 @@ add_executable(${projectName}
 find_package(PkgConfig REQUIRED)
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "current processor: ${CMAKE_SYSTEM_PROCESSOR}")
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
     ## opencv
     find_package(OpenCV 3.4.14 REQUIRED)
     message(STATUS "OpenCV library status:")
