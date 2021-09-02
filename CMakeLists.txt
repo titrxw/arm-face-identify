@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.17)
+#cmake_minimum_required(VERSION 3.17)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 11)
-
+set(projectName arm_face_identify)
 
 # Define project name
-project(arm_face_identify)
+project(${projectName})
 
 ### opencv
 # Find OpenCV, you may need to set OpenCV_DIR variable
@@ -35,18 +35,21 @@ INCLUDE_DIRECTORIES("./vendor")
 #        PROPERTIES IMPORTED_LOCATION
 #        vendor/boost/libboost_filesystem.so)
 #add_subdirectory("data")
+
 # Declare the executable target built from your sources
-add_executable(arm_face_identify
-        main.cpp core/identify/Source/FaceIdentify.cpp core/identify/Include/FaceIdentify.h core/identify/Include/Identify.h core/identify/Source/Identify.cpp core/train/Source/FaceTrain.cpp core/train/Include/FaceTrain.h core/train/Include/Train.h core/train/Source/Train.cpp core/helper/Include/Str.h core/helper/Source/Str.cpp business/train/Source/DialogVideoFaceTrain.cpp business/train/Include/DialogVideoFaceTrain.h core/base/Source/Opencv.cpp core/base/Include/Opencv.h core/helper/Source/File.cpp core/helper/Include/File.h core/base/Enum/Event.h  core/base/Include/Event/BaseEvent.h core/base/Include/Event/DetectedFeatureMatEvent.h business/train/Source/DialogVideoFaceTrain.cpp business/train/Include/DialogVideoFaceTrain.h core/entity/Include/PredictFace.h business/identify/Source/DialogVideoFaceIdentify.cpp business/identify/Include/DialogVideoFaceIdentify.h core/base/Include/Event/PredictFeatureMatEvent.h core/entity/Include/DetectedFace.h
-        )
+add_executable(${projectName}
+        main.cpp )
 
 # Link your application with OpenCV libraries
-target_link_libraries(arm_face_identify PRIVATE ${OpenCV_LIBS})
-# 树莓派
-#target_link_libraries(arm_face_identify PRIVATE atomic)
-#target_link_libraries(arm_face_identify PRIVATE boost_filesystem)
+target_link_libraries(${projectName} PRIVATE ${OpenCV_LIBS})
 
-#cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify  ..
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
+    target_link_libraries(${projectName} PRIVATE atomic)
+endif()
+
+# target_link_libraries(${projectName} PRIVATE boost_filesystem)
+
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify  ..
 # 在执行make install 的时候会把data目录下的文件复制到 CMAKE_INSTALL_PREFIX 目录下的data目录
 install(DIRECTORY data/ DESTINATION data)
 
