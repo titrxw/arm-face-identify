@@ -12,7 +12,7 @@
 namespace ArmFaceIdentify {
     class Identify : public Opencv {
     public:
-        Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer);
+        Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
         ~Identify();
 
         vector<PredictFace> identify(Mat &model);

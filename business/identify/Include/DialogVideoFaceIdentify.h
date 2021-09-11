@@ -11,7 +11,7 @@
 
 class DialogVideoFaceIdentify : public ArmFaceIdentify::FaceIdentify {
 public:
-    DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc);
+    DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *)> *eventDispatcher);
     ~DialogVideoFaceIdentify();
 
     void identifyFromVideo();

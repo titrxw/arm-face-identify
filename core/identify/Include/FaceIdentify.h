@@ -11,7 +11,7 @@
 namespace ArmFaceIdentify {
     class FaceIdentify : public Identify {
     public:
-        FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer) : Identify(cascade, modelRecognizer) {}
+        FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Identify(cascade, modelRecognizer, eventDispatcher) {}
         ~FaceIdentify() {}
 
     protected:

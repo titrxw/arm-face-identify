@@ -7,9 +7,10 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "../../../core/helper/Include/Str.h"
 
+
 DialogVideoFaceIdentify::DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
-                                                 VideoCapture *vc) : ArmFaceIdentify::FaceIdentify(cascade, modelRecognizer), vc(vc) {
-    this->setEventDispatcher(new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *)>());
+                                                 VideoCapture *vc, EventDispatcher<int, void(
+        ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : ArmFaceIdentify::FaceIdentify(cascade, modelRecognizer, eventDispatcher), vc(vc) {
     this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
         this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
     });

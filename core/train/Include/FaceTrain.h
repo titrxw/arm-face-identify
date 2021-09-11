@@ -14,7 +14,7 @@ namespace ArmFaceIdentify
     class FaceTrain : public Train
     {
     public:
-        FaceTrain(Ptr<FaceRecognizer> modelRecognizer) : Train(modelRecognizer) {}
+        FaceTrain(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Train(modelRecognizer, eventDispatcher) {}
         ~FaceTrain() {}
 
     protected:

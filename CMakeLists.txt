@@ -20,7 +20,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
     message(STATUS "OpenCV library status:")
     message(STATUS "    config: ${OpenCV_DIR}")
     message(STATUS "    version: ${OpenCV_VERSION}")
-    message(STATUS "    libraries: ${OpenCV_LIBS}")1
+    message(STATUS "    libraries: ${OpenCV_LIBS}")
     message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
     include_directories(${OpenCV_INCLUDE_DIRS})
     link_directories(${OpenCV_LIB_DIR})

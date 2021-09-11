@@ -52,7 +52,7 @@ void identifyFace()
     modelRecognizer->read(modelFile1); // opencv2用load
 
     VideoCapture capture(0);
-    DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, &capture);
+    DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, &capture, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>());
     faceIdentify->identifyFromVideo();
 
 //    cascade.release();
@@ -62,8 +62,8 @@ void identifyFace()
 
 int main()
 {
-    trainFaceFromVideo();
+//    trainFaceFromVideo();
 //    trainFace();
-//    identifyFace();
+    identifyFace();
     return 0;
 }

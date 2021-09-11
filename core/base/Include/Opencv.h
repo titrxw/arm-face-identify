@@ -22,8 +22,7 @@ using namespace eventpp;
 namespace ArmFaceIdentify {
     class Opencv {
     public:
-        Opencv() {}
-        Opencv(Ptr<FaceRecognizer> modelRecognizer) : modelRecognizer(modelRecognizer) {}
+        Opencv(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : modelRecognizer(modelRecognizer), eventDispatcher(eventDispatcher) {}
         ~Opencv();
 
         void setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer);
@@ -31,7 +30,7 @@ namespace ArmFaceIdentify {
         void setEventDispatcher(EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher);
         EventDispatcher<int, void (BaseEvent *event)> *getEventDispatcher();
     protected:
-        EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher = nullptr;
+        EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
         Ptr<FaceRecognizer> modelRecognizer;
 
         static Mat pretreatmentMat(Mat model);
