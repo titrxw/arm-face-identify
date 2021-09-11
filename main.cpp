@@ -24,7 +24,7 @@ void trainFaceFromVideo()
 
     VideoCapture capture(0);
 
-    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(cascade, modelRecognizer, &capture, targetFile);
+    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(cascade, modelRecognizer, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>(), &capture, targetFile);
     faceTrain->train(18);
 
     delete[] tmpCurPwd;

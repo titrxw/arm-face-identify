@@ -3,15 +3,24 @@
 //
 
 #include "../../../core/helper/Include/Str.h"
+#include "../../../core/base/Enum/Event.h"
 #include "../../../core/helper/Include/File.h"
 #include "../Include/DialogVideoFaceTrain.h"
 
-void DialogVideoFaceTrain::onDetectedFace(ArmFaceIdentify::DetectedFace detectedFace, unsigned int curNum) {
-    rectangle(detectedFace.sourceMat, Point(detectedFace.face.x, detectedFace.face.y), Point(detectedFace.face.x + detectedFace.face.width, detectedFace.face.y + detectedFace.face.height),
+DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
+                                           EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher,
+                                           VideoCapture *vc, const string &targetDir) : cascade(cascade), vc(vc), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
+    this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
+        this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
+    });
+}
+
+void DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event) {
+    rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.face.x, event->detectedFace.face.y), Point(event->detectedFace.face.x + event->detectedFace.face.width, event->detectedFace.face.y + event->detectedFace.face.height),
               Scalar(0, 255, 0), 1, 8);
 
-    string label = string("第").append(ArmFaceIdentify::Str::toString(curNum).append("张, 共").append(ArmFaceIdentify::Str::toString(DialogVideoFaceTrain::DETECTED_FACE_NUM)).append("张"));
-    putText(detectedFace.sourceMat, label, detectedFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
+    string label = string("第").append(event->options["cur_num"].append("张, 共").append(ArmFaceIdentify::Str::toString(DialogVideoFaceTrain::DETECTED_FACE_NUM)).append("张"));
+    putText(event->detectedFace.sourceMat, label, event->detectedFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
 string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
@@ -36,7 +45,10 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
                 matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
                 imwrite(matFileName, detectedFaceMap[0].detectMat);
 
-                this->onDetectedFace(detectedFaceMap[0], picNum);
+                map<string, string>options;
+                options["cur_num"] = picNum;
+                ArmFaceIdentify::DetectedFeatureMatEvent event(detectedFaceMap[0], options);
+                this->getEventDispatcher()->dispatch(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, &event);
 
                 modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
@@ -89,6 +101,8 @@ void DialogVideoFaceTrain::train(unsigned int label) {
         ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
         throw e;
     }
+
+
 }
 
 DialogVideoFaceTrain::~DialogVideoFaceTrain() {

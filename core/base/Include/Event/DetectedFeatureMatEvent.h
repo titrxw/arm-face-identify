@@ -12,7 +12,9 @@ namespace ArmFaceIdentify {
     class DetectedFeatureMatEvent : public BaseEvent {
     public:
         DetectedFace detectedFace;
-        DetectedFeatureMatEvent(DetectedFace detectedFace) : detectedFace(detectedFace) {}
+        map<string, string> options;
+
+        DetectedFeatureMatEvent(DetectedFace detectedFace, map<string, string> options = {}) : detectedFace(detectedFace), options(options) {}
     };
 }
 

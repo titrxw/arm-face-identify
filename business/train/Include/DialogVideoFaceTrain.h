@@ -6,10 +6,11 @@
 #define ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
 
 #include "../../../core/train/Include/FaceTrain.h"
+#include "../../../core/base/Include/Event/DetectedFeatureMatEvent.h"
 
 class DialogVideoFaceTrain : public ArmFaceIdentify::FaceTrain {
 public:
-    DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc, const string& targetDir) : cascade(cascade), vc(vc), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer) {}
+    DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher, VideoCapture *vc, const string& targetDir);
     ~DialogVideoFaceTrain();
 
     void train(unsigned int label);
@@ -24,7 +25,7 @@ protected:
     const string SAMPLE_FILE_TRAIN_NAME = "arm_face_sample_train.xml";
 
     string makeSampleFile(unsigned int label);
-    void onDetectedFace(ArmFaceIdentify::DetectedFace detectedFace, unsigned int curNum);
+    void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
 };
 
 #endif //ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
