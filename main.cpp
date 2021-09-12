@@ -24,8 +24,8 @@ void trainFaceFromVideo()
 
     VideoCapture capture(0);
 
-    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(cascade, modelRecognizer, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>(), &capture, targetFile);
-    faceTrain->train(18);
+    DialogVideoFaceTrain *faceTrain = new DialogVideoFaceTrain(cascade, modelRecognizer, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>(), targetFile);
+    faceTrain->trainFromVideoCapture(&capture, 18);
 
     delete[] tmpCurPwd;
     tmpCurPwd = nullptr;
@@ -52,8 +52,8 @@ void identifyFace()
     modelRecognizer->read(modelFile1); // opencv2用load
 
     VideoCapture capture(0);
-    DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, &capture, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>());
-    faceIdentify->identifyFromVideo();
+    DialogVideoFaceIdentify *faceIdentify = new DialogVideoFaceIdentify(cascade, modelRecognizer, new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>());
+    faceIdentify->identifyFromVideoCapture(&capture);
 
 //    cascade.release();
     delete faceIdentify;

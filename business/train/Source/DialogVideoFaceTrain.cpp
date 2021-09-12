@@ -9,8 +9,8 @@
 
 DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                                            EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher,
-                                           VideoCapture *vc, const string &targetDir) : cascade(cascade), vc(vc), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
-    this->getEventDispatcher()->appendListener(this->FEATURE_IMAGE_COLLECT_COMPLETE, [this](ArmFaceIdentify::BaseEvent *event) {
+                                           const string &targetDir) : cascade(cascade), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
+    this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
         this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
     });
 }
@@ -23,7 +23,7 @@ void DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatu
     putText(event->detectedFace.sourceMat, label, event->detectedFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
-string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
+string DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, unsigned int label) {
     Mat frame;
     unsigned int picNum = 1;
     string modeFileContent;
@@ -33,7 +33,7 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
     imgDir = imgDir.append("img/").append(ArmFaceIdentify::Str::toString(label)).append("/");
     ArmFaceIdentify::File::mkdirs(imgDir);
 
-    while (this->vc->read(frame)) {
+    while (vc->read(frame)) {
         if (frame.empty()) {
             break;
         }
@@ -44,11 +44,6 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
                 string matFileName(imgDir);
                 matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串
                 imwrite(matFileName, detectedFaceMap[0].detectMat);
-
-                map<string, string>options;
-                options["cur_num"] = picNum;
-                ArmFaceIdentify::DetectedFeatureMatEvent event(detectedFaceMap[0], options);
-                this->getEventDispatcher()->dispatch(this->FEATURE_IMAGE_COLLECT_COMPLETE, &event);
 
                 modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
@@ -72,9 +67,9 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
     return faceSampleFile;
 }
 
-void DialogVideoFaceTrain::train(unsigned int label) {
+void DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int label) {
     //文件按照label_filename的方式命名, 训练的时候找到所有类似的文件,生成临时文件,训练完成后删除
-    string sampleFilePath = this->makeSampleFile(label);
+    string sampleFilePath = this->makeSampleFileFromVideoCapture(vc, label);
     //预训练,保证数据正确
     try {
         this->trainAndSave(sampleFilePath);
@@ -101,14 +96,13 @@ void DialogVideoFaceTrain::train(unsigned int label) {
         ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
         throw e;
     }
+
+    vc->release();
+    vc = nullptr;
 }
 
 DialogVideoFaceTrain::~DialogVideoFaceTrain() {
     if (!this->cascade.empty()) {
         this->cascade.release();
-    }
-    if (this->vc) {
-        this->vc->release();
-        this->vc = nullptr;
     }
 }

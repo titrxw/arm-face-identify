@@ -11,19 +11,20 @@
 
 class DialogVideoFaceIdentify : public ArmFaceIdentify::FaceIdentify {
 public:
-    DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *)> *eventDispatcher);
+    DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *)> *eventDispatcher);
     ~DialogVideoFaceIdentify();
 
     const int FEATURE_IMAGE_IDENTIFY_COMPLETE = 4;
 
-    void identifyFromVideo();
+    void identifyFromVideoCapture(VideoCapture *vc);
+    void stopIdentifyFromVideo();
     void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
     void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);
 
 protected:
-    VideoCapture *vc = nullptr;
+    bool isStopIdentify = false;
 
-    static bool ifNecessaryStop();
+    bool ifNecessaryStop();
 };
 
 #endif //ARM_FACE_IDENTIFY_DIALOGVIDEOFACEIDENTIFY_H

@@ -5,7 +5,7 @@
 ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher) : cascade(cascade), Opencv(modelRecognizer, eventDispatcher){
 }
 
-vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::Identify::identify(Mat &model){
+vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::Identify::identifyMat(Mat &model){
     vector<DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, model);
 
     vector<PredictFace> predictFaceMap;
