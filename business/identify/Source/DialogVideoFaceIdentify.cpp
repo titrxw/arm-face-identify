@@ -41,7 +41,12 @@ void DialogVideoFaceIdentify::identifyFromVideo() {
             break;
         }
 
-        this->identify(frame);
+        vector<ArmFaceIdentify::PredictFace> predictFaceMap = this->identify(frame);
+        if (predictFaceMap.size() == 1) {
+            ArmFaceIdentify::PredictFeatureMatEvent _predictMap(predictFaceMap[0]);
+            this->eventDispatcher->dispatch(this->FEATURE_IMAGE_IDENTIFY_COMPLETE, &_predictMap);
+        }
+        predictFaceMap.clear();
 
         imshow(dialogName, frame);
     }

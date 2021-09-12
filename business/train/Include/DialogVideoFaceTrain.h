@@ -13,6 +13,8 @@ public:
     DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher, VideoCapture *vc, const string& targetDir);
     ~DialogVideoFaceTrain();
 
+    const int FEATURE_IMAGE_COLLECT_COMPLETE = 3;
+
     void train(unsigned int label);
 
 protected:

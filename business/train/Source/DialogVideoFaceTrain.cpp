@@ -10,7 +10,7 @@
 DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                                            EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher,
                                            VideoCapture *vc, const string &targetDir) : cascade(cascade), vc(vc), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
-    this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
+    this->getEventDispatcher()->appendListener(this->FEATURE_IMAGE_COLLECT_COMPLETE, [this](ArmFaceIdentify::BaseEvent *event) {
         this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
     });
 }
@@ -48,7 +48,7 @@ string DialogVideoFaceTrain::makeSampleFile(unsigned int label) {
                 map<string, string>options;
                 options["cur_num"] = picNum;
                 ArmFaceIdentify::DetectedFeatureMatEvent event(detectedFaceMap[0], options);
-                this->getEventDispatcher()->dispatch(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, &event);
+                this->getEventDispatcher()->dispatch(this->FEATURE_IMAGE_COLLECT_COMPLETE, &event);
 
                 modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 

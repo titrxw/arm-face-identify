@@ -14,6 +14,8 @@ public:
     DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, VideoCapture *vc, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *)> *eventDispatcher);
     ~DialogVideoFaceIdentify();
 
+    const int FEATURE_IMAGE_IDENTIFY_COMPLETE = 4;
+
     void identifyFromVideo();
     void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
     void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);
