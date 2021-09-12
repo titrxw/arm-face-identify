@@ -101,8 +101,6 @@ void DialogVideoFaceTrain::train(unsigned int label) {
         ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
         throw e;
     }
-
-
 }
 
 DialogVideoFaceTrain::~DialogVideoFaceTrain() {
