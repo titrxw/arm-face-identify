@@ -46,16 +46,6 @@ endif()
 ## vendor
 include_directories("./vendor")
 
-## boost
-find_package(Boost 1.77.0 REQUIRED COMPONENTS beast)
-if(NOT Boost_FOUND)
-    message("Not found Boost")
-endif()
-include_directories(${Boost_INCLUDE_DIRS})
-message("${Boost_INCLUDE_DIRS}")
-message("${Boost_LIBRARIES}")
-target_link_libraries(${projectName} ${Boost_LIBRARIES})
-
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录
 #add_library(boost_filesystem
 #        SHARED

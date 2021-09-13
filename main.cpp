@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include "core/helper/Include/Str.h"
+#include "asio/asio.hpp"
 
 using namespace ArmFaceIdentify;
 
