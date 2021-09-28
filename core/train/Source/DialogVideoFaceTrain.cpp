@@ -2,12 +2,12 @@
 // Created by rxwyun on 2021/8/24.
 //
 
-#include "../../../core/helper/Include/Str.h"
-#include "../../../core/base/Enum/Event.h"
-#include "../../../core/helper/Include/File.h"
+#include "../../helper/Include/Str.h"
+#include "../../base/Enum/Event.h"
+#include "../../helper/Include/File.h"
 #include "../Include/DialogVideoFaceTrain.h"
 
-DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
+ArmFaceIdentify::DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                                            EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher,
                                            const string &targetDir) : cascade(cascade), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
     this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
@@ -15,7 +15,7 @@ DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<F
     });
 }
 
-void DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event) {
+void ArmFaceIdentify::DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event) {
     rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.face.x, event->detectedFace.face.y), Point(event->detectedFace.face.x + event->detectedFace.face.width, event->detectedFace.face.y + event->detectedFace.face.height),
               Scalar(0, 255, 0), 1, 8);
 
@@ -23,11 +23,10 @@ void DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatu
     putText(event->detectedFace.sourceMat, label, event->detectedFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
-string DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, unsigned int label) {
+string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, unsigned int label) {
     Mat frame;
     unsigned int picNum = 1;
     string modeFileContent;
-    string dialogName = "arm_face_identify_dialog";
 
     string imgDir(this->targetDir);
     imgDir = imgDir.append("img/").append(ArmFaceIdentify::Str::toString(label)).append("/");
@@ -35,7 +34,7 @@ string DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, un
 
     while (vc->read(frame)) {
         if (frame.empty()) {
-            break;
+            throw "video capture read frame empty";
         }
 
         if (waitKey(10) == 'n') {
@@ -52,13 +51,13 @@ string DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, un
             detectedFaceMap.clear();
         }
 
-        imshow(dialogName, frame);
+        imshow(DialogVideoFaceTrain::DIALOG_NAME, frame);
 
         if (picNum == 30) {
             break;
         }
     }
-    cvDestroyWindow(dialogName.c_str());
+    cvDestroyWindow(DialogVideoFaceTrain::DIALOG_NAME.c_str());
 
     string faceSampleFile(this->targetDir);
     faceSampleFile = faceSampleFile.append(ArmFaceIdentify::Str::toString(label)).append("_").append(DialogVideoFaceTrain::SAMPLE_FILE_NAME);
@@ -67,7 +66,7 @@ string DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, un
     return faceSampleFile;
 }
 
-void DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int label) {
+string ArmFaceIdentify::DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int label) {
     //文件按照label_filename的方式命名, 训练的时候找到所有类似的文件,生成临时文件,训练完成后删除
     string sampleFilePath = this->makeSampleFileFromVideoCapture(vc, label);
     //预训练,保证数据正确
@@ -87,8 +86,8 @@ void DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int 
     tmpSampleFile = tmpSampleFile.append(DialogVideoFaceTrain::SAMPLE_FILE_NAME);
     ArmFaceIdentify::File::write(tmpSampleFile, sampleContent);
 
+    string sampleTrainFile(this->targetDir);
     try {
-        string sampleTrainFile(this->targetDir);
         sampleTrainFile = sampleTrainFile.append(DialogVideoFaceTrain::SAMPLE_FILE_TRAIN_NAME);
         this->trainAndSave(tmpSampleFile, sampleTrainFile);
         ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
@@ -99,9 +98,11 @@ void DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int 
 
     vc->release();
     vc = nullptr;
+
+    return sampleTrainFile;
 }
 
-DialogVideoFaceTrain::~DialogVideoFaceTrain() {
+ArmFaceIdentify::DialogVideoFaceTrain::~DialogVideoFaceTrain() {
     if (!this->cascade.empty()) {
         this->cascade.release();
     }

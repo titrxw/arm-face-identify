@@ -1,6 +1,6 @@
 #include "core/train/Include/FaceTrain.h"
-#include "business/train/Include/DialogVideoFaceTrain.h"
-#include "business/identify/Include/DialogVideoFaceIdentify.h"
+#include "core/train/Include/DialogVideoFaceTrain.h"
+#include "core/identify/Include/DialogVideoFaceIdentify.h"
 #include <unistd.h>
 #include <cstdlib>
 #include "core/helper/Include/Str.h"

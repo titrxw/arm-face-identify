@@ -9,10 +9,8 @@
 #include "opencv2/imgproc.hpp"
 #include "Train.h"
 
-namespace ArmFaceIdentify
-{
-    class FaceTrain : public Train
-    {
+namespace ArmFaceIdentify {
+    class FaceTrain : public Train {
     public:
         FaceTrain(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Train(modelRecognizer, eventDispatcher) {}
         ~FaceTrain() {}
