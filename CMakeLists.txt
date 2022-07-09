@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.17)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 11)
 set(projectName arm_face_identify)
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Define project name
 project(${projectName})
