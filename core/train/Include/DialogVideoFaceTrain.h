@@ -23,7 +23,6 @@ namespace ArmFaceIdentify {
         string trainFromVideoCapture(VideoCapture *vc, unsigned int label);
 
     protected:
-        Ptr<CascadeClassifier> cascade;
         const string &targetDir;
 
         const int DETECTED_FACE_NUM = 30;

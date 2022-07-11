@@ -12,10 +12,13 @@
 namespace ArmFaceIdentify {
     class FaceTrain : public Train {
     public:
-        FaceTrain(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Train(modelRecognizer, eventDispatcher) {}
-        ~FaceTrain() {}
+        FaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
+        ~FaceTrain();
 
     protected:
+        Ptr<CascadeClassifier> cascade;
+        Ptr<FaceRecognizer> modelRecognizer;
+
         void loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator = ';');
         void trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile);
     };

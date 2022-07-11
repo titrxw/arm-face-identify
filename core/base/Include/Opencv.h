@@ -22,16 +22,13 @@ using namespace eventpp;
 namespace ArmFaceIdentify {
     class Opencv {
     public:
-        Opencv(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : modelRecognizer(modelRecognizer), eventDispatcher(eventDispatcher) {}
+        Opencv(EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : eventDispatcher(eventDispatcher) {}
         ~Opencv();
 
-        void setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer);
-        Ptr<FaceRecognizer> getModelRecognizer();
         void setEventDispatcher(EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher);
         EventDispatcher<int, void (BaseEvent *event)> *getEventDispatcher();
     protected:
         EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
-        Ptr<FaceRecognizer> modelRecognizer;
 
         static Mat pretreatmentMat(Mat model);
         vector<DetectedMat> detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model);

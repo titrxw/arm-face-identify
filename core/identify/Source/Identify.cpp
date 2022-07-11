@@ -2,7 +2,7 @@
 #include "../../base/Enum/Event.h"
 #include "../../base/Include/Event/PredictFeatureMatEvent.h"
 
-ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher) : cascade(cascade), Opencv(modelRecognizer, eventDispatcher){
+ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher) : cascade(cascade), Opencv(eventDispatcher){
 }
 
 vector<ArmFaceIdentify::PredictMat> ArmFaceIdentify::Identify::identifyMat(Mat &model){

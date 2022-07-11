@@ -22,41 +22,30 @@ vector<ArmFaceIdentify::DetectedMat> ArmFaceIdentify::Opencv::detectFaceMatFromM
                               Size(80, 80), Size(500, 500));
 
     Mat detectMat;
-    vector<DetectedMat> detectedFaceMap;
+    vector<DetectedMat> detectedMatMap;
     for (int i = 0; i < faces.size(); i++) {
         detectMat = grayMat(faces[i]); //将所有的脸部保存起来
         if (detectMat.empty())
             continue;
 
-        DetectedMat detectedFace(model, detectMat, faces[i]);
-        detectedFaceMap.push_back(detectedFace);
+        DetectedMat detectedMat(model, detectMat, faces[i]);
+        detectedMatMap.push_back(detectedMat);
 
         if (this->eventDispatcher) {
-            DetectedFeatureMatEvent event(detectedFace);
+            DetectedFeatureMatEvent event(detectedMat);
             this->eventDispatcher->dispatch(Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, &event);
         }
     }
     faces.clear();
 
-    return detectedFaceMap;
+    return detectedMatMap;
 }
 
 ArmFaceIdentify::Opencv::~Opencv() {
-    if (!this->modelRecognizer.empty()) {
-        this->modelRecognizer.release();
-    }
     if (this->eventDispatcher) {
         delete this->eventDispatcher;
         this->eventDispatcher = nullptr;
     }
-}
-
-void ArmFaceIdentify::Opencv::setModelRecognizer(Ptr<FaceRecognizer> modelRecognizer) {
-    this->modelRecognizer = modelRecognizer;
-}
-
-Ptr<FaceRecognizer> ArmFaceIdentify::Opencv::getModelRecognizer() {
-    return this->modelRecognizer;
 }
 
 void ArmFaceIdentify::Opencv::setEventDispatcher(EventDispatcher<int, void(BaseEvent *)> *eventDispatcher) {

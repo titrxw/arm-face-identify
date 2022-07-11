@@ -12,7 +12,7 @@
 namespace ArmFaceIdentify {
     class Train : public Opencv {
     public:
-        Train(Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Opencv(modelRecognizer, eventDispatcher) {}
+        Train(EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Opencv(eventDispatcher) {}
         ~Train() {}
 
         void trainAndSave(const string& sourceFile, const string& targetFile = "");

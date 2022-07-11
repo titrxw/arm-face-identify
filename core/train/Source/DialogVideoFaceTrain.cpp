@@ -9,7 +9,7 @@
 
 ArmFaceIdentify::DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                                            EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher,
-                                           const string &targetDir) : cascade(cascade), targetDir(targetDir), ArmFaceIdentify::FaceTrain(modelRecognizer, eventDispatcher) {
+                                           const string &targetDir) : targetDir(targetDir), ArmFaceIdentify::FaceTrain(cascade, modelRecognizer, eventDispatcher) {
     this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
         this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
     });
@@ -103,7 +103,5 @@ string ArmFaceIdentify::DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture
 }
 
 ArmFaceIdentify::DialogVideoFaceTrain::~DialogVideoFaceTrain() {
-    if (!this->cascade.empty()) {
-        this->cascade.release();
-    }
+
 }

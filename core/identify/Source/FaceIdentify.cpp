@@ -10,3 +10,13 @@ ArmFaceIdentify::PredictMat ArmFaceIdentify::FaceIdentify::predictMat(DetectedMa
 
     return PredictMat(detectedFaceMap.sourceMat, detectedFaceMap.detectMat, detectedFaceMap.mat, label, confidence);
 }
+
+ArmFaceIdentify::FaceIdentify::FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
+                                            EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : Identify(cascade, eventDispatcher), modelRecognizer(modelRecognizer) {
+}
+
+ArmFaceIdentify::FaceIdentify::~FaceIdentify() {
+    if (!this->modelRecognizer.empty()) {
+        this->modelRecognizer.release();
+    }
+}

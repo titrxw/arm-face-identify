@@ -11,10 +11,12 @@
 namespace ArmFaceIdentify {
     class FaceIdentify : public Identify {
     public:
-        FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : Identify(cascade, modelRecognizer, eventDispatcher) {}
-        ~FaceIdentify() {}
+        FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
+        ~FaceIdentify();
 
     protected:
+        Ptr<FaceRecognizer> modelRecognizer;
+
         PredictMat predictMat(DetectedMat detectedFaceMap);
     };
 }

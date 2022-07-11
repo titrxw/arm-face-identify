@@ -5,6 +5,12 @@
 #include "../Include/FaceTrain.h"
 #include "../../helper/Include/File.h"
 
+
+ArmFaceIdentify::FaceTrain::FaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
+                                      EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : Train(eventDispatcher), cascade(cascade), modelRecognizer(modelRecognizer) {} {
+
+}
+
 void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<Mat> &mats, vector<int> &matLabels, char separator)
 {
     std::ifstream file(filename.c_str(), ifstream::in);
@@ -34,5 +40,14 @@ void ArmFaceIdentify::FaceTrain::trainMats(vector<Mat> &mats, vector<int> &matLa
     this->modelRecognizer->train(mats, matLabels);
     if (!targetFile.empty()) {
         this->modelRecognizer->save(targetFile);
+    }
+}
+
+ArmFaceIdentify::FaceTrain::~FaceTrain() {
+    if (!this->modelRecognizer.empty()) {
+        this->modelRecognizer.release();
+    }
+    if (!this->cascade.empty()) {
+        this->cascade.release();
     }
 }
