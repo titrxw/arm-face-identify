@@ -5,22 +5,22 @@
 ArmFaceIdentify::Identify::Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher) : cascade(cascade), Opencv(modelRecognizer, eventDispatcher){
 }
 
-vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::Identify::identifyMat(Mat &model){
-    vector<DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, model);
+vector<ArmFaceIdentify::PredictMat> ArmFaceIdentify::Identify::identifyMat(Mat &model){
+    vector<DetectedMat> detectedMatMap = this->detectFaceMatFromMat(this->cascade, model);
 
-    vector<PredictFace> predictFaceMap;
-    for(int i = 0; i < detectedFaceMap.size(); i++) {
-        PredictFace predictFace = this->predictMat(detectedFaceMap[i]);
-        predictFaceMap.push_back(predictFace);
+    vector<PredictMat> predictMatMap;
+    for(int i = 0; i < detectedMatMap.size(); i++) {
+        PredictMat predictFace = this->predictMat(detectedMatMap[i]);
+        predictMatMap.push_back(predictFace);
 
         if (this->eventDispatcher) {
             PredictFeatureMatEvent _predictMap(predictFace);
             this->eventDispatcher->dispatch(Event::PREDICT_FEATURE_IMAGE_FROM_FRAME, &_predictMap);
         }
     }
-    detectedFaceMap.clear();
+    detectedMatMap.clear();
 
-    return predictFaceMap;
+    return predictMatMap;
 }
 
 ArmFaceIdentify::Identify::~Identify() {

@@ -6,15 +6,15 @@
 #define ARM_FACE_IDENTIFY_DETECTEDFEATUREMATEVENT_H
 
 #include "./BaseEvent.h"
-#include "../../../entity/Include/DetectedFace.h"
+#include "../../../entity/Include/DetectedMat.h"
 
 namespace ArmFaceIdentify {
     class DetectedFeatureMatEvent : public BaseEvent {
     public:
-        DetectedFace detectedFace;
+        DetectedMat detectedFace;
         map<string, string> options;
 
-        DetectedFeatureMatEvent(DetectedFace detectedFace, map<string, string> options = {}) : detectedFace(detectedFace), options(options) {}
+        DetectedFeatureMatEvent(DetectedMat detectedFace, map<string, string> options = {}) : detectedFace(detectedFace), options(options) {}
     };
 }
 

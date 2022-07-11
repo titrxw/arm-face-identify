@@ -6,8 +6,8 @@
 #define ARM_FACE_IDENTIFY_IDENTIFY_H
 
 #include "../../base/Include/Opencv.h"
-#include "../../entity/Include/DetectedFace.h"
-#include "../../entity/Include/PredictFace.h"
+#include "../../entity/Include/DetectedMat.h"
+#include "../../entity/Include/PredictMat.h"
 
 namespace ArmFaceIdentify {
     class Identify : public Opencv {
@@ -15,12 +15,12 @@ namespace ArmFaceIdentify {
         Identify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
         ~Identify();
 
-        vector<PredictFace> identifyMat(Mat &model);
+        vector<PredictMat> identifyMat(Mat &model);
 
     protected:
         Ptr<CascadeClassifier> cascade;
 
-        virtual PredictFace predictMat(DetectedFace detectedFaceMap) = 0;
+        virtual PredictMat predictMat(DetectedMat detectedMatMap) = 0;
     };
 }
 

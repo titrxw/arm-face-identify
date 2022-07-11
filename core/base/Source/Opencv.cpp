@@ -14,7 +14,7 @@ Mat ArmFaceIdentify::Opencv::pretreatmentMat(Mat model) {
     return grayMat;
 }
 
-vector<ArmFaceIdentify::DetectedFace> ArmFaceIdentify::Opencv::detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model) {
+vector<ArmFaceIdentify::DetectedMat> ArmFaceIdentify::Opencv::detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model) {
     Mat grayMat = Opencv::pretreatmentMat(model);
     vector<Rect> faces; //建立用于存放人脸的向量容器
     cascade->detectMultiScale(grayMat, faces,
@@ -22,13 +22,13 @@ vector<ArmFaceIdentify::DetectedFace> ArmFaceIdentify::Opencv::detectFaceMatFrom
                               Size(80, 80), Size(500, 500));
 
     Mat detectMat;
-    vector<DetectedFace> detectedFaceMap;
+    vector<DetectedMat> detectedFaceMap;
     for (int i = 0; i < faces.size(); i++) {
         detectMat = grayMat(faces[i]); //将所有的脸部保存起来
         if (detectMat.empty())
             continue;
 
-        DetectedFace detectedFace(model, detectMat, faces[i]);
+        DetectedMat detectedFace(model, detectMat, faces[i]);
         detectedFaceMap.push_back(detectedFace);
 
         if (this->eventDispatcher) {

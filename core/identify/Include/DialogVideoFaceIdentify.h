@@ -18,7 +18,7 @@ namespace ArmFaceIdentify {
 
         const string DIALOG_NAME = "arm_face_identify_dialog";
 
-        vector<ArmFaceIdentify::PredictFace> identifyFromVideoCapture(VideoCapture *vc);
+        vector<ArmFaceIdentify::PredictMat> identifyFromVideoCapture(VideoCapture *vc);
         void stopIdentifyFromVideo();
         void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
         void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);

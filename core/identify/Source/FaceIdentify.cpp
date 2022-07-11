@@ -1,6 +1,6 @@
 #include "../Include/FaceIdentify.h"
 
-ArmFaceIdentify::PredictFace ArmFaceIdentify::FaceIdentify::predictMat(DetectedFace detectedFaceMap) {
+ArmFaceIdentify::PredictMat ArmFaceIdentify::FaceIdentify::predictMat(DetectedMat detectedFaceMap) {
     int label = -1;
     double confidence = 0;
 
@@ -8,5 +8,5 @@ ArmFaceIdentify::PredictFace ArmFaceIdentify::FaceIdentify::predictMat(DetectedF
     resize(detectedFaceMap.detectMat, tmpMat, Size(92, 112));
     this->modelRecognizer->predict(tmpMat, label, confidence);
 
-    return PredictFace(detectedFaceMap.sourceMat, detectedFaceMap.detectMat, detectedFaceMap.face, label, confidence);
+    return PredictMat(detectedFaceMap.sourceMat, detectedFaceMap.detectMat, detectedFaceMap.mat, label, confidence);
 }

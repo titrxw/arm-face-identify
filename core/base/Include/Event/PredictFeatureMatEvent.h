@@ -6,13 +6,13 @@
 #define ARM_FACE_IDENTIFY_PREDICTFEATUREMATEVENT_H
 
 #include "./BaseEvent.h"
-#include "../../../entity/Include/PredictFace.h"
+#include "../../../entity/Include/PredictMat.h"
 
 namespace ArmFaceIdentify {
     class PredictFeatureMatEvent : public BaseEvent {
     public:
-        PredictFace predictFace;
-        PredictFeatureMatEvent(PredictFace predictFace) : predictFace(predictFace) {}
+        PredictMat predictFace;
+        PredictFeatureMatEvent(PredictMat predictFace) : predictFace(predictFace) {}
     };
 }
 

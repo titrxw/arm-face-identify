@@ -16,11 +16,11 @@ ArmFaceIdentify::DialogVideoFaceTrain::DialogVideoFaceTrain(Ptr<CascadeClassifie
 }
 
 void ArmFaceIdentify::DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event) {
-    rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.face.x, event->detectedFace.face.y), Point(event->detectedFace.face.x + event->detectedFace.face.width, event->detectedFace.face.y + event->detectedFace.face.height),
+    rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.mat.x, event->detectedFace.mat.y), Point(event->detectedFace.mat.x + event->detectedFace.mat.width, event->detectedFace.mat.y + event->detectedFace.mat.height),
               Scalar(0, 255, 0), 1, 8);
 
     string label = string("第").append(event->options["cur_num"].append("张, 共").append(ArmFaceIdentify::Str::toString(DialogVideoFaceTrain::DETECTED_FACE_NUM)).append("张"));
-    putText(event->detectedFace.sourceMat, label, event->detectedFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
+    putText(event->detectedFace.sourceMat, label, event->detectedFace.mat.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
 string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, unsigned int label) {
@@ -38,7 +38,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
         }
 
         if (waitKey(10) == 'n') {
-            vector<ArmFaceIdentify::DetectedFace> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
+            vector<ArmFaceIdentify::DetectedMat> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
             if (detectedFaceMap.size() == 1) {
                 string matFileName(imgDir);
                 matFileName = matFileName.append(format("%d.jpg", picNum)); //存放在当前项目文件夹以1-10.jpg 命名，format就是转为字符串

@@ -20,19 +20,19 @@ ArmFaceIdentify::DialogVideoFaceIdentify::DialogVideoFaceIdentify(Ptr<CascadeCla
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event) {
-    rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.face.x, event->detectedFace.face.y), Point(event->detectedFace.face.x + event->detectedFace.face.width, event->detectedFace.face.y + event->detectedFace.face.height),
+    rectangle(event->detectedFace.sourceMat, Point(event->detectedFace.mat.x, event->detectedFace.mat.y), Point(event->detectedFace.mat.x + event->detectedFace.mat.width, event->detectedFace.mat.y + event->detectedFace.mat.height),
               Scalar(0, 255, 0), 1, 8);
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event) {
     string confidence = ArmFaceIdentify::Str::toString(event->predictFace.confidence);
     string label = ArmFaceIdentify::Str::toString(event->predictFace.label).append(" --- ").append(confidence);
-    putText(event->predictFace.sourceMat, label, event->predictFace.face.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
+    putText(event->predictFace.sourceMat, label, event->predictFace.mat.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
-vector<ArmFaceIdentify::PredictFace> ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
+vector<ArmFaceIdentify::PredictMat> ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
     Mat frame;
-    vector<ArmFaceIdentify::PredictFace> predictFaceMap;
+    vector<ArmFaceIdentify::PredictMat> predictFaceMap;
 
     while (vc->read(frame)) {
         if (frame.empty()) {
