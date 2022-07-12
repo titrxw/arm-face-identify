@@ -7,7 +7,7 @@
 
 
 ArmFaceIdentify::FaceTrain::FaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
-                                      EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : Train(eventDispatcher), cascade(cascade), modelRecognizer(modelRecognizer) {} {
+                                      EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : Train(eventDispatcher), cascade(cascade), modelRecognizer(modelRecognizer) {
 
 }
 
