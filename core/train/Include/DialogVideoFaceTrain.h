@@ -21,9 +21,14 @@ namespace ArmFaceIdentify {
         const string DIALOG_NAME = "arm_face_identify_dialog";
 
         string trainFromVideoCapture(VideoCapture *vc, unsigned int label);
+        void setCanDetectedNextMat(bool can);
+        void stopDetectedFromVideo();
+        bool ifNecessaryStop() const;
 
     protected:
         const string &targetDir;
+        bool canDetectedNextMat = false;
+        bool stopDetectedMat = false;
 
         const int DETECTED_FACE_NUM = 30;
         const string SAMPLE_FILE_NAME = "arm_face_sample.txt";

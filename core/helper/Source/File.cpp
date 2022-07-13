@@ -6,6 +6,8 @@
 #include <glob.h>
 #include <unistd.h>
 #include <cstring>
+#include <dirent.h>
+#include <iostream>
 
 void ArmFaceIdentify::File::write(const string &filePath, const string& content, ios_base::openmode mode) {
     ofstream outfile(filePath, mode);
@@ -69,4 +71,25 @@ void ArmFaceIdentify::File::mkdirs(const string &dir) {
     if( len>0 && access(str,0)!=0 ){
         mkdir(str, 0777);
     }
+}
+
+void ArmFaceIdentify::File::removeDir(const string &dirPath)  {
+    struct dirent *dirp;
+
+    DIR* dir = opendir(dirPath.c_str());
+
+    while ((dirp = readdir(dir)) != nullptr) {
+        // 完整路径
+        string name = dirp->d_name;
+        const string& path = dirPath;
+        if (dirp->d_type == DT_REG) {
+            File::unlink(path+name);
+        } else if (dirp->d_type == DT_DIR) {
+            if(name!="." && name!=".."){
+                File::removeDir(path+name+"/");
+            }
+        }
+    }
+
+    closedir(dir);
 }

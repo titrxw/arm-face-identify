@@ -18,9 +18,10 @@ namespace ArmFaceIdentify {
         static void write(const string& filePath, const string& content, ios_base::openmode mode = ios::trunc|ios::out);
         static string read(const string& filePath, ios_base::openmode mode = ios::out|ios::in);
         static vector<string> glob(const string &pattern);
-        static void unlink(const string &filePath);
         static bool exists(const string &filePath);
+        static void unlink(const string &filePath);
         static void mkdirs(const string &dir);
+        static void removeDir(const string &dirPath);
     };
 }
 

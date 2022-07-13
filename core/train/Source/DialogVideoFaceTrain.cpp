@@ -23,6 +23,17 @@ void ArmFaceIdentify::DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdenti
     putText(event->detectedFace.sourceMat, label, event->detectedFace.mat.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
+void ArmFaceIdentify::DialogVideoFaceTrain::setCanDetectedNextMat(bool can) {
+    this->canDetectedNextMat =  can;
+}
+
+void ArmFaceIdentify::DialogVideoFaceTrain::stopDetectedFromVideo() {
+    this->stopDetectedMat = true;
+}
+bool ArmFaceIdentify::DialogVideoFaceTrain::ifNecessaryStop() const {
+    return waitKey(10) == 'k' || this->stopDetectedMat;
+}
+
 string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(VideoCapture *vc, unsigned int label) {
     Mat frame;
     unsigned int picNum = 1;
@@ -31,13 +42,16 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
     string imgDir(this->targetDir);
     imgDir = imgDir.append("img/").append(ArmFaceIdentify::Str::toString(label)).append("/");
     ArmFaceIdentify::File::mkdirs(imgDir);
+    ArmFaceIdentify::File::removeDir(imgDir);
 
     while (vc->read(frame)) {
         if (frame.empty()) {
             throw "video capture read frame empty";
         }
 
-        if (waitKey(10) == 'n') {
+        if (this->canDetectedNextMat) {
+            this->setCanDetectedNextMat(false);
+
             vector<ArmFaceIdentify::DetectedMat> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
             if (detectedFaceMap.size() == 1) {
                 string matFileName(imgDir);
@@ -46,14 +60,14 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
 
                 modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
 
-                ++picNum;
             }
             detectedFaceMap.clear();
         }
 
         imshow(DialogVideoFaceTrain::DIALOG_NAME, frame);
 
-        if (picNum == 30) {
+        if (this->ifNecessaryStop()) {
+            this->stopDetectedMat = false;
             break;
         }
     }
@@ -74,9 +88,9 @@ string ArmFaceIdentify::DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture
     try {
         sampleTrainFile = sampleTrainFile.append(DialogVideoFaceTrain::SAMPLE_FILE_TRAIN_NAME);
         this->trainAndSave(sampleFilePath, sampleTrainFile);
-        ArmFaceIdentify::File::unlink(sampleFilePath.c_str());
+        ArmFaceIdentify::File::unlink(sampleFilePath);
     } catch (std::exception e) {
-        ArmFaceIdentify::File::unlink(sampleFilePath.c_str());
+        ArmFaceIdentify::File::unlink(sampleFilePath);
         throw e;
     }
 
