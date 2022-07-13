@@ -69,30 +69,14 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
 string ArmFaceIdentify::DialogVideoFaceTrain::trainFromVideoCapture(VideoCapture *vc, unsigned int label) {
     //文件按照label_filename的方式命名, 训练的时候找到所有类似的文件,生成临时文件,训练完成后删除
     string sampleFilePath = this->makeSampleFileFromVideoCapture(vc, label);
-    //预训练,保证数据正确
-    try {
-        this->trainAndSave(sampleFilePath);
-    } catch (exception e) {
-        ArmFaceIdentify::File::unlink(sampleFilePath);
-        throw e;
-    }
-
-    string sampleContent;
-    vector<string> files = ArmFaceIdentify::File::glob(string(this->targetDir).append("*_").append(DialogVideoFaceTrain::SAMPLE_FILE_NAME));
-    for(int i = 0; i < files.size(); i++) {
-        sampleContent = sampleContent.append(ArmFaceIdentify::File::read(files[i]));
-    }
-    string tmpSampleFile(this->targetDir);
-    tmpSampleFile = tmpSampleFile.append(DialogVideoFaceTrain::SAMPLE_FILE_NAME);
-    ArmFaceIdentify::File::write(tmpSampleFile, sampleContent);
 
     string sampleTrainFile(this->targetDir);
     try {
         sampleTrainFile = sampleTrainFile.append(DialogVideoFaceTrain::SAMPLE_FILE_TRAIN_NAME);
-        this->trainAndSave(tmpSampleFile, sampleTrainFile);
-        ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
+        this->trainAndSave(sampleFilePath, sampleTrainFile);
+        ArmFaceIdentify::File::unlink(sampleFilePath.c_str());
     } catch (std::exception e) {
-        ArmFaceIdentify::File::unlink(tmpSampleFile.c_str());
+        ArmFaceIdentify::File::unlink(sampleFilePath.c_str());
         throw e;
     }
 
