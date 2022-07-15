@@ -5,14 +5,14 @@
 #ifndef ARM_FACE_IDENTIFY_FACETRAIN_H
 #define ARM_FACE_IDENTIFY_FACETRAIN_H
 
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
 #include "Train.h"
 
-namespace ArmFaceIdentify {
-    class FaceTrain : public Train {
+namespace ArmFaceIdentify
+{
+    class FaceTrain : public Train
+    {
     public:
-        FaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
+        FaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer, EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr);
         ~FaceTrain();
 
     protected:
@@ -24,4 +24,4 @@ namespace ArmFaceIdentify {
     };
 }
 
-#endif //ARM_FACE_IDENTIFY_FACETRAIN_H
+#endif // ARM_FACE_IDENTIFY_FACETRAIN_H

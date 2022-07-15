@@ -5,11 +5,27 @@
 #ifndef ARM_FACE_IDENTIFY_IDENTIFY_H
 #define ARM_FACE_IDENTIFY_IDENTIFY_H
 
-#include "../../core/identify/Include/DialogVideoFaceIdentify.h"
+#include <sstream>
+#include "vector"
+#include "opencv2/face.hpp"
+#include "opencv2/video.hpp"
 
-class Identify : public ArmFaceIdentify::DialogVideoFaceIdentify  {
+class Identify
+{
+public:
+    Identify(string cascadeFilePath, vector<string> modelFilesPath);
+    ~Identify();
 
+    Ptr<CascadeClassifier> getCascadeClassifier();
+    Ptr<FaceRecognizer> getModelRecognizer();
+
+    void startIdentifyFromVideoCapture(VideoCapture *vc);
+
+protected:
+    string cascadeFilePath;
+    string modelFilesPath;
+    Ptr<CascadeClassifier> cascade;
+    Ptr<FaceRecognizer> modelRecognizer;
 };
 
-
-#endif //ARM_FACE_IDENTIFY_IDENTIFY_H
+#endif // ARM_FACE_IDENTIFY_IDENTIFY_H

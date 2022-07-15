@@ -9,8 +9,10 @@
 
 using namespace std;
 
-namespace ArmFaceIdentify {
-    class Str {
+namespace ArmFaceIdentify
+{
+    class Str
+    {
     public:
         static string toString(long T1);
         static string toString(unsigned int T1);
@@ -19,4 +21,4 @@ namespace ArmFaceIdentify {
     };
 }
 
-#endif //ARM_FACE_IDENTIFY_STR_H
+#endif // ARM_FACE_IDENTIFY_STR_H

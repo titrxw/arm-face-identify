@@ -5,12 +5,15 @@
 #ifndef ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
 #define ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
 
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 #include "FaceTrain.h"
 #include "../../base/Include/Event/DetectedFeatureMatEvent.h"
 
-
-namespace ArmFaceIdentify {
-    class DialogVideoFaceTrain : public ArmFaceIdentify::FaceTrain {
+namespace ArmFaceIdentify
+{
+    class DialogVideoFaceTrain : public ArmFaceIdentify::FaceTrain
+    {
     public:
         DialogVideoFaceTrain(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                              EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher,
@@ -40,4 +43,4 @@ namespace ArmFaceIdentify {
     };
 }
 
-#endif //ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H
+#endif // ARM_FACE_IDENTIFY_DIALOGVIDEOFACETRAIN_H

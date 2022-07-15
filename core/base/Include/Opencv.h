@@ -19,20 +19,23 @@ using namespace cv::face;
 using namespace std;
 using namespace eventpp;
 
-namespace ArmFaceIdentify {
-    class Opencv {
+namespace ArmFaceIdentify
+{
+    class Opencv
+    {
     public:
-        Opencv(EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : eventDispatcher(eventDispatcher) {}
+        Opencv(EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr) : eventDispatcher(eventDispatcher) {}
         ~Opencv();
 
-        void setEventDispatcher(EventDispatcher<int, void (BaseEvent *event)> *eventDispatcher);
-        EventDispatcher<int, void (BaseEvent *event)> *getEventDispatcher();
+        void setEventDispatcher(EventDispatcher<int, void(BaseEvent *event)> *eventDispatcher);
+        EventDispatcher<int, void(BaseEvent *event)> *getEventDispatcher();
+
     protected:
-        EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
+        EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
 
         static Mat pretreatmentMat(Mat model);
         vector<DetectedMat> detectFaceMatFromMat(Ptr<CascadeClassifier> cascade, Mat &model);
     };
 }
 
-#endif //ARM_FACE_IDENTIFY_OPENCV_H
+#endif // ARM_FACE_IDENTIFY_OPENCV_H

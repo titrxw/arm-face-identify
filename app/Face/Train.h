@@ -5,11 +5,26 @@
 #ifndef ARM_FACE_IDENTIFY_TRAIN_H
 #define ARM_FACE_IDENTIFY_TRAIN_H
 
-#include "../../core/train/Include/DialogVideoFaceTrain.h"
+#include <sstream>
+#include "vector"
+#include "opencv2/face.hpp"
 
-class Train : public ArmFaceIdentify::DialogVideoFaceTrain {
+class Train
+{
+public:
+    Train(string cascadeFilePath, string targetDir);
+    ~Train();
 
+    Ptr<CascadeClassifier> getCascadeClassifier();
+    Ptr<FaceRecognizer> getModelRecognizer();
+
+    string trainFromRemoteImgUrls(vector<string> remoteImgUrls);
+
+protected:
+    string cascadeFilePath;
+    string targetDir;
+    Ptr<CascadeClassifier> cascade;
+    Ptr<FaceRecognizer> modelRecognizer;
 };
 
-
-#endif //ARM_FACE_IDENTIFY_TRAIN_H
+#endif // ARM_FACE_IDENTIFY_TRAIN_H
