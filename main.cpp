@@ -3,6 +3,7 @@
 #include "core/identify/Include/DialogVideoFaceIdentify.h"
 #include <unistd.h>
 #include "core/helper/Include/Str.h"
+#include "app/Face/Train.h"
 
 using namespace ArmFaceIdentify;
 
@@ -64,8 +65,9 @@ void identifyFace()
 
 int main()
 {
+    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();
-    identifyFace();
+//    identifyFace();
     return 0;
 }
