@@ -2,8 +2,8 @@
 // Created by rxwyun on 2022/7/13.
 //
 
-#ifndef ARM_FACE_IDENTIFY_TRAIN_H
-#define ARM_FACE_IDENTIFY_TRAIN_H
+#ifndef ARM_FACE_IDENTIFY_TRAIN_APP_H
+#define ARM_FACE_IDENTIFY_TRAIN_APP_H
 
 #include <sstream>
 #include "vector"
@@ -27,4 +27,4 @@ protected:
     Ptr<FaceRecognizer> modelRecognizer;
 };
 
-#endif // ARM_FACE_IDENTIFY_TRAIN_H
+#endif // ARM_FACE_IDENTIFY_TRAIN_APP_H

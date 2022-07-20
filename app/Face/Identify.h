@@ -2,8 +2,8 @@
 // Created by rxwyun on 2022/7/13.
 //
 
-#ifndef ARM_FACE_IDENTIFY_IDENTIFY_H
-#define ARM_FACE_IDENTIFY_IDENTIFY_H
+#ifndef ARM_FACE_IDENTIFY_IDENTIFY_APP_H
+#define ARM_FACE_IDENTIFY_IDENTIFY_APP_H
 
 #include <sstream>
 #include "vector"
