@@ -66,8 +66,8 @@ void identifyFace()
 
 int main()
 {
-    (new App())->start();
-//    new ::Train("dsf", "sdfdsf");
+//    (new App())->start();
+    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();
 //    identifyFace();

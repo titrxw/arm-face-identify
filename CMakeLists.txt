@@ -19,9 +19,8 @@ message(STATUS "current processor: ${CMAKE_SYSTEM_PROCESSOR}")
 ## library
 find_package(PkgConfig REQUIRED)
 
-### mqtt
-link_directories(vendor/mqtt/lib)
-include_directories(vendor/mqtt/include)
+## vendor
+include_directories("./vendor")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
     ## opencv
@@ -30,13 +29,23 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
     message(STATUS "    config: ${OpenCV_DIR}")
     message(STATUS "    version: ${OpenCV_VERSION}")
     message(STATUS "    libraries: ${OpenCV_LIBS}")
+    message(STATUS "    libraries path: ${OpenCV_LIB_DIR}")
     message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
     include_directories(${OpenCV_INCLUDE_DIRS})
     link_directories(${OpenCV_LIB_DIR})
     target_link_libraries(${projectName} ${OpenCV_LIBS})
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        target_link_libraries(${projectName} libpaho-mqttpp3.1.dylib)
+#        add_library(libpaho-mqtt
+#                SHARED
+#                IMPORTED)
+#        set_target_properties(libpaho-mqtt
+#                PROPERTIES IMPORTED_LOCATION
+#                vendor/mqtt/lib/libpaho-mqttpp3.so)
+        find_library(SERIALDEVICE_LIB paho-mqttpp3)
+message(STATUS "    include path: ${SERIALDEVICE_LIB}")
+message(STATUS "    include path: ${SERIALDEVICE_LIB}")
+        target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.dylib")
     endif()
 
 endif()
@@ -56,11 +65,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
         target_link_libraries(${projectName} atomic)
     endif()
 
-    target_link_libraries(${projectName} libpaho-mqttpp3.so)
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.so")
 endif()
-
-## vendor
-include_directories("./vendor")
 
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录
 #add_library(boost_filesystem
