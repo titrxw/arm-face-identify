@@ -29,7 +29,7 @@ void SubscribeManager::onConnected(async_client *client, const string &cause) {
 }
 
 void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
-
+    std::cout << (msg->get_topic());
 }
 
 SubscribeManager::~SubscribeManager() {

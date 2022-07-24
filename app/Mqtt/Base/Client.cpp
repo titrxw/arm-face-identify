@@ -21,7 +21,7 @@ async_client *Client::getClient() {
     return this->client;
 }
 
-connect_options Client::getClientConnectOptions() {
+__attribute__((unused)) connect_options Client::getClientConnectOptions() {
     return this->connectOptions;
 }
 

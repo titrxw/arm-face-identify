@@ -16,18 +16,18 @@ public:
     App();
     ~App();
 
-    Client* makeMqttClient(string mqttServerAddress, string appid, string appSecret);
-    Client* getMqttClient();
+    Client* makeMqttClient(string channel, string mqttServerAddress, string appid, string appSecret);
+    Client* getDefaultMqttClient();
     SubscribeManager* getSubscribeManager();
-    void startMqtt();
     void start();
-
+protected:
+    void startMqtt();
 protected:
     string appName = "smart_home";
     string appId = "";
     string appSecret = "";
-    string mqttServerAddress = "";
-    Client *client;
+    string mqttServerAddress = "tcp://127.0.0.1:1883";
+    map<string, Client*>clientMap;
     SubscribeManager *subscribeManager;
 };
 

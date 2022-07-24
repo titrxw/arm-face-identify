@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "core/helper/Include/Str.h"
 #include "app/Face/Train.h"
+#include "app//App.h"
 
 using namespace ArmFaceIdentify;
 
@@ -65,7 +66,8 @@ void identifyFace()
 
 int main()
 {
-    new ::Train("dsf", "sdfdsf");
+    (new App())->start();
+//    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();
 //    identifyFace();

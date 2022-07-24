@@ -13,16 +13,16 @@ const string MQTT_APP_NAME = "smart_home";
 
 class Helper {
 public:
-    string static getDeviceCtrlTopic(string serverNamespace, string appid) {
-        return "/iot/" + serverNamespace + "/device/" + appid + "/ctrl";
+    string static getDeviceCtrlTopic(string topicNamespace, string appid) {
+        return "/iot/" + topicNamespace + "/device/" + appid + "/ctrl";
     }
 
-    string static getDeviceReplayTopic(string serverNamespace, string appid) {
-        return "/iot/" + serverNamespace + "/device/" + appid + "/reply";
+    string static getDeviceReplayTopic(string topicNamespace, string appid) {
+        return "/iot/" + topicNamespace + "/device/" + appid + "/reply";
     }
 
-    string static getDeviceReportTopic(string serverNamespace, string appid) {
-        return "/iot/" + serverNamespace + "/device/" + appid + "/report";
+    string static getDeviceReportTopic(string topicNamespace, string appid) {
+        return "/iot/" + topicNamespace + "/device/" + appid + "/report";
     }
 };
 

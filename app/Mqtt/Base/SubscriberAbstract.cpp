@@ -4,3 +4,8 @@
 
 #include "SubscriberAbstract.h"
 
+string SubscriberAbstract::getTopic() {
+    return "";
+}
+
+void SubscriberAbstract::onSubscribe() {}

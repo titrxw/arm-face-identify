@@ -11,9 +11,6 @@ using namespace std;
 
 class SubscriberAbstract {
 public:
-    SubscriberAbstract();
-    ~SubscriberAbstract();
-
     virtual string getTopic();
     virtual void onSubscribe();
 };
