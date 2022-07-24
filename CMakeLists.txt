@@ -10,7 +10,7 @@ project(${projectName})
 
 add_executable(${projectName}
         main.cpp core/identify/Source/FaceIdentify.cpp core/identify/Include/FaceIdentify.h core/identify/Include/Identify.h core/identify/Source/Identify.cpp core/train/Source/FaceTrain.cpp core/train/Include/FaceTrain.h core/train/Include/Train.h core/train/Source/Train.cpp core/helper/Include/Str.h core/helper/Source/Str.cpp core/train/Source/DialogVideoFaceTrain.cpp core/train/Include/DialogVideoFaceTrain.h core/base/Source/Opencv.cpp core/base/Include/Opencv.h core/helper/Source/File.cpp core/helper/Include/File.h core/base/Enum/Event.h  core/base/Include/Event/BaseEvent.h core/base/Include/Event/DetectedFeatureMatEvent.h core/train/Source/DialogVideoFaceTrain.cpp core/train/Include/DialogVideoFaceTrain.h core/entity/Include/PredictMat.h core/identify/Source/DialogVideoFaceIdentify.cpp core/identify/Include/DialogVideoFaceIdentify.h core/base/Include/Event/PredictFeatureMatEvent.h core/entity/Include/DetectedMat.h
-        app/Face/Train.cpp app/Face/Train.h app/Face/Identify.cpp app/Face/Identify.h)
+        app/Face/Train.cpp app/Face/Train.h app/Face/Identify.cpp app/Face/Identify.h app/App.cpp app/App.h app/Mqtt/Base/Client.cpp app/Mqtt/Base/Client.h app/Mqtt/Base/SubscriberAbstract.cpp app/Mqtt/Base/SubscriberAbstract.h app/Mqtt/Base/SubscribeManager.cpp app/Mqtt/Base/SubscribeManager.h app/Mqtt/Base/ClientCallback.cpp app/Mqtt/Base/ClientCallback.h app/Mqtt/DeviceCtrlSubscribe.cpp app/Mqtt/DeviceCtrlSubscribe.h app/Mqtt/Base/Helper.h)
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
