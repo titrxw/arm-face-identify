@@ -9,8 +9,50 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 project(${projectName})
 
 add_executable(${projectName}
-        main.cpp core/identify/Source/FaceIdentify.cpp core/identify/Include/FaceIdentify.h core/identify/Include/Identify.h core/identify/Source/Identify.cpp core/train/Source/FaceTrain.cpp core/train/Include/FaceTrain.h core/train/Include/Train.h core/train/Source/Train.cpp core/helper/Include/Str.h core/helper/Source/Str.cpp core/train/Source/DialogVideoFaceTrain.cpp core/train/Include/DialogVideoFaceTrain.h core/base/Source/Opencv.cpp core/base/Include/Opencv.h core/helper/Source/File.cpp core/helper/Include/File.h core/base/Enum/Event.h  core/base/Include/Event/BaseEvent.h core/base/Include/Event/DetectedFeatureMatEvent.h core/train/Source/DialogVideoFaceTrain.cpp core/train/Include/DialogVideoFaceTrain.h core/entity/Include/PredictMat.h core/identify/Source/DialogVideoFaceIdentify.cpp core/identify/Include/DialogVideoFaceIdentify.h core/base/Include/Event/PredictFeatureMatEvent.h core/entity/Include/DetectedMat.h
-        app/Face/Train.cpp app/Face/Train.h app/Face/Identify.cpp app/Face/Identify.h app/App.cpp app/App.h app/Mqtt/Base/Client.cpp app/Mqtt/Base/Client.h app/Mqtt/Base/SubscriberAbstract.cpp app/Mqtt/Base/SubscriberAbstract.h app/Mqtt/Base/SubscribeManager.cpp app/Mqtt/Base/SubscribeManager.h app/Mqtt/Base/ClientCallback.h app/Mqtt/DeviceCtrlSubscribe.h app/Mqtt/Base/Helper.h)
+        main.cpp
+#        core/identify/Source/FaceIdentify.cpp
+#        core/identify/Include/FaceIdentify.h
+#        core/identify/Include/Identify.h
+#        core/identify/Source/Identify.cpp
+#        core/train/Source/FaceTrain.cpp
+#        core/train/Include/FaceTrain.h
+#        core/train/Include/Train.h
+#        core/train/Source/Train.cpp
+#        core/helper/Include/Str.h
+#        core/helper/Source/Str.cpp
+#        core/train/Source/DialogVideoFaceTrain.cpp
+#        core/train/Include/DialogVideoFaceTrain.h
+#        core/base/Source/Opencv.cpp
+#        core/base/Include/Opencv.h
+#        core/helper/Source/File.cpp
+#        core/helper/Include/File.h
+#        core/base/Enum/Event.h
+#        core/base/Include/Event/BaseEvent.h
+#        core/base/Include/Event/DetectedFeatureMatEvent.h
+#        core/train/Source/DialogVideoFaceTrain.cpp
+#        core/train/Include/DialogVideoFaceTrain.h
+#        core/entity/Include/PredictMat.h
+#        core/identify/Source/DialogVideoFaceIdentify.cpp
+#        core/identify/Include/DialogVideoFaceIdentify.h
+#        core/base/Include/Event/PredictFeatureMatEvent.h
+#        core/entity/Include/DetectedMat.h
+
+#        app/Face/Train.cpp
+#        app/Face/Train.h
+#        app/Face/Identify.cpp
+#        app/Face/Identify.h
+        app/App.cpp
+        app/App.h
+        app/Mqtt/Base/Client.cpp
+        app/Mqtt/Base/Client.h
+        app/Mqtt/Base/SubscriberAbstract.cpp
+        app/Mqtt/Base/SubscriberAbstract.h
+        app/Mqtt/Base/SubscribeManager.cpp
+        app/Mqtt/Base/SubscribeManager.h
+        app/Mqtt/Base/ClientCallback.h
+        app/Mqtt/DeviceCtrlSubscribe.h
+        app/Mqtt/Base/Helper.h
+        )
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
@@ -30,21 +72,15 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
     message(STATUS "    version: ${OpenCV_VERSION}")
     message(STATUS "    libraries: ${OpenCV_LIBS}")
     message(STATUS "    libraries path: ${OpenCV_LIB_DIR}")
+    message(STATUS "    libraries path: ${OpenCV_LIB_DIR}")
     message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
     include_directories(${OpenCV_INCLUDE_DIRS})
     link_directories(${OpenCV_LIB_DIR})
     target_link_libraries(${projectName} ${OpenCV_LIBS})
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-#        add_library(libpaho-mqtt
-#                SHARED
-#                IMPORTED)
-#        set_target_properties(libpaho-mqtt
-#                PROPERTIES IMPORTED_LOCATION
-#                vendor/mqtt/lib/libpaho-mqttpp3.so)
-        find_library(SERIALDEVICE_LIB paho-mqttpp3)
-message(STATUS "    include path: ${SERIALDEVICE_LIB}")
-message(STATUS "    include path: ${SERIALDEVICE_LIB}")
+        link_directories("${PROJECT_SOURCE_DIR}/vendor/mqtt/lib")
+        target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqtt3a.1.3.8.dylib")
         target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.dylib")
     endif()
 

@@ -21,7 +21,7 @@ async_client *Client::getClient() {
     return this->client;
 }
 
-__attribute__((unused)) connect_options Client::getClientConnectOptions() {
+connect_options Client::getClientConnectOptions() {
     return this->connectOptions;
 }
 
@@ -34,9 +34,7 @@ void Client::connect() {
 }
 
 Client::~Client() {
-    if (this->clientCallback) {
-        delete this->clientCallback;
-    }
+    delete this->clientCallback;
     if (this->client) {
         this->client->disable_callbacks();
         this->client->is_connected() && this->client->disconnect();
