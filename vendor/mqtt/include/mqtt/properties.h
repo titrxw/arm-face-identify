@@ -28,9 +28,9 @@ extern "C" {
 	#include "MQTTProperties.h"
 }
 
-#include "mqtt/types.h"
-#include "mqtt/buffer_ref.h"
-#include "mqtt/exception.h"
+#include "types.h"
+#include "buffer_ref.h"
+#include "exception.h"
 #include <tuple>
 #include <initializer_list>
 

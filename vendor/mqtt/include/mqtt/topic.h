@@ -25,10 +25,10 @@
 #define __mqtt_topic_h
 
 #include "MQTTAsync.h"
-#include "mqtt/delivery_token.h"
-#include "mqtt/subscribe_options.h"
-#include "mqtt/message.h"
-#include "mqtt/types.h"
+#include "delivery_token.h"
+#include "subscribe_options.h"
+#include "message.h"
+#include "types.h"
 #include <vector>
 
 namespace mqtt {

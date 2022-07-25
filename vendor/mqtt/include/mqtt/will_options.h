@@ -27,9 +27,9 @@
 #define __mqtt_will_options_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
-#include "mqtt/message.h"
-#include "mqtt/topic.h"
+#include "types.h"
+#include "message.h"
+#include "topic.h"
 
 namespace mqtt {
 

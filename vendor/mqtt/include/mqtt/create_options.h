@@ -25,7 +25,7 @@
 #define __mqtt_create_options_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
+#include "types.h"
 
 namespace mqtt {
 

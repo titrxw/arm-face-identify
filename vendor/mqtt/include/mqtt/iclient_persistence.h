@@ -25,9 +25,9 @@
 #define __mqtt_iclient_persistence_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
-#include "mqtt/buffer_view.h"
-#include "mqtt/string_collection.h"
+#include "types.h"
+#include "buffer_view.h"
+#include "string_collection.h"
 #include <vector>
 
 namespace mqtt {

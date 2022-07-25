@@ -24,9 +24,9 @@
 #define __mqtt_disconnect_options_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
-#include "mqtt/token.h"
-#include "mqtt/properties.h"
+#include "types.h"
+#include "token.h"
+#include "properties.h"
 #include <chrono>
 
 namespace mqtt {

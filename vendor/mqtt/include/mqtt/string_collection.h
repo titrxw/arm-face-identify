@@ -25,7 +25,7 @@
 #define __mqtt_string_collection_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
+#include "types.h"
 #include <vector>
 #include <map>
 #include <memory>

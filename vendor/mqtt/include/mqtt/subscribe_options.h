@@ -26,7 +26,7 @@
 
 #include "MQTTAsync.h"
 #include "MQTTSubscribeOpts.h"
-#include "mqtt/types.h"
+#include "types.h"
 
 namespace mqtt {
 

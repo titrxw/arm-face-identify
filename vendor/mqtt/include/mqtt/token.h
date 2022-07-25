@@ -26,13 +26,13 @@
 #define __mqtt_token_h
 
 #include "MQTTAsync.h"
-#include "mqtt/iaction_listener.h"
-#include "mqtt/exception.h"
-#include "mqtt/types.h"
-#include "mqtt/properties.h"
-#include "mqtt/buffer_ref.h"
-#include "mqtt/string_collection.h"
-#include "mqtt/server_response.h"
+#include "iaction_listener.h"
+#include "exception.h"
+#include "types.h"
+#include "properties.h"
+#include "buffer_ref.h"
+#include "string_collection.h"
+#include "server_response.h"
 #include <vector>
 #include <thread>
 #include <mutex>

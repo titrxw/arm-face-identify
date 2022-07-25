@@ -25,7 +25,7 @@
 #define __mqtt_exception_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
+#include "types.h"
 #include <iostream>
 #include <vector>
 #include <memory>

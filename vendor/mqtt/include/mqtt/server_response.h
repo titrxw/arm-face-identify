@@ -25,8 +25,8 @@
 #define __mqtt_server_response_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
-#include "mqtt/properties.h"
+#include "types.h"
+#include "properties.h"
 
 #include <iostream>
 

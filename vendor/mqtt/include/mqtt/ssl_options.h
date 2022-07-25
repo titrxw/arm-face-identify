@@ -28,9 +28,9 @@
 #define __mqtt_ssl_options_h
 
 #include "MQTTAsync.h"
-#include "mqtt/message.h"
-#include "mqtt/topic.h"
-#include "mqtt/types.h"
+#include "message.h"
+#include "topic.h"
+#include "types.h"
 #include <vector>
 #include <functional>
 

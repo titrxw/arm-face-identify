@@ -25,7 +25,7 @@
 #define __mqtt_iaction_listener_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
+#include "types.h"
 #include <vector>
 
 namespace mqtt {

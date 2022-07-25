@@ -25,13 +25,13 @@
 #define __mqtt_connect_options_h
 
 #include "MQTTAsync.h"
-#include "mqtt/types.h"
-#include "mqtt/message.h"
-#include "mqtt/topic.h"
-#include "mqtt/token.h"
-#include "mqtt/string_collection.h"
-#include "mqtt/will_options.h"
-#include "mqtt/ssl_options.h"
+#include "types.h"
+#include "message.h"
+#include "topic.h"
+#include "token.h"
+#include "string_collection.h"
+#include "will_options.h"
+#include "ssl_options.h"
 #include <vector>
 #include <map>
 #include <chrono>

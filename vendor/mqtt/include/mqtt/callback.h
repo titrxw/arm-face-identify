@@ -25,8 +25,8 @@
 #define __mqtt_callback_h
 
 #include "MQTTAsync.h"
-#include "mqtt/delivery_token.h"
-#include "mqtt/types.h"
+#include "delivery_token.h"
+#include "types.h"
 #include <vector>
 #include <memory>
 

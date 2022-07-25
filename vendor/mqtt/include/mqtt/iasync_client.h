@@ -25,17 +25,17 @@
 #ifndef __mqtt_iasync_client_h
 #define __mqtt_iasync_client_h
 
-#include "mqtt/types.h"
-#include "mqtt/token.h"
-#include "mqtt/delivery_token.h"
-#include "mqtt/iclient_persistence.h"
-#include "mqtt/iaction_listener.h"
-#include "mqtt/connect_options.h"
-#include "mqtt/disconnect_options.h"
-#include "mqtt/subscribe_options.h"
-#include "mqtt/exception.h"
-#include "mqtt/message.h"
-#include "mqtt/callback.h"
+#include "types.h"
+#include "token.h"
+#include "delivery_token.h"
+#include "iclient_persistence.h"
+#include "iaction_listener.h"
+#include "connect_options.h"
+#include "disconnect_options.h"
+#include "subscribe_options.h"
+#include "exception.h"
+#include "message.h"
+#include "callback.h"
 #include <vector>
 
 namespace mqtt {

@@ -26,9 +26,9 @@
 #define __mqtt_message_h
 
 #include "MQTTAsync.h"
-#include "mqtt/buffer_ref.h"
-#include "mqtt/properties.h"
-#include "mqtt/exception.h"
+#include "buffer_ref.h"
+#include "properties.h"
+#include "exception.h"
 #include <memory>
 
 namespace mqtt {

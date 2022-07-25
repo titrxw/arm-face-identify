@@ -24,7 +24,7 @@
 #ifndef __mqtt_buffer_ref_h
 #define __mqtt_buffer_ref_h
 
-#include "mqtt/types.h"
+#include "types.h"
 #include <iostream>
 #include <cstring>
 
