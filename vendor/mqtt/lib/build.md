@@ -1,0 +1,1 @@
+sudo cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_BUILD_DOCUMENTATION=TRUE -DPAHO_BUILD_SAMPLES=TRUE  -DCMAKE_PREFIX_PATH=/home/rxw/paho.mqtt.c/build/install -DCMAKE_INSTALL_PREFIX=./build/install
