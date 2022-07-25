@@ -62,7 +62,7 @@ message(STATUS "current processor: ${CMAKE_SYSTEM_PROCESSOR}")
 find_package(PkgConfig REQUIRED)
 
 ## vendor
-include_directories("./vendor")
+include_directories("${PROJECT_SOURCE_DIR}/vendor")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
     ## opencv
