@@ -24,8 +24,8 @@ protected:
     void startMqtt();
 protected:
     string appName = "smart_home";
-    string appId = "";
-    string appSecret = "";
+    string appId = "sd1fB4nJqnx3bNsyjym5R7Kr";
+    string appSecret = "c0629cec91d3470bbc914bb4df496bfb";
     string mqttServerAddress = "tcp://127.0.0.1:1883";
     map<string, Client*>clientMap;
     SubscribeManager *subscribeManager;

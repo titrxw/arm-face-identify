@@ -14,7 +14,7 @@ Client::Client(string serverAddress, string userName, string password) : serverA
             .automatic_reconnect(true)
             .finalize();
     this->clientCallback = new ClientCallback(this->client, this->connectOptions);
-    this->client->set_callback(reinterpret_cast<callback &>(this->clientCallback));
+    this->client->set_callback(*this->clientCallback);
 }
 
 async_client *Client::getClient() {
@@ -30,7 +30,12 @@ ClientCallback *Client::getClientCallback() {
 }
 
 void Client::connect() {
-    this->client->connect(this->connectOptions, nullptr, reinterpret_cast<iaction_listener &>(this->clientCallback));
+    try {
+        this->client->connect(this->connectOptions, nullptr,*this->clientCallback);
+    }
+    catch (const mqtt::exception& exc) {
+        throw string("client Unable to connect to MQTT server, error:") + exc.what();
+    }
 }
 
 Client::~Client() {

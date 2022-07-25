@@ -68,7 +68,9 @@ int main()
 {
     std::cout<<23;
         (new App())->start();
-
+    while (std::tolower(std::cin.get()) != 'q')
+        ;
+    std::cout<<34;
 //    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();
