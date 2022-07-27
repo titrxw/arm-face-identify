@@ -71,7 +71,7 @@ public:
 /**
  * Response for a connect request
  */
-class connect_response : public server_response, public std::__1::error_code {
+class connect_response : public server_response, public std::error_code {
 	/** The connection string of the server */
 	string serverURI_;
 	/** The version of MQTT being used */
