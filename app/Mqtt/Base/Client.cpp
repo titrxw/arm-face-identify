@@ -4,7 +4,9 @@
 
 #include "Client.h"
 
-Client::Client(string serverAddress, string userName, string password) : serverAddress(serverAddress), userName(userName), password(password) {
+#include <utility>
+
+Client::Client(const string& serverAddress, const string& userName, const string& password) : serverAddress(serverAddress), userName(userName), password(password) {
     this->client = new async_client(this->serverAddress, this->userName);
     this->connectOptions = connect_options_builder()
             .user_name(userName)

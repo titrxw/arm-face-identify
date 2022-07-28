@@ -31,74 +31,76 @@ using namespace std;
  *
  * [cloud-events-primer]: https://github.com/cloudevents/spec
  */
-class CloudEvent {
- public:
-    inline static auto constexpr kDefaultSpecVersion = "1.0";
-    using ClockType = chrono::system_clock;
-    using time_point = ClockType::time_point;
+namespace google_function {
+    class CloudEvent {
+    public:
+        inline static auto constexpr kDefaultSpecVersion = "1.0";
+        using ClockType = chrono::system_clock;
+        using time_point = ClockType::time_point;
 
-    CloudEvent(string id, string source, string type,
-             string spec_version = kDefaultSpecVersion)
-      : id_(move(id)),
-        source_(move(source)),
-        type_(move(type)),
-        spec_version_(move(spec_version)) {}
+        CloudEvent(string id, string source, string type,
+                   string spec_version = kDefaultSpecVersion)
+                   : id_(move(id)),
+                   source_(move(source)),
+                   type_(move(type)),
+                   spec_version_(move(spec_version)) {}
 
-    string id() const {
-        return id_;
-    }
-    string source() const {
-        return source_;
-    }
-    string type() const {
-        return type_;
-    }
-    string spec_version() const {
-        return spec_version_;
-    }
-    string data_content_type() const {
-        return data_content_type_;
-    }
-    string data_schema() const {
-        return data_schema_;
-    }
-    string subject() const {
-        return subject_;
-    }
-    time_point time() const {
-        return time_;
-    }
-    string data() const& {
-        return data_;
-    }
+                   string id() const {
+            return id_;
+        }
+        string source() const {
+            return source_;
+        }
+        string type() const {
+            return type_;
+        }
+        string spec_version() const {
+            return spec_version_;
+        }
+        string data_content_type() const {
+            return data_content_type_;
+        }
+        string data_schema() const {
+            return data_schema_;
+        }
+        string subject() const {
+            return subject_;
+        }
+        string time() const {
+            return time_;
+        }
+        string data() const& {
+            return data_;
+        }
 
-    void set_data_content_type(string v) {
-        data_content_type_ = v;
-    }
-    void set_data_schema(string v) {
-        data_schema_ = v;
-    }
-    void set_subject(string v) {
-        subject_ = v;
-    }
-    void set_time(time_point tp) {
-        time_ = tp;
-    }
-    void set_data(string v) {
-        data_ = v;
-    }
+        void set_data_content_type(string v) {
+            data_content_type_ = v;
+        }
+        void set_data_schema(string v) {
+            data_schema_ = v;
+        }
+        void set_subject(string v) {
+            subject_ = v;
+        }
+        void set_time(string tp) {
+            time_ = tp;
+        }
+        void set_data(string v) {
+            data_ = v;
+        }
 
- private:
-    string const id_;
-    string const source_;
-    string const type_;
-    string const spec_version_;
+    private:
+        string const id_;
+        string const source_;
+        string const type_;
+        string const spec_version_;
 
-    string data_content_type_;
-    string data_schema_;
-    string subject_;
-    time_point time_;
-    string data_;
-};
+        string data_content_type_ = "";
+        string data_schema_ = "";
+        string subject_ = "";
+        string time_ = "";
+        string data_ = "";
+    };
+}
 
 #endif  // FUNCTIONS_FRAMEWORK_CPP_GOOGLE_CLOUD_FUNCTIONS_CLOUD_EVENT_H

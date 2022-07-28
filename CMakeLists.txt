@@ -52,7 +52,12 @@ add_executable(${projectName}
         app/Mqtt/Base/ClientCallback.h
         app/Mqtt/DeviceCtrlSubscribe.h
         app/Mqtt/Base/Helper.h
-        app/Util/Encrypt.h)
+        app/Util/Encrypt.h
+        app/Util/CloudEvent.h
+        config/Config.h
+        config/Mqtt.h
+        config/Device.h
+        app/Mqtt/DeviceCtrlSubscribe.cpp)
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

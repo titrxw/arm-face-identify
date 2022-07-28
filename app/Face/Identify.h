@@ -18,7 +18,7 @@ using namespace std;
 class Identify
 {
 public:
-    Identify(string cascadeFilePath, vector<string> modelFilesPath);
+    Identify(const string& cascadeFilePath, vector<string> modelFilesPath);
     ~Identify();
 
     Ptr<CascadeClassifier> getCascadeClassifier();

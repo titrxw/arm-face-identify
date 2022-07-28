@@ -4,7 +4,7 @@
 
 #include "Identify.h"
 
-Identify::Identify(string cascadeFilePath, vector<string> modelFilesPath) : cascadeFilePath(cascadeFilePath), modelFilesPath(modelFilesPath) {
+Identify::Identify(const string& cascadeFilePath, vector<string> modelFilesPath) : cascadeFilePath(cascadeFilePath), modelFilesPath(modelFilesPath) {
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
 }
 

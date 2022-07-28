@@ -8,4 +8,8 @@ string SubscriberAbstract::getTopic() {
     return "";
 }
 
-void SubscriberAbstract::onSubscribe() {}
+SubscriberAbstract::SubscriberAbstract(Device device) : device(device) {
+
+}
+
+void SubscriberAbstract::onSubscribe(async_client *client, const_message_ptr msg) {}

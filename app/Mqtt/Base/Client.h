@@ -14,7 +14,7 @@ using namespace mqtt;
 
 class Client {
 public:
-    Client(string serverAddress, string userName, string password);
+    Client(const string& serverAddress, const string& userName, const string& password);
     ~Client();
 
     async_client * getClient();

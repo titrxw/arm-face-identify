@@ -6,6 +6,7 @@
 #define ARM_FACE_IDENTIFY_APP_H
 
 #include <sstream>
+#include "../config/Config.h"
 #include "./Mqtt/Base/Client.h"
 #include "./Mqtt/Base/SubscribeManager.h"
 
@@ -13,22 +14,19 @@ using namespace std;
 
 class App {
 public:
-    App();
+    explicit App(Config config);
     ~App();
 
-    Client* makeMqttClient(string channel, string mqttServerAddress, string appid, string appSecret);
+    Client* makeMqttClient(const string& channel, Mqtt mqtt, Device device);
     Client* getDefaultMqttClient();
     SubscribeManager* getSubscribeManager();
     void start();
 protected:
     void startMqtt();
 protected:
-    string appName = "smart_home";
-    string appId = "sd1fB4nJqnx3bNsyjym5R7Kr";
-    string appSecret = "c0629cec91d3470bbc914bb4df496bfb";
-    string mqttServerAddress = "tcp://127.0.0.1:1883";
+    Config config;
     map<string, Client*>clientMap;
-    SubscribeManager *subscribeManager;
+    SubscribeManager *subscribeManager{};
 };
 
 

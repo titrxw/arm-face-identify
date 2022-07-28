@@ -17,7 +17,7 @@ using namespace std;
 class Train
 {
 public:
-    Train(string cascadeFilePath, string targetDir);
+    Train(const string& cascadeFilePath, string targetDir);
     ~Train();
 
     Ptr<CascadeClassifier> getCascadeClassifier();

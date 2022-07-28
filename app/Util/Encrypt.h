@@ -23,7 +23,7 @@ using namespace std;
 
 class Encrypt {
 public:
-    string static encrypt(string plain, string key) {
+    string static encrypt(const string& plain, const string& key) {
         string cipher;
         string iv = key.substr(0, 16);
 
@@ -47,7 +47,7 @@ public:
         ); // StringSource
         return encoded;
     }
-    string static decrypt(string plain, string key) {
+    string static decrypt(const string& plain, const string& key) {
         string encodeByte;
         string iv = key.substr(0, 16);
 

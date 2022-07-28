@@ -4,7 +4,11 @@
 //#include <unistd.h>
 //#include "core/helper/Include/Str.h"
 //#include "app/Face/Train.h"
+#include <fstream>
 #include "app/App.h"
+#include "config/Config.h"
+#include "config/Device.h"
+#include "config/Mqtt.h"
 
 //using namespace ArmFaceIdentify;
 
@@ -66,11 +70,16 @@
 
 int main()
 {
-    std::cout<<23;
-        (new App())->start();
+    Config config;
+    std::ifstream ifs("/home/rxw/lnmpdocker/Workspace/c/arm-face-identify/config.json");
+
+    json j;
+    ifs >> j;
+    config = (Config)j;
+
+    (new App(config))->start();
     while (std::tolower(std::cin.get()) != 'q')
         ;
-    std::cout<<34;
 //    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();

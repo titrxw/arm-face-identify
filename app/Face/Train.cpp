@@ -4,7 +4,7 @@
 
 #include "Train.h"
 
-Train::Train(string cascadeFilePath, string targetDir) : cascadeFilePath(cascadeFilePath), targetDir(targetDir) {
+Train::Train(const string& cascadeFilePath, string targetDir) : cascadeFilePath(cascadeFilePath), targetDir(targetDir) {
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
 }
 

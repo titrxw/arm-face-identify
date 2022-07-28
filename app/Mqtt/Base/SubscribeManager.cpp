@@ -4,9 +4,7 @@
 
 #include "SubscribeManager.h"
 
-SubscribeManager::SubscribeManager() {
-
-}
+SubscribeManager::SubscribeManager() = default;
 
 void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
     this->subscriberMap[subscribe->getTopic()] = subscribe;

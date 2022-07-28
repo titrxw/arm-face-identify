@@ -1,0 +1,11 @@
+{
+  "mqtt": {
+    "server_address": "tcp://127.0.0.1:1883"
+  },
+  "device": {
+    "app_name": "de",
+    "app_server_namespace": "smart_home",
+    "app_id": "sd1fB4nJqnx3bNsyjym5R7Kr",
+    "app_secret": "c0629cec91d3470bbc914bb4df496bfb"
+  }
+}

@@ -6,6 +6,7 @@
 #define ARM_FACE_IDENTIFY_CLIENTCALLBACK_H
 
 #include <functional>
+#include <utility>
 #include "mqtt/include/mqtt/async_client.h"
 
 using namespace mqtt;
@@ -17,7 +18,7 @@ class ClientCallback : public virtual callback,
                  public virtual iaction_listener
 {
 protected:
-    int reConnectRetry;
+    int reConnectRetry{};
     int maxConnectRetry = 5;
     async_client *client;
     connect_options connectOptions;
@@ -28,7 +29,7 @@ public:
     OnMessage onMessage;
 
 public:
-    ClientCallback(async_client *client, connect_options connectOptions, int maxConnectRetry = 5) : client(client), connectOptions(connectOptions), maxConnectRetry(maxConnectRetry) {}
+    ClientCallback(async_client *client, connect_options connectOptions, int maxConnectRetry = 5) : client(client), connectOptions(std::move(connectOptions)), maxConnectRetry(maxConnectRetry) {}
     ~ClientCallback() {}
 
     // This deomonstrates manually reconnecting to the broker by calling

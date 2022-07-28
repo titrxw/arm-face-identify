@@ -3,28 +3,23 @@
 //
 
 #include "App.h"
+
 #include "./Mqtt/DeviceCtrlSubscribe.h"
 
-App::App() {
+App::App(Config config) : config(config) {
 
 }
 
-Client *App::makeMqttClient(string channel, string mqttServerAddress, string appid, string appSecret) {
+Client *App::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
     if (this->clientMap.end() == this->clientMap.find(channel)) {
-        this->clientMap[channel] = new Client(mqttServerAddress, appid, appSecret);
+        this->clientMap[channel] = new Client(mqtt.mqttServerAddress, device.appId, device.appSecret);
     }
 
     return this->clientMap[channel];
 }
 
 Client *App::getDefaultMqttClient() {
-    return this->makeMqttClient("default", this->mqttServerAddress, this->appId, this->appSecret);
-}
-
-void App::startMqtt() {
-    subscribeManager = this->getSubscribeManager();
-    subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->appName, this->appId));
-    subscribeManager->start(this->getDefaultMqttClient());
+    return this->makeMqttClient("default", this->config.mqtt, this->config.device);
 }
 
 SubscribeManager *App::getSubscribeManager() {
@@ -35,14 +30,19 @@ SubscribeManager *App::getSubscribeManager() {
     return this->subscribeManager;
 }
 
+void App::startMqtt() {
+    subscribeManager = this->getSubscribeManager();
+    subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->config.device));
+    subscribeManager->start(this->getDefaultMqttClient());
+}
+
 void App::start() {
     this->startMqtt();
 }
 
 App::~App() {
-    if (this->subscribeManager != nullptr) {
-        delete this->subscribeManager;
-    }
+    delete this->subscribeManager;
+
     map<string, Client*>::iterator iter;
     iter = this->clientMap.begin();
     while(iter != this->clientMap.end()) {
