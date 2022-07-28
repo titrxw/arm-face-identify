@@ -71,7 +71,7 @@
 int main()
 {
     Config config;
-    std::ifstream ifs("/home/rxw/lnmpdocker/Workspace/c/arm-face-identify/config.json");
+    std::ifstream ifs("/Users/rxwyun/Develop/c/arm-face-identify/config.json");
 
     json j;
     ifs >> j;

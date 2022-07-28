@@ -10,37 +10,37 @@ project(${projectName})
 
 add_executable(${projectName}
         main.cpp
-#        core/identify/Source/FaceIdentify.cpp
-#        core/identify/Include/FaceIdentify.h
-#        core/identify/Include/Identify.h
-#        core/identify/Source/Identify.cpp
-#        core/train/Source/FaceTrain.cpp
-#        core/train/Include/FaceTrain.h
-#        core/train/Include/Train.h
-#        core/train/Source/Train.cpp
-#        core/helper/Include/Str.h
-#        core/helper/Source/Str.cpp
-#        core/train/Source/DialogVideoFaceTrain.cpp
-#        core/train/Include/DialogVideoFaceTrain.h
-#        core/base/Source/Opencv.cpp
-#        core/base/Include/Opencv.h
-#        core/helper/Source/File.cpp
-#        core/helper/Include/File.h
-#        core/base/Enum/Event.h
-#        core/base/Include/Event/BaseEvent.h
-#        core/base/Include/Event/DetectedFeatureMatEvent.h
-#        core/train/Source/DialogVideoFaceTrain.cpp
-#        core/train/Include/DialogVideoFaceTrain.h
-#        core/entity/Include/PredictMat.h
-#        core/identify/Source/DialogVideoFaceIdentify.cpp
-#        core/identify/Include/DialogVideoFaceIdentify.h
-#        core/base/Include/Event/PredictFeatureMatEvent.h
-#        core/entity/Include/DetectedMat.h
+        core/identify/Source/FaceIdentify.cpp
+        core/identify/Include/FaceIdentify.h
+        core/identify/Include/Identify.h
+        core/identify/Source/Identify.cpp
+        core/train/Source/FaceTrain.cpp
+        core/train/Include/FaceTrain.h
+        core/train/Include/Train.h
+        core/train/Source/Train.cpp
+        core/helper/Include/Str.h
+        core/helper/Source/Str.cpp
+        core/train/Source/DialogVideoFaceTrain.cpp
+        core/train/Include/DialogVideoFaceTrain.h
+        core/base/Source/Opencv.cpp
+        core/base/Include/Opencv.h
+        core/helper/Source/File.cpp
+        core/helper/Include/File.h
+        core/base/Enum/Event.h
+        core/base/Include/Event/BaseEvent.h
+        core/base/Include/Event/DetectedFeatureMatEvent.h
+        core/train/Source/DialogVideoFaceTrain.cpp
+        core/train/Include/DialogVideoFaceTrain.h
+        core/entity/Include/PredictMat.h
+        core/identify/Source/DialogVideoFaceIdentify.cpp
+        core/identify/Include/DialogVideoFaceIdentify.h
+        core/base/Include/Event/PredictFeatureMatEvent.h
+        core/entity/Include/DetectedMat.h
 
-#        app/Face/Train.cpp
-#        app/Face/Train.h
-#        app/Face/Identify.cpp
-#        app/Face/Identify.h
+        app/Face/Train.cpp
+        app/Face/Train.h
+        app/Face/Identify.cpp
+        app/Face/Identify.h
         app/App.cpp
         app/App.h
         app/Mqtt/Base/Client.cpp
@@ -76,12 +76,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
     message(STATUS "    config: ${OpenCV_DIR}")
     message(STATUS "    version: ${OpenCV_VERSION}")
     message(STATUS "    libraries: ${OpenCV_LIBS}")
-    message(STATUS "    libraries path: ${OpenCV_LIB_DIR}")
-    message(STATUS "    libraries path: ${OpenCV_LIB_DIR}")
     message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
     include_directories(${OpenCV_INCLUDE_DIRS})
     link_directories(${OpenCV_LIB_DIR})
     target_link_libraries(${projectName} ${OpenCV_LIBS})
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/mac/libopencv_face.3.4.14.dylib")
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         link_directories("${PROJECT_SOURCE_DIR}/vendor/mqtt/lib")
