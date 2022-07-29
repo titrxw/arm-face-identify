@@ -8,6 +8,7 @@
 #include <sstream>
 #include "mqtt/include/mqtt/async_client.h"
 #include "../../../config/Device.h"
+#include "../../Util/CloudEvent.h"
 
 using namespace std;
 using namespace mqtt;
@@ -15,6 +16,9 @@ using namespace mqtt;
 class SubscriberAbstract {
 public:
     explicit SubscriberAbstract(Device device);
+
+protected:
+    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg);
 
 public:
     virtual string getTopic();
