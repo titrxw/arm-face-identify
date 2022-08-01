@@ -57,7 +57,9 @@ add_executable(${projectName}
         config/Config.h
         config/Mqtt.h
         config/Device.h
-        app/Mqtt/DeviceCtrlSubscribe.cpp)
+        app/Mqtt/DeviceCtrlSubscribe.cpp
+        app/Util/Filesystem.h
+        )
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
@@ -131,6 +133,5 @@ endif()
 
 #树莓派
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify -DCMAKE_CXX_STANDARD=11 -DCMAKE_SHARED_LINKER_FLAGS='-latomic'  ..
-
 
 install(DIRECTORY data/ DESTINATION data)

@@ -34,7 +34,7 @@ using namespace std;
 namespace google_function {
     class CloudEvent {
     public:
-        inline static auto constexpr kDefaultSpecVersion = "1.0";
+        static auto constexpr kDefaultSpecVersion = "1.0";
         using ClockType = chrono::system_clock;
         using time_point = ClockType::time_point;
 
