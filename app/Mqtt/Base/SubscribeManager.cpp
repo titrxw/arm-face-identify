@@ -3,11 +3,20 @@
 //
 
 #include "SubscribeManager.h"
+#include "Helper.h"
 
 SubscribeManager::SubscribeManager() = default;
 
+google_function::CloudEvent SubscribeManager::getCloudEventFromMsg(const_message_ptr msg) {
+    return CloudEvent::jsonStrToCloudEvent(msg->get_payload_str());
+}
+
 void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
     this->subscriberMap[subscribe->getTopic()] = subscribe;
+}
+
+void SubscribeManager::setExceptionHandler(std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler) {
+    this->exceptionHandler = exceptionHandler;
 }
 
 void SubscribeManager::start(Client *client) {
@@ -27,16 +36,40 @@ void SubscribeManager::onConnected(async_client *client, const string &cause) {
 }
 
 void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
+    google_function::CloudEvent cloudEvent;
     try {
-        map<string, SubscriberAbstract*>::iterator iter;
-        iter = this->subscriberMap.find(msg->get_topic());
-        if(iter != this->subscriberMap.end()){
-            iter->second->onSubscribe(client, msg);
+        cloudEvent = this->getCloudEventFromMsg(msg);
+    } catch (nlohmann::json::exception e) {
+        if (this->exceptionHandler != nullptr) {
+            this->exceptionHandler(client, msg, e);
         }
-    } catch (mqtt::exception e) {
 
-    } catch (std::exception e) {
-        std::cout<<e.what();
+        return;
+    }
+
+    map<string, SubscriberAbstract*>::iterator iter;
+    iter = this->subscriberMap.find(msg->get_topic());
+    if(iter != this->subscriberMap.end()){
+        try {
+            iter->second->onSubscribe(client, msg, cloudEvent);
+        } catch (std::exception e) {
+            try {
+                nlohmann::json err;
+                err["error"] = e.what();
+                err["error_code"] = 500;
+                cloudEvent.set_type("exception");
+                cloudEvent.set_data(to_string(err));
+                client->publish(msg->create(Helper::getDeviceReportTopic(iter->second->getDevice().appServerNamespace, iter->second->getDevice().appId), CloudEvent::cloudEventToJsonStr(cloudEvent)));
+            } catch (std::exception reportE) {
+                if (this->exceptionHandler != nullptr) {
+                    this->exceptionHandler(client, msg, reportE);
+                }
+            }
+
+            if (this->exceptionHandler != nullptr) {
+                this->exceptionHandler(client, msg, e);
+            }
+        }
     }
 }
 

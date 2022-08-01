@@ -9,6 +9,7 @@
 #include "../config/Config.h"
 #include "./Mqtt/Base/Client.h"
 #include "./Mqtt/Base/SubscribeManager.h"
+#include "./Exception/ExceptionHandler.h"
 
 using namespace std;
 
@@ -23,10 +24,12 @@ public:
     void start();
 protected:
     void startMqtt();
+    ExceptionHandler* getExceptionHandler();
 protected:
     Config config;
     map<string, Client*>clientMap;
     SubscribeManager *subscribeManager{};
+    ExceptionHandler *exceptionHandler;
 };
 
 

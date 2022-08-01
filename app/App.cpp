@@ -10,6 +10,14 @@ App::App(Config config) : config(config) {
 
 }
 
+ExceptionHandler *App::getExceptionHandler() {
+    if (this->exceptionHandler == nullptr) {
+        this->exceptionHandler = new ExceptionHandler();
+    }
+
+    return this->exceptionHandler;
+}
+
 Client *App::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
     if (this->clientMap.end() == this->clientMap.find(channel)) {
         this->clientMap[channel] = new Client(mqtt.mqttServerAddress, device.appId, device.appSecret);
@@ -34,6 +42,10 @@ void App::startMqtt() {
     subscribeManager = this->getSubscribeManager();
     subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->config.device));
     subscribeManager->start(this->getDefaultMqttClient());
+    subscribeManager->setExceptionHandler([this](async_client *client, const_message_ptr msg, std::exception e) {
+        this->getExceptionHandler()->report(e);
+        this->getExceptionHandler()->handle(e);
+    });
 }
 
 void App::start() {
@@ -42,6 +54,7 @@ void App::start() {
 
 App::~App() {
     delete this->subscribeManager;
+    delete this->exceptionHandler;
 
     map<string, Client*>::iterator iter;
     iter = this->clientMap.begin();

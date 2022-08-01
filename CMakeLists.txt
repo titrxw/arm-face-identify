@@ -59,7 +59,7 @@ add_executable(${projectName}
         config/Device.h
         app/Mqtt/DeviceCtrlSubscribe.cpp
         app/Util/Filesystem.h
-        )
+        app/Exception/ExceptionHandler.h)
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

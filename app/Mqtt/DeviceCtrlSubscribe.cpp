@@ -13,8 +13,9 @@ string DeviceCtrlSubscribe::getTopic() {
     return Helper::getDeviceCtrlTopic(this->device.appServerNamespace, this->device.appId);
 }
 
-void DeviceCtrlSubscribe::onSubscribe(async_client *client, const_message_ptr msg) {
-    google_function::CloudEvent cloudEvent = this->getCloudEventFromMsg(msg);
+void
+DeviceCtrlSubscribe::onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) {
+
 }
 
 DeviceCtrlSubscribe::~DeviceCtrlSubscribe() {

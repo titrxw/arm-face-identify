@@ -17,12 +17,16 @@ public:
     ~SubscribeManager();
 
     void registerSubscriber(SubscriberAbstract *subscribe);
+    void setExceptionHandler(std::function<void (async_client *client, const_message_ptr msg, std::exception e)>);
     void onConnected(async_client *client, const string& cause);
     void onMessage(async_client *client, const_message_ptr msg);
 
     void start(Client *client);
 protected:
+    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg);
+protected:
     map<string, SubscriberAbstract*> subscriberMap;
+    std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler;
 };
 
 

@@ -38,6 +38,8 @@ namespace google_function {
         using ClockType = chrono::system_clock;
         using time_point = ClockType::time_point;
 
+        CloudEvent() {}
+
         CloudEvent(string id, string source, string type,
                    string spec_version = kDefaultSpecVersion)
                    : id_(move(id)),
@@ -73,6 +75,9 @@ namespace google_function {
             return data_;
         }
 
+        void set_type(string v) {
+            type_ = v;
+        }
         void set_data_content_type(string v) {
             data_content_type_ = v;
         }
@@ -90,10 +95,10 @@ namespace google_function {
         }
 
     private:
-        string const id_;
-        string const source_;
-        string const type_;
-        string const spec_version_;
+        string id_;
+        string source_;
+        string type_;
+        string spec_version_;
 
         string data_content_type_ = "";
         string data_schema_ = "";

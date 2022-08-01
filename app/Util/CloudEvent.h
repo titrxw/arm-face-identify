@@ -29,8 +29,8 @@ class CloudEvent {
             nlohmann::json jsonObj = json::parse(jsonStr);
             if (!jsonObj.contains("id") || !jsonObj.contains("source") ||
             !jsonObj.contains("type")) {
-                throw std::runtime_error(
-                        "JSON message missing `id`, `source`, and/or `type` fields");
+                throw nlohmann::json::other_error::create(400,
+                        "JSON message missing `id`, `source`, and/or `type` fields", nullptr);
             }
 
             google_function::CloudEvent event = google_function::CloudEvent(

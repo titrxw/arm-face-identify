@@ -16,13 +16,11 @@ using namespace mqtt;
 class SubscriberAbstract {
 public:
     explicit SubscriberAbstract(Device device);
-
-protected:
-    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg);
+    Device getDevice();
 
 public:
     virtual string getTopic();
-    virtual void onSubscribe(async_client *client, const_message_ptr msg);
+    virtual void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent);
 
 protected:
     Device device;
