@@ -8,12 +8,10 @@
 #include <nlohmann/json.hpp>
 #include "cloudevent/cloud_event.h"
 
-using namespace nlohmann;
-
 class CloudEvent {
     public:
         string static cloudEventToJsonStr(google_function::CloudEvent cloudEvent) {
-            json jsonObj;
+            nlohmann::json jsonObj;
             jsonObj["id"] = cloudEvent.id();
             jsonObj["source"] = cloudEvent.source();
             jsonObj["type"] = cloudEvent.type();
@@ -28,7 +26,7 @@ class CloudEvent {
         }
 
         google_function::CloudEvent static jsonStrToCloudEvent(const string& jsonStr) {
-            json jsonObj = json::parse(jsonStr);
+            nlohmann::json jsonObj = json::parse(jsonStr);
             if (!jsonObj.contains("id") || !jsonObj.contains("source") ||
             !jsonObj.contains("type")) {
                 throw std::runtime_error(
