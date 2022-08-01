@@ -16,4 +16,4 @@ Device SubscriberAbstract::getDevice() {
     return this->device;
 }
 
-void SubscriberAbstract::onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) {}
+google_function::CloudEvent SubscriberAbstract::onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) {}
