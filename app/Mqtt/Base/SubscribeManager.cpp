@@ -28,9 +28,15 @@ void SubscribeManager::onConnected(async_client *client, const string &cause) {
 
 void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
     try {
-
+        map<string, SubscriberAbstract*>::iterator iter;
+        iter = this->subscriberMap.find(msg->get_topic());
+        if(iter != this->subscriberMap.end()){
+            iter->second->onSubscribe(client, msg);
+        }
     } catch (mqtt::exception e) {
 
+    } catch (std::exception e) {
+        std::cout<<e.what();
     }
 }
 
