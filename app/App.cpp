@@ -12,7 +12,7 @@ App::App(Config config) : config(config) {
 }
 
 string App::getAppPath() {
-    return Filesystem::getCurUserDocDir();
+    return Filesystem::getCurUserDocDir() + "/" + this->config.appName;
 }
 
 string App::getRuntimePath() {
@@ -68,11 +68,10 @@ SubscribeManager *App::getSubscribeManager() {
 void App::startMqtt() {
     subscribeManager = this->getSubscribeManager();
     subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->config.device));
-    subscribeManager->start(this->getDefaultMqttClient());
     subscribeManager->setExceptionHandler([this](async_client *client, const_message_ptr msg, std::exception e) {
-        this->getExceptionHandler()->report(e);
         this->getExceptionHandler()->handle(e);
     });
+    subscribeManager->start(this->getDefaultMqttClient());
 }
 
 void App::initAppEnv() {
@@ -82,8 +81,13 @@ void App::initAppEnv() {
 }
 
 void App::start() {
-    this->initAppEnv();
-    this->startMqtt();
+    try {
+        this->initAppEnv();
+        this->startMqtt();
+    } catch (std::exception &e) {
+        this->getExceptionHandler()->handle(e);
+        throw e;
+    }
 }
 
 App::~App() {

@@ -1,4 +1,5 @@
 {
+  "app_name": "smart_home",
   "mqtt": {
     "server_address": "tcp://127.0.0.1:1883"
   },

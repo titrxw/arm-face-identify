@@ -10,14 +10,14 @@
 
 class ExceptionHandler {
 public:
-    ExceptionHandler(shared_ptr<spdlog::logger>) : logger(logger) {
+    ExceptionHandler(shared_ptr<spdlog::logger> logger) : logger(logger) {
 
     }
-    void report(std::exception e) {
+    void report(std::exception &e) {
         this->logger->debug(e.what());
     }
-    void handle(std::exception e) {
-
+    void handle(std::exception &e) {
+        this->report(e);
     }
 protected:
     shared_ptr<spdlog::logger> logger;

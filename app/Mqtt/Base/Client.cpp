@@ -32,12 +32,8 @@ ClientCallback *Client::getClientCallback() {
 }
 
 void Client::connect() {
-    try {
-        this->client->connect(this->connectOptions, nullptr,*this->clientCallback);
-    }
-    catch (const mqtt::exception& exc) {
-        throw string("client Unable to connect to MQTT server, error:") + exc.what();
-    }
+    token_ptr res = this->client->connect(this->connectOptions, nullptr,*this->clientCallback);
+    res->wait_for(1000 * 100);
 }
 
 Client::~Client() {

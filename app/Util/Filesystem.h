@@ -40,7 +40,7 @@ public:
 
     string static getPathDir(const string& filePath) {
         string dirPath = filePath;
-        size_t p = filePath.find_last_of('\\');
+        size_t p = filePath.find_last_of('/');
         if (p != -1)
         {
             dirPath.erase(p);
@@ -54,9 +54,8 @@ public:
         }
 
         list <string> dirList;
-        dirList.push_front(dir);
-        string curDir = Filesystem::getPathDir(dir);
-        while (curDir != dir) {
+        string curDir = dir;
+        while (true) {
             if (Filesystem::dirExists(curDir)){
                 break;
             }
@@ -69,7 +68,8 @@ public:
 
         for (const auto& it : dirList)
         {
-            mkdir(it.c_str(), mode);
+            int res = mkdir(it.c_str(), mode);
+            std::cout<<res;
         }
     }
 };

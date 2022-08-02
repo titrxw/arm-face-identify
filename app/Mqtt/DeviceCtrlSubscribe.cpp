@@ -15,7 +15,7 @@ string DeviceCtrlSubscribe::getTopic() {
 
 google_function::CloudEvent
 DeviceCtrlSubscribe::onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) {
-
+    return cloudEvent;
 }
 
 DeviceCtrlSubscribe::~DeviceCtrlSubscribe() {

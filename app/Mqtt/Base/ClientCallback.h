@@ -54,7 +54,7 @@ public:
         }
 
         if (++this->reConnectRetry > this->maxConnectRetry) {
-            throw "mqtt retry too many times";
+            return;
         }
 
         this->reconnect();
