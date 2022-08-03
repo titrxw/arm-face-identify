@@ -3,12 +3,20 @@
 //
 
 #include "SubscribeManager.h"
-#include "Helper.h"
+#include "Helper.hpp"
+#include "../../Util/Encrypt.hpp"
 
 SubscribeManager::SubscribeManager() = default;
 
-google_function::CloudEvent SubscribeManager::getCloudEventFromMsg(const_message_ptr msg) {
-    return CloudEvent::jsonStrToCloudEvent(msg->get_payload_str());
+google_function::CloudEvent SubscribeManager::getCloudEventFromMsg(const_message_ptr msg, Device device) {
+    string payload;
+    try {
+        payload = Encrypt::decrypt(msg->get_payload_str(), device.appSecret);
+    } catch (std::exception e) {
+        payload = "";
+    }
+
+    return CloudEvent::jsonStrToCloudEvent(payload);
 }
 
 void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
@@ -56,32 +64,34 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
         }
     };
 
-    google_function::CloudEvent cloudEvent;
-    try {
-        cloudEvent = this->getCloudEventFromMsg(msg);
-    } catch (nlohmann::json::exception e) {
-        if (this->exceptionHandler != nullptr) {
-            this->exceptionHandler(client, msg, e);
-        }
-
-        return;
-    }
-
     map<string, SubscriberAbstract*>::iterator iter;
     iter = this->subscriberMap.find(msg->get_topic());
-    if(iter != this->subscriberMap.end()){
+    if(iter != this->subscriberMap.end()) {
+        Device device = iter->second->getDevice();
+
+        google_function::CloudEvent cloudEvent;
+        try {
+            cloudEvent = this->getCloudEventFromMsg(msg, device);
+        } catch (nlohmann::json::exception e) {
+            if (this->exceptionHandler != nullptr) {
+                this->exceptionHandler(client, msg, e);
+            }
+
+            return;
+        }
+
         try {
             cloudEvent = iter->second->onSubscribe(client, msg, cloudEvent);
         } catch (std::exception e) {
-            _exceptionHandler(client, iter->second->getDevice(), msg, cloudEvent, e, "ctrl");
+            _exceptionHandler(client, device, msg, cloudEvent, e, "ctrl");
             return;
         }
 
         //reply
         try {
-            client->publish(msg->create(Helper::getDeviceReplayTopic(iter->second->getDevice().appServerNamespace, iter->second->getDevice().appId), CloudEvent::cloudEventToJsonStr(cloudEvent)));
+            client->publish(msg->create(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), CloudEvent::cloudEventToJsonStr(cloudEvent)));
         } catch (std::exception e) {
-            _exceptionHandler(client, iter->second->getDevice(), msg, cloudEvent, e, "reply");
+            _exceptionHandler(client, device, msg, cloudEvent, e, "reply");
         }
     }
 }

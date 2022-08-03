@@ -2,8 +2,8 @@
 // Created by rxwyun on 2022/7/24.
 //
 
-#ifndef ARM_FACE_IDENTIFY_CLIENTCALLBACK_H
-#define ARM_FACE_IDENTIFY_CLIENTCALLBACK_H
+#ifndef ARM_FACE_IDENTIFY_CLIENTCALLBACK_HPP
+#define ARM_FACE_IDENTIFY_CLIENTCALLBACK_HPP
 
 #include <functional>
 #include <utility>
@@ -90,4 +90,4 @@ public:
     void delivery_complete(mqtt::delivery_token_ptr token) override {}
 };
 
-#endif //ARM_FACE_IDENTIFY_CLIENTCALLBACK_H
+#endif //ARM_FACE_IDENTIFY_CLIENTCALLBACK_HPP

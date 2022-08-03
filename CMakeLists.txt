@@ -41,25 +41,25 @@ add_executable(${projectName}
 #        app/Face/Train.h
 #        app/Face/Identify.cpp
 #        app/Face/Identify.h
-        app/App.cpp
-        app/App.h
+        app/Application.cpp
+        app/Application.h
         app/Mqtt/Base/Client.cpp
         app/Mqtt/Base/Client.h
         app/Mqtt/Base/SubscriberAbstract.cpp
         app/Mqtt/Base/SubscriberAbstract.h
         app/Mqtt/Base/SubscribeManager.cpp
         app/Mqtt/Base/SubscribeManager.h
-        app/Mqtt/Base/ClientCallback.h
+        app/Mqtt/Base/ClientCallback.hpp
         app/Mqtt/DeviceCtrlSubscribe.h
-        app/Mqtt/Base/Helper.h
-        app/Util/Encrypt.h
-        app/Util/CloudEvent.h
+        app/Mqtt/Base/Helper.hpp
+        app/Util/Encrypt.hpp
+        app/Util/CloudEvent.hpp
         config/Config.h
         config/Mqtt.h
         config/Device.h
         app/Mqtt/DeviceCtrlSubscribe.cpp
-        app/Util/Filesystem.h
-        app/Exception/ExceptionHandler.h)
+        app/Util/Filesystem.hpp
+        app/Exception/ExceptionHandler.hpp config/App.h)
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

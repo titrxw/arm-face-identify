@@ -8,7 +8,7 @@
 #include <sstream>
 #include "mqtt/include/mqtt/async_client.h"
 #include "../../../config/Device.h"
-#include "../../Util/CloudEvent.h"
+#include "../../Util/CloudEvent.hpp"
 
 using namespace std;
 using namespace mqtt;

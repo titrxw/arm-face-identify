@@ -2,22 +2,22 @@
 // Created by rxwyun on 2022/7/23.
 //
 
-#ifndef ARM_FACE_IDENTIFY_APP_H
-#define ARM_FACE_IDENTIFY_APP_H
+#ifndef ARM_FACE_IDENTIFY_APPLICATION_H
+#define ARM_FACE_IDENTIFY_APPLICATION_H
 
 #include <sstream>
 #include "../config/Config.h"
 #include "./Mqtt/Base/Client.h"
 #include "./Mqtt/Base/SubscribeManager.h"
-#include "./Exception/ExceptionHandler.h"
+#include "./Exception/ExceptionHandler.hpp"
 #include "spdlog/spdlog.h"
 
 using namespace std;
 
-class App {
+class Application {
 public:
-    explicit App(Config config);
-    ~App();
+    explicit Application(Config config);
+    ~Application();
 
     Client* makeMqttClient(const string& channel, Mqtt mqtt, Device device);
     Client* getDefaultMqttClient();
@@ -40,4 +40,4 @@ protected:
 };
 
 
-#endif //ARM_FACE_IDENTIFY_APP_H
+#endif //ARM_FACE_IDENTIFY_APPLICATION_H

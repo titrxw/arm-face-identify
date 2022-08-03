@@ -3,7 +3,7 @@
 //
 
 #include "DeviceCtrlSubscribe.h"
-#include "./Base/Helper.h"
+#include "./Base/Helper.hpp"
 
 DeviceCtrlSubscribe::DeviceCtrlSubscribe(Device device) : SubscriberAbstract(device) {
 

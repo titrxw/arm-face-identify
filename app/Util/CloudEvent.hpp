@@ -2,8 +2,8 @@
 // Created by rxw on 2022/7/28.
 //
 
-#ifndef ARM_FACE_IDENTIFY_CLOUDEVENT_H
-#define ARM_FACE_IDENTIFY_CLOUDEVENT_H
+#ifndef ARM_FACE_IDENTIFY_CLOUDEVENT_HPP
+#define ARM_FACE_IDENTIFY_CLOUDEVENT_HPP
 
 #include <nlohmann/json.hpp>
 #include "cloudevent/cloud_event.h"
@@ -62,4 +62,4 @@ class CloudEvent {
         }
 };
 
-#endif //ARM_FACE_IDENTIFY_CLOUDEVENT_H
+#endif //ARM_FACE_IDENTIFY_CLOUDEVENT_HPP

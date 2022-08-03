@@ -5,7 +5,7 @@
 //#include "core/helper/Include/Str.h"
 //#include "app/Face/Train.h"
 #include <fstream>
-#include "app/App.h"
+#include "app/Application.h"
 #include "config/Config.h"
 #include "config/Device.h"
 #include "config/Mqtt.h"
@@ -77,7 +77,7 @@ int main()
     ifs >> j;
     config = (Config)j;
 
-    (new App(config))->start();
+    (new Application(config))->start();
     while (std::tolower(std::cin.get()) != 'q')
         ;
 //    new ::Train("dsf", "sdfdsf");

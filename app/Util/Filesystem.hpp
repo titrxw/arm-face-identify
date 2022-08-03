@@ -2,8 +2,8 @@
 // Created by rxw on 2022/8/1.
 //
 
-#ifndef ARM_FACE_IDENTIFY_FILESYSTEM_H
-#define ARM_FACE_IDENTIFY_FILESYSTEM_H
+#ifndef ARM_FACE_IDENTIFY_FILESYSTEM_HPP
+#define ARM_FACE_IDENTIFY_FILESYSTEM_HPP
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -74,4 +74,4 @@ public:
     }
 };
 
-#endif //ARM_FACE_IDENTIFY_FILESYSTEM_H
+#endif //ARM_FACE_IDENTIFY_FILESYSTEM_HPP

@@ -7,7 +7,7 @@
 
 #include <sstream>
 #include "mqtt/include/mqtt/async_client.h"
-#include "ClientCallback.h"
+#include "ClientCallback.hpp"
 
 using namespace std;
 using namespace mqtt;

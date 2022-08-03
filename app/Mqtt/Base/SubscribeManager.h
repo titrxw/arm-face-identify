@@ -23,7 +23,7 @@ public:
 
     void start(Client *client);
 protected:
-    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg);
+    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg, Device device);
 protected:
     map<string, SubscriberAbstract*> subscriberMap;
     std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler;

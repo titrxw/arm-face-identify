@@ -2,8 +2,8 @@
 // Created by rxwyun on 2022/7/26.
 //
 
-#ifndef ARM_FACE_IDENTIFY_ENCRYPT_H
-#define ARM_FACE_IDENTIFY_ENCRYPT_H
+#ifndef ARM_FACE_IDENTIFY_ENCRYPT_HPP
+#define ARM_FACE_IDENTIFY_ENCRYPT_HPP
 
 #include <sstream>
 #include "cryptopp/include/cryptopp/aes.h"
@@ -72,4 +72,4 @@ public:
 };
 
 
-#endif //ARM_FACE_IDENTIFY_ENCRYPT_H
+#endif //ARM_FACE_IDENTIFY_ENCRYPT_HPP

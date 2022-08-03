@@ -2,24 +2,24 @@
 // Created by rxwyun on 2022/7/23.
 //
 
-#include "App.h"
+#include "Application.h"
 #include "./Mqtt/DeviceCtrlSubscribe.h"
-#include "./Util/Filesystem.h"
+#include "./Util/Filesystem.hpp"
 #include "spdlog/sinks/daily_file_sink.h"
 
-App::App(Config config) : config(config) {
+Application::Application(Config config) : config(config) {
 
 }
 
-string App::getAppPath() {
-    return Filesystem::getCurUserDocDir() + "/" + this->config.appName;
+string Application::getAppPath() {
+    return Filesystem::getCurUserDocDir() + "/" + this->config.app.appName;
 }
 
-string App::getRuntimePath() {
+string Application::getRuntimePath() {
     return this->getAppPath() + "/runtimes";
 }
 
-shared_ptr<spdlog::logger> App::getLogger() {
+shared_ptr<spdlog::logger> Application::getLogger() {
     if (this->logger != nullptr) {
         return this->logger;
     }
@@ -37,7 +37,7 @@ shared_ptr<spdlog::logger> App::getLogger() {
     return this->logger;
 }
 
-ExceptionHandler *App::getExceptionHandler() {
+ExceptionHandler *Application::getExceptionHandler() {
     if (this->exceptionHandler == nullptr) {
         this->exceptionHandler = new ExceptionHandler(this->getLogger());
     }
@@ -45,7 +45,7 @@ ExceptionHandler *App::getExceptionHandler() {
     return this->exceptionHandler;
 }
 
-Client *App::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
+Client *Application::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
     if (this->clientMap.end() == this->clientMap.find(channel)) {
         this->clientMap[channel] = new Client(mqtt.mqttServerAddress, device.appId, device.appSecret);
     }
@@ -53,11 +53,11 @@ Client *App::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
     return this->clientMap[channel];
 }
 
-Client *App::getDefaultMqttClient() {
+Client *Application::getDefaultMqttClient() {
     return this->makeMqttClient("default", this->config.mqtt, this->config.device);
 }
 
-SubscribeManager *App::getSubscribeManager() {
+SubscribeManager *Application::getSubscribeManager() {
     if (this->subscribeManager == nullptr) {
         this->subscribeManager = new SubscribeManager();
     }
@@ -65,7 +65,7 @@ SubscribeManager *App::getSubscribeManager() {
     return this->subscribeManager;
 }
 
-void App::startMqtt() {
+void Application::startMqtt() {
     subscribeManager = this->getSubscribeManager();
     subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->config.device));
     subscribeManager->setExceptionHandler([this](async_client *client, const_message_ptr msg, std::exception e) {
@@ -74,13 +74,13 @@ void App::startMqtt() {
     subscribeManager->start(this->getDefaultMqttClient());
 }
 
-void App::initAppEnv() {
+void Application::initAppEnv() {
     if (!Filesystem::dirExists(this->getRuntimePath())) {
         Filesystem::createDir(this->getRuntimePath());
     }
 }
 
-void App::start() {
+void Application::start() {
     try {
         this->initAppEnv();
         this->startMqtt();
@@ -90,7 +90,7 @@ void App::start() {
     }
 }
 
-App::~App() {
+Application::~Application() {
     delete this->subscribeManager;
     delete this->exceptionHandler;
     spdlog::drop_all();
