@@ -3,7 +3,7 @@
 //
 
 #include "SubscribeManager.h"
-
+#include <time.h>
 #include <utility>
 #include "Helper.hpp"
 #include "../../Util/Encrypt.hpp"
@@ -12,6 +12,11 @@ SubscribeManager::SubscribeManager() = default;
 
 const_message_ptr SubscribeManager::createMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, Device device) {
     const_message_ptr msg;
+    time_t timep;
+    time (&timep);
+    char tmp[64];
+    strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
+    cloudEvent.set_time(tmp);
     return msg->create(topic, Encrypt::encrypt(CloudEvent::cloudEventToJsonStr(std::move(cloudEvent)), device.appSecret));
 }
 

@@ -20,7 +20,8 @@ class CloudEvent {
             jsonObj["dataschema"] = cloudEvent.data_schema();
             jsonObj["subject"] = cloudEvent.subject();
             jsonObj["time"] = cloudEvent.time();
-            jsonObj["data"] = cloudEvent.data();
+            nlohmann::json jsonData = nlohmann::json::parse(cloudEvent.data());
+            jsonObj["data"] = jsonData;
 
             return to_string(jsonObj);
         }
