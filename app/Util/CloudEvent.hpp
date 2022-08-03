@@ -10,7 +10,7 @@
 
 class CloudEvent {
     public:
-        string static cloudEventToJsonStr(google_function::CloudEvent cloudEvent) {
+        string static cloudEventToJsonStr(const google_function::CloudEvent& cloudEvent) {
             nlohmann::json jsonObj;
             jsonObj["id"] = cloudEvent.id();
             jsonObj["source"] = cloudEvent.source();
@@ -26,7 +26,7 @@ class CloudEvent {
         }
 
         google_function::CloudEvent static jsonStrToCloudEvent(const string& jsonStr) {
-            nlohmann::json jsonObj = json::parse(jsonStr);
+            nlohmann::json jsonObj = nlohmann::json::parse(jsonStr);
             if (!jsonObj.contains("id") || !jsonObj.contains("source") ||
             !jsonObj.contains("type")) {
                 throw nlohmann::json::other_error::create(400,

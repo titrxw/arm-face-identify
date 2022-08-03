@@ -3,10 +3,17 @@
 //
 
 #include "SubscribeManager.h"
+
+#include <utility>
 #include "Helper.hpp"
 #include "../../Util/Encrypt.hpp"
 
 SubscribeManager::SubscribeManager() = default;
+
+const_message_ptr SubscribeManager::createMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, Device device) {
+    const_message_ptr msg;
+    return msg->create(topic, Encrypt::encrypt(CloudEvent::cloudEventToJsonStr(std::move(cloudEvent)), device.appSecret));
+}
 
 google_function::CloudEvent SubscribeManager::getCloudEventFromMsg(const_message_ptr msg, Device device) {
     string payload;
@@ -44,7 +51,7 @@ void SubscribeManager::onConnected(async_client *client, const string &cause) {
 }
 
 void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
-    std::function<void (async_client *, Device, const_message_ptr, google_function::CloudEvent, std::exception, string)> _exceptionHandler = [this](async_client *client, Device device, const_message_ptr msg, google_function::CloudEvent cloudEvent, std::exception e, string type) {
+    std::function<void (async_client *, Device, const_message_ptr, google_function::CloudEvent, std::exception &, string)> _exceptionHandler = [this](async_client *client, Device device, const_message_ptr msg, google_function::CloudEvent cloudEvent, std::exception &e, string type) {
         try {
             nlohmann::json err;
             err["error"] = e.what();
@@ -52,7 +59,7 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
             err["payload"] = cloudEvent.data();
             cloudEvent.set_type(type + "_exception");
             cloudEvent.set_data(to_string(err));
-            client->publish(msg->create(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), CloudEvent::cloudEventToJsonStr(cloudEvent)));
+            client->publish(this->createMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device));
         } catch (std::exception reportE) {
             if (this->exceptionHandler != nullptr) {
                 this->exceptionHandler(client, msg, reportE);
@@ -72,7 +79,7 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
         google_function::CloudEvent cloudEvent;
         try {
             cloudEvent = this->getCloudEventFromMsg(msg, device);
-        } catch (nlohmann::json::exception e) {
+        } catch (nlohmann::json::exception &e) {
             if (this->exceptionHandler != nullptr) {
                 this->exceptionHandler(client, msg, e);
             }
@@ -82,14 +89,14 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
 
         try {
             cloudEvent = iter->second->onSubscribe(client, msg, cloudEvent);
-        } catch (std::exception e) {
+        } catch (std::exception &e) {
             _exceptionHandler(client, device, msg, cloudEvent, e, "ctrl");
             return;
         }
 
         //reply
         try {
-            client->publish(msg->create(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), CloudEvent::cloudEventToJsonStr(cloudEvent)));
+            client->publish(this->createMsgFromCloudEvent(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, device));
         } catch (std::exception e) {
             _exceptionHandler(client, device, msg, cloudEvent, e, "reply");
         }

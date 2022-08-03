@@ -23,6 +23,7 @@ public:
 
     void start(Client *client);
 protected:
+    const_message_ptr createMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, Device device);
     google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg, Device device);
 protected:
     map<string, SubscriberAbstract*> subscriberMap;
