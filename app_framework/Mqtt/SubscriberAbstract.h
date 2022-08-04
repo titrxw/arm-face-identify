@@ -5,13 +5,9 @@
 #ifndef ARM_FACE_IDENTIFY_SUBSCRIBERABSTRACT_H
 #define ARM_FACE_IDENTIFY_SUBSCRIBERABSTRACT_H
 
-#include <sstream>
-#include "mqtt/include/mqtt/async_client.h"
-#include "../../../config/Device.h"
-#include "../../Util/CloudEvent.hpp"
-
-using namespace std;
-using namespace mqtt;
+#include "Client.h"
+#include "../../config/Device.h"
+#include "../Util/CloudEvent.hpp"
 
 class SubscriberAbstract {
 public:

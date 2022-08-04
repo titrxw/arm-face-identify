@@ -8,7 +8,7 @@
 #include <sstream>
 #include "vector"
 #include "opencv2/face.hpp"
-#include "../../core/train/Include/DialogVideoFaceTrain.h"
+#include "../../identify_core/train/Include/DialogVideoFaceTrain.h"
 
 using namespace cv;
 using namespace cv::face;

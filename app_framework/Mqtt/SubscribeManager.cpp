@@ -3,33 +3,9 @@
 //
 
 #include "SubscribeManager.h"
-#include <time.h>
-#include <utility>
 #include "Helper.hpp"
-#include "../../Util/Encrypt.hpp"
 
 SubscribeManager::SubscribeManager() = default;
-
-const_message_ptr SubscribeManager::createMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, Device device) {
-    const_message_ptr msg;
-    time_t timep;
-    time (&timep);
-    char tmp[64];
-    strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
-    cloudEvent.set_time(tmp);
-    return msg->create(topic, Encrypt::encrypt(CloudEvent::cloudEventToJsonStr(std::move(cloudEvent)), device.appSecret));
-}
-
-google_function::CloudEvent SubscribeManager::getCloudEventFromMsg(const_message_ptr msg, Device device) {
-    string payload;
-    try {
-        payload = Encrypt::decrypt(msg->get_payload_str(), device.appSecret);
-    } catch (std::exception e) {
-        payload = "";
-    }
-
-    return CloudEvent::jsonStrToCloudEvent(payload);
-}
 
 void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
     this->subscriberMap[subscribe->getTopic()] = subscribe;
@@ -64,7 +40,7 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
             err["payload"] = cloudEvent.data();
             cloudEvent.set_type(type + "_exception");
             cloudEvent.set_data(to_string(err));
-            client->publish(this->createMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device));
+            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
         } catch (std::exception reportE) {
             if (this->exceptionHandler != nullptr) {
                 this->exceptionHandler(client, msg, reportE);
@@ -83,7 +59,7 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
 
         google_function::CloudEvent cloudEvent;
         try {
-            cloudEvent = this->getCloudEventFromMsg(msg, device);
+            cloudEvent = Helper::getCloudEventFromMsg(msg, device.appSecret);
         } catch (nlohmann::json::exception &e) {
             if (this->exceptionHandler != nullptr) {
                 this->exceptionHandler(client, msg, e);
@@ -101,7 +77,7 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
 
         //reply
         try {
-            client->publish(this->createMsgFromCloudEvent(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, device));
+            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
         } catch (std::exception e) {
             _exceptionHandler(client, device, msg, cloudEvent, e, "reply");
         }

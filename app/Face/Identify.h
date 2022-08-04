@@ -9,7 +9,7 @@
 #include "vector"
 #include "opencv2/face.hpp"
 #include "opencv2/opencv.hpp"
-#include "../../core/identify/Include/DialogVideoFaceIdentify.h"
+#include "../../identify_core/identify/Include/DialogVideoFaceIdentify.h"
 
 using namespace cv;
 using namespace cv::face;
@@ -24,7 +24,8 @@ public:
     Ptr<CascadeClassifier> getCascadeClassifier();
     Ptr<FaceRecognizer> getModelRecognizer();
     ArmFaceIdentify::DialogVideoFaceIdentify *getFaceIdentifyHandler();
-    void startIdentifyFromVideoCapture(VideoCapture *vc);
+    void setPredictMatConfidence(double predictMatConfidence);
+    vector<ArmFaceIdentify::PredictMat> startIdentifyFromVideoCapture(VideoCapture *vc);
 
 protected:
     string cascadeFilePath;
@@ -33,6 +34,7 @@ protected:
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
     ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler;
+    double predictMatConfidence = 2000;
 };
 
 #endif // ARM_FACE_IDENTIFY_IDENTIFY_H

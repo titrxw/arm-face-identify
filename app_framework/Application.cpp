@@ -3,7 +3,6 @@
 //
 
 #include "Application.h"
-#include "./Mqtt/DeviceCtrlSubscribe.h"
 #include "./Util/Filesystem.hpp"
 #include "spdlog/sinks/daily_file_sink.h"
 
@@ -45,6 +44,13 @@ ExceptionHandler *Application::getExceptionHandler() {
     return this->exceptionHandler;
 }
 
+void Application::initAppEnv() {
+    if (!Filesystem::dirExists(this->getRuntimePath())) {
+        Filesystem::createDir(this->getRuntimePath());
+    }
+}
+
+
 Client *Application::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
     if (this->clientMap.end() == this->clientMap.find(channel)) {
         this->clientMap[channel] = new Client(mqtt.mqttServerAddress, device.appId, device.appSecret);
@@ -67,23 +73,26 @@ SubscribeManager *Application::getSubscribeManager() {
 
 void Application::startMqtt() {
     subscribeManager = this->getSubscribeManager();
-    subscribeManager->registerSubscriber(new DeviceCtrlSubscribe(this->config.device));
     subscribeManager->setExceptionHandler([this](async_client *client, const_message_ptr msg, std::exception e) {
         this->getExceptionHandler()->handle(e);
     });
     subscribeManager->start(this->getDefaultMqttClient());
 }
 
-void Application::initAppEnv() {
-    if (!Filesystem::dirExists(this->getRuntimePath())) {
-        Filesystem::createDir(this->getRuntimePath());
-    }
+void Application::beforeStart() {
+
+}
+
+void Application::afterStart() {
+
 }
 
 void Application::start() {
     try {
         this->initAppEnv();
+        this->beforeStart();
         this->startMqtt();
+        this->afterStart();
     } catch (std::exception &e) {
         this->getExceptionHandler()->handle(e);
         throw e;

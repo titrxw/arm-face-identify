@@ -10,56 +10,62 @@ project(${projectName})
 
 add_executable(${projectName}
         main.cpp
-#        core/identify/Source/FaceIdentify.cpp
-#        core/identify/Include/FaceIdentify.h
-#        core/identify/Include/Identify.h
-#        core/identify/Source/Identify.cpp
-#        core/train/Source/FaceTrain.cpp
-#        core/train/Include/FaceTrain.h
-#        core/train/Include/Train.h
-#        core/train/Source/Train.cpp
-#        core/helper/Include/Str.h
-#        core/helper/Source/Str.cpp
-#        core/train/Source/DialogVideoFaceTrain.cpp
-#        core/train/Include/DialogVideoFaceTrain.h
-#        core/base/Source/Opencv.cpp
-#        core/base/Include/Opencv.h
-#        core/helper/Source/File.cpp
-#        core/helper/Include/File.h
-#        core/base/Enum/Event.h
-#        core/base/Include/Event/BaseEvent.h
-#        core/base/Include/Event/DetectedFeatureMatEvent.h
-#        core/train/Source/DialogVideoFaceTrain.cpp
-#        core/train/Include/DialogVideoFaceTrain.h
-#        core/entity/Include/PredictMat.h
-#        core/identify/Source/DialogVideoFaceIdentify.cpp
-#        core/identify/Include/DialogVideoFaceIdentify.h
-#        core/base/Include/Event/PredictFeatureMatEvent.h
-#        core/entity/Include/DetectedMat.h
+#        identify_core/identify/Source/FaceIdentify.cpp
+#        identify_core/identify/Include/FaceIdentify.h
+#        identify_core/identify/Include/Identify.h
+#        identify_core/identify/Source/Identify.cpp
+#        identify_core/train/Source/FaceTrain.cpp
+#        identify_core/train/Include/FaceTrain.h
+#        identify_core/train/Include/Train.h
+#        identify_core/train/Source/Train.cpp
+#        identify_core/helper/Include/Str.h
+#        identify_core/helper/Source/Str.cpp
+#        identify_core/train/Source/DialogVideoFaceTrain.cpp
+#        identify_core/train/Include/DialogVideoFaceTrain.h
+#        identify_core/base/Source/Opencv.cpp
+#        identify_core/base/Include/Opencv.h
+#        identify_core/helper/Source/File.cpp
+#        identify_core/helper/Include/File.h
+#        identify_core/base/Enum/Event.h
+#        identify_core/base/Include/Event/BaseEvent.h
+#        identify_core/base/Include/Event/DetectedFeatureMatEvent.h
+#        identify_core/train/Source/DialogVideoFaceTrain.cpp
+#        identify_core/train/Include/DialogVideoFaceTrain.h
+#        identify_core/entity/Include/PredictMat.h
+#        identify_core/identify/Source/DialogVideoFaceIdentify.cpp
+#        identify_core/identify/Include/DialogVideoFaceIdentify.h
+#        identify_core/base/Include/Event/PredictFeatureMatEvent.h
+#        identify_core/entity/Include/DetectedMat.h
 #
+
+        app_framework/Mqtt/Client.cpp
+        app_framework/Mqtt/Client.h
+        app_framework/Mqtt/SubscriberAbstract.cpp
+        app_framework/Mqtt/SubscriberAbstract.h
+        app_framework/Mqtt/SubscribeManager.cpp
+        app_framework/Mqtt/SubscribeManager.h
+        app_framework/Mqtt/ClientCallback.hpp
+        app_framework/Mqtt/Helper.hpp
+        app_framework/Util/Encrypt.hpp
+        app_framework/Util/CloudEvent.hpp
+        app_framework/Util/Filesystem.hpp
+        app_framework/Exception/ExceptionHandler.hpp
+        app_framework/Application.cpp
+        app_framework/Application.h
+
 #        app/Face/Train.cpp
 #        app/Face/Train.h
 #        app/Face/Identify.cpp
 #        app/Face/Identify.h
-        app/Application.cpp
-        app/Application.h
-        app/Mqtt/Base/Client.cpp
-        app/Mqtt/Base/Client.h
-        app/Mqtt/Base/SubscriberAbstract.cpp
-        app/Mqtt/Base/SubscriberAbstract.h
-        app/Mqtt/Base/SubscribeManager.cpp
-        app/Mqtt/Base/SubscribeManager.h
-        app/Mqtt/Base/ClientCallback.hpp
+        app/IdentifyApplication.cpp
+        app/IdentifyApplication.h
         app/Mqtt/DeviceCtrlSubscribe.h
-        app/Mqtt/Base/Helper.hpp
-        app/Util/Encrypt.hpp
-        app/Util/CloudEvent.hpp
         config/Config.h
         config/Mqtt.h
         config/Device.h
+        config/App.h
         app/Mqtt/DeviceCtrlSubscribe.cpp
-        app/Util/Filesystem.hpp
-        app/Exception/ExceptionHandler.hpp config/App.h)
+        )
 
 MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

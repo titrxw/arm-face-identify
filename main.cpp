@@ -5,10 +5,9 @@
 //#include "core/helper/Include/Str.h"
 //#include "app/Face/Train.h"
 #include <fstream>
-#include "app/Application.h"
+#include "app/IdentifyApplication.h"
 #include "config/Config.h"
 #include "config/Device.h"
-#include "config/Mqtt.h"
 
 //using namespace ArmFaceIdentify;
 
@@ -77,7 +76,7 @@ int main()
     ifs >> j;
     config = (Config)j;
 
-    (new Application(config))->start();
+    (new IdentifyApplication(config))->start();
     while (std::tolower(std::cin.get()) != 'q')
         ;
 //    new ::Train("dsf", "sdfdsf");

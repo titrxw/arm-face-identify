@@ -7,7 +7,6 @@
 
 #include "map"
 #include "SubscriberAbstract.h"
-#include "Client.h"
 
 using namespace std;
 
@@ -22,9 +21,7 @@ public:
     void onMessage(async_client *client, const_message_ptr msg);
 
     void start(Client *client);
-protected:
-    const_message_ptr createMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, Device device);
-    google_function::CloudEvent getCloudEventFromMsg(const_message_ptr msg, Device device);
+
 protected:
     map<string, SubscriberAbstract*> subscriberMap;
     std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler;

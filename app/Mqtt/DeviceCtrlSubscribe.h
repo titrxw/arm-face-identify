@@ -5,7 +5,7 @@
 #ifndef ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_H
 #define ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_H
 
-#include "./Base/SubscriberAbstract.h"
+#include "../../app_framework/Mqtt/SubscriberAbstract.h"
 
 class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
 protected:

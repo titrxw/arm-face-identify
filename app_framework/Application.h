@@ -7,8 +7,8 @@
 
 #include <sstream>
 #include "../config/Config.h"
-#include "./Mqtt/Base/Client.h"
-#include "./Mqtt/Base/SubscribeManager.h"
+#include "Mqtt/Client.h"
+#include "Mqtt/SubscribeManager.h"
 #include "./Exception/ExceptionHandler.hpp"
 #include "spdlog/spdlog.h"
 
@@ -16,13 +16,15 @@ using namespace std;
 
 class Application {
 public:
-    explicit Application(Config config);
+    Application(Config config);
     ~Application();
 
     Client* makeMqttClient(const string& channel, Mqtt mqtt, Device device);
     Client* getDefaultMqttClient();
     SubscribeManager* getSubscribeManager();
+
     void start();
+
 protected:
     ExceptionHandler* getExceptionHandler();
     shared_ptr<spdlog::logger> getLogger();
@@ -31,12 +33,16 @@ protected:
 
     void initAppEnv();
     void startMqtt();
+
+    virtual void beforeStart();
+    virtual void afterStart();
+
 protected:
     Config config;
-    map<string, Client*>clientMap;
-    SubscribeManager *subscribeManager{};
     shared_ptr<spdlog::logger> logger;
     ExceptionHandler *exceptionHandler;
+    map<string, Client*>clientMap;
+    SubscribeManager *subscribeManager{};
 };
 
 
