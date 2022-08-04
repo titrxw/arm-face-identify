@@ -67,7 +67,7 @@ add_executable(${projectName}
         app/Mqtt/DeviceCtrlSubscribe.cpp
         )
 
-MESSAGE(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "current processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
