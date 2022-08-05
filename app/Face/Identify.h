@@ -18,23 +18,24 @@ using namespace std;
 class Identify
 {
 public:
-    Identify(const string& cascadeFilePath, vector<string> modelFilesPath);
+    Identify(const string& cascadeFilePath, vector<string> modelFilesPath, int videoCaptureIndex = 0);
     ~Identify();
 
     Ptr<CascadeClassifier> getCascadeClassifier();
     Ptr<FaceRecognizer> getModelRecognizer();
     ArmFaceIdentify::DialogVideoFaceIdentify *getFaceIdentifyHandler();
     void setPredictMatConfidence(double predictMatConfidence);
-    vector<ArmFaceIdentify::PredictMat> startIdentifyFromVideoCapture(VideoCapture *vc);
+    vector<ArmFaceIdentify::PredictMat> startIdentifyFromVideoCapture();
 
 protected:
     string cascadeFilePath;
     vector<string> modelFilesPath;
+    int videoCaptureIndex;
+    double predictMatConfidence = 2000;
     Ptr<CascadeClassifier> cascade;
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
     ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler;
-    double predictMatConfidence = 2000;
 };
 
 #endif // ARM_FACE_IDENTIFY_IDENTIFY_H

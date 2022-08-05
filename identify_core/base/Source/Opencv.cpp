@@ -47,11 +47,7 @@ vector<ArmFaceIdentify::DetectedMat> ArmFaceIdentify::Opencv::detectFaceMatFromM
 
 ArmFaceIdentify::Opencv::~Opencv()
 {
-    if (this->eventDispatcher)
-    {
-        delete this->eventDispatcher;
-        this->eventDispatcher = nullptr;
-    }
+
 }
 
 void ArmFaceIdentify::Opencv::setEventDispatcher(EventDispatcher<int, void(BaseEvent *)> *eventDispatcher)

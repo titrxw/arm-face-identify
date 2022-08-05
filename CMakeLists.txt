@@ -10,32 +10,32 @@ project(${projectName})
 
 add_executable(${projectName}
         main.cpp
-#        identify_core/identify/Source/FaceIdentify.cpp
-#        identify_core/identify/Include/FaceIdentify.h
-#        identify_core/identify/Include/Identify.h
-#        identify_core/identify/Source/Identify.cpp
-#        identify_core/train/Source/FaceTrain.cpp
-#        identify_core/train/Include/FaceTrain.h
-#        identify_core/train/Include/Train.h
-#        identify_core/train/Source/Train.cpp
-#        identify_core/helper/Include/Str.h
-#        identify_core/helper/Source/Str.cpp
-#        identify_core/train/Source/DialogVideoFaceTrain.cpp
-#        identify_core/train/Include/DialogVideoFaceTrain.h
-#        identify_core/base/Source/Opencv.cpp
-#        identify_core/base/Include/Opencv.h
-#        identify_core/helper/Source/File.cpp
-#        identify_core/helper/Include/File.h
-#        identify_core/base/Enum/Event.h
-#        identify_core/base/Include/Event/BaseEvent.h
-#        identify_core/base/Include/Event/DetectedFeatureMatEvent.h
-#        identify_core/train/Source/DialogVideoFaceTrain.cpp
-#        identify_core/train/Include/DialogVideoFaceTrain.h
-#        identify_core/entity/Include/PredictMat.h
-#        identify_core/identify/Source/DialogVideoFaceIdentify.cpp
-#        identify_core/identify/Include/DialogVideoFaceIdentify.h
-#        identify_core/base/Include/Event/PredictFeatureMatEvent.h
-#        identify_core/entity/Include/DetectedMat.h
+        identify_core/identify/Source/FaceIdentify.cpp
+        identify_core/identify/Include/FaceIdentify.h
+        identify_core/identify/Include/Identify.h
+        identify_core/identify/Source/Identify.cpp
+        identify_core/train/Source/FaceTrain.cpp
+        identify_core/train/Include/FaceTrain.h
+        identify_core/train/Include/Train.h
+        identify_core/train/Source/Train.cpp
+        identify_core/helper/Include/Str.h
+        identify_core/helper/Source/Str.cpp
+        identify_core/train/Source/DialogVideoFaceTrain.cpp
+        identify_core/train/Include/DialogVideoFaceTrain.h
+        identify_core/base/Source/Opencv.cpp
+        identify_core/base/Include/Opencv.h
+        identify_core/helper/Source/File.cpp
+        identify_core/helper/Include/File.h
+        identify_core/base/Enum/Event.h
+        identify_core/base/Include/Event/BaseEvent.h
+        identify_core/base/Include/Event/DetectedFeatureMatEvent.h
+        identify_core/train/Source/DialogVideoFaceTrain.cpp
+        identify_core/train/Include/DialogVideoFaceTrain.h
+        identify_core/entity/Include/PredictMat.h
+        identify_core/identify/Source/DialogVideoFaceIdentify.cpp
+        identify_core/identify/Include/DialogVideoFaceIdentify.h
+        identify_core/base/Include/Event/PredictFeatureMatEvent.h
+        identify_core/entity/Include/DetectedMat.h
 #
 
         app_framework/Mqtt/Client.cpp
@@ -53,19 +53,19 @@ add_executable(${projectName}
         app_framework/Application.cpp
         app_framework/Application.h
 
-#        app/Face/Train.cpp
-#        app/Face/Train.h
-#        app/Face/Identify.cpp
-#        app/Face/Identify.h
+        app/Face/Train.cpp
+        app/Face/Train.h
+        app/Face/Identify.cpp
+        app/Face/Identify.h
         app/IdentifyApplication.cpp
         app/IdentifyApplication.h
-        app/Mqtt/DeviceCtrlSubscribe.h
+        app/Mqtt/DeviceCtrlSubscribe.hpp
         config/Config.h
         config/Mqtt.h
         config/Device.h
         config/App.h
-        app/Mqtt/DeviceCtrlSubscribe.cpp
-        )
+        config/FaceIdentify.h
+        app/Define.h )
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
@@ -118,6 +118,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.so.1")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp_l.so")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/linux/libopencv_face.so")
 endif()
 
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录

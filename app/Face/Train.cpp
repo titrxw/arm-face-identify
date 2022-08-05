@@ -8,12 +8,6 @@ Train::Train(const string& cascadeFilePath, string targetDir) : cascadeFilePath(
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
 }
 
-Train::~Train() {
-    if (this->faceTrainHandler != nullptr) {
-        delete this->faceTrainHandler;
-    }
-}
-
 Ptr<CascadeClassifier> Train::getCascadeClassifier() {
     if (this->cascade == nullptr) {
         this->cascade = new CascadeClassifier(this->cascadeFilePath);
@@ -40,4 +34,21 @@ ArmFaceIdentify::DialogVideoFaceTrain *Train::getFaceTrainHandler() {
 
 string Train::trainFromRemoteImgUrls(vector<string> remoteImgUrls) {
     return std::string();
+}
+
+Train::~Train() {
+    if (this->modelRecognizer) {
+        this->modelRecognizer.release();
+    }
+    if (this->cascade) {
+        this->cascade.release();
+    }
+
+    delete this->eventDispatcher;
+    this->eventDispatcher = nullptr;
+
+    if (this->faceTrainHandler != nullptr) {
+        delete this->faceTrainHandler;
+        this->faceTrainHandler = nullptr;
+    }
 }

@@ -44,10 +44,5 @@ void ArmFaceIdentify::FaceTrain::trainMats(vector<Mat> &mats, vector<int> &matLa
 }
 
 ArmFaceIdentify::FaceTrain::~FaceTrain() {
-    if (!this->modelRecognizer.empty()) {
-        this->modelRecognizer.release();
-    }
-    if (!this->cascade.empty()) {
-        this->cascade.release();
-    }
+
 }

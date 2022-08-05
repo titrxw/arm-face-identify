@@ -10,5 +10,9 @@
     "app_server_namespace": "smart_home",
     "app_id": "sdgvww54lyO3Cd1EsSw735ps",
     "app_secret": "7ba7abc0e79841af8f085db7b0fd5344"
+  },
+  "face_identify": {
+    "video_captcha_index": 0,
+    "predict_mat_confidence": 2000.00
   }
 }

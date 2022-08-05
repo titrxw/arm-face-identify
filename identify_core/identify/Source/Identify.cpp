@@ -29,8 +29,5 @@ vector<ArmFaceIdentify::PredictMat> ArmFaceIdentify::Identify::identifyMat(Mat &
 
 ArmFaceIdentify::Identify::~Identify()
 {
-    if (!this->cascade.empty())
-    {
-        this->cascade.release();
-    }
+
 }

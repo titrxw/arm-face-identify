@@ -16,7 +16,5 @@ ArmFaceIdentify::FaceIdentify::FaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<
 }
 
 ArmFaceIdentify::FaceIdentify::~FaceIdentify() {
-    if (!this->modelRecognizer.empty()) {
-        this->modelRecognizer.release();
-    }
+
 }

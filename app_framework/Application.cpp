@@ -101,7 +101,11 @@ void Application::start() {
 
 Application::~Application() {
     delete this->subscribeManager;
+    this->subscribeManager = nullptr;
+
     delete this->exceptionHandler;
+    this->exceptionHandler = nullptr;
+
     spdlog::drop_all();
 
     map<string, Client*>::iterator iter;

@@ -4,7 +4,7 @@
 
 #include "Identify.h"
 
-Identify::Identify(const string& cascadeFilePath, vector<string> modelFilesPath) : cascadeFilePath(cascadeFilePath), modelFilesPath(modelFilesPath) {
+Identify::Identify(const string& cascadeFilePath, vector<string> modelFilesPath, int videoCaptureIndex) : cascadeFilePath(cascadeFilePath), modelFilesPath(modelFilesPath), videoCaptureIndex(videoCaptureIndex) {
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
 }
 
@@ -23,6 +23,9 @@ Ptr<CascadeClassifier> Identify::getCascadeClassifier() {
 Ptr<FaceRecognizer> Identify::getModelRecognizer() {
     if (this->modelRecognizer == nullptr) {
         this->modelRecognizer = EigenFaceRecognizer::create();
+        for (int i = 0; i < this->modelFilesPath.size(); i++) {
+            this->modelRecognizer->read(this->modelFilesPath[i]);
+        }
     }
 
     return this->modelRecognizer;
@@ -39,21 +42,35 @@ ArmFaceIdentify::DialogVideoFaceIdentify *Identify::getFaceIdentifyHandler() {
             if (predictMatMap[0].confidence < this->predictMatConfidence){
                 return true;
             }
+
+            return false;
         });
     }
 
     return this->faceIdentifyHandler;
 }
 
-vector<ArmFaceIdentify::PredictMat> Identify::startIdentifyFromVideoCapture(VideoCapture *vc) {
-    vector<ArmFaceIdentify::PredictMat> predictMatMap = this->getFaceIdentifyHandler()->identifyFromVideoCapture(vc);
-    vc->release();
+vector<ArmFaceIdentify::PredictMat> Identify::startIdentifyFromVideoCapture() {
+    VideoCapture capture(this->videoCaptureIndex);
+    vector<ArmFaceIdentify::PredictMat> predictMatMap = this->getFaceIdentifyHandler()->identifyFromVideoCapture(&capture);
+    capture.release();
 
     return predictMatMap;
 }
 
 Identify::~Identify() {
+    if (this->cascade){
+        this->cascade.release();
+    }
+    if (this->modelRecognizer) {
+        this->modelRecognizer.release();
+    }
+
+    delete this->eventDispatcher;
+    this->eventDispatcher = nullptr;
+
     if (this->faceIdentifyHandler != nullptr) {
         delete this->faceIdentifyHandler;
+        this->faceIdentifyHandler = nullptr;
     }
 }
