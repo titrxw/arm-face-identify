@@ -14,11 +14,11 @@
 class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
 public:
     explicit DeviceCtrlSubscribe(Device device, Identify *identify, Train *train) : SubscriberAbstract(device), identify(identify), train(train) {
-
+        this->identify->setPredictMatMapCallback(DeviceCtrlSubscribe::predictedMatCallback);
     }
     ~DeviceCtrlSubscribe() = default;
 
-    void predictedMatCallback(ArmFaceIdentify::PredictMat predictMat, string flag) {
+    void static predictedMatCallback(ArmFaceIdentify::PredictMat predictMat, string flag) {
 
     }
 

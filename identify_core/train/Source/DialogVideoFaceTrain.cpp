@@ -29,7 +29,7 @@ void ArmFaceIdentify::DialogVideoFaceTrain::setCanDetectedNextMatWithFlag(string
 }
 
 bool ArmFaceIdentify::DialogVideoFaceTrain::isCanDetectedNextMat() const {
-    return waitKey(10) == 'n' || this->canDetectedNextMatFlag != "";
+    return waitKey(10) == 'n' || !this->canDetectedNextMatFlag.empty();
 }
 
 void ArmFaceIdentify::DialogVideoFaceTrain::stopDetectedFromVideo()

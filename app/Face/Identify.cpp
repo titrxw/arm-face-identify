@@ -43,7 +43,7 @@ ArmFaceIdentify::DialogVideoFaceIdentify *Identify::getFaceIdentifyHandler() {
                 return;
             }
 
-            if (predictMatMap[0].confidence < this->predictMatConfidence){
+            if (predictMatMap[0].confidence > this->predictMatConfidence){
                 return;
             }
 

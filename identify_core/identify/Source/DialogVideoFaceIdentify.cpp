@@ -39,7 +39,7 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::setCanIdentifyNextMatWithFlag(str
 }
 
 bool ArmFaceIdentify::DialogVideoFaceIdentify::isCanIdentifyNextMat() const {
-    return this->canIdentifyNextMatFlag != "";
+    return !this->canIdentifyNextMatFlag.empty();
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
