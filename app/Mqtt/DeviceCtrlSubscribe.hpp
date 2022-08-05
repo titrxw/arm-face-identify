@@ -9,6 +9,7 @@
 #include "../../app_framework/Mqtt/Helper.hpp"
 #include "../Face/Identify.h"
 #include "../Face/Train.h"
+#include "../Define.h"
 
 class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
 public:
