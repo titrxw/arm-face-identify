@@ -16,7 +16,7 @@ public:
     ~SubscribeManager();
 
     void registerSubscriber(SubscriberAbstract *subscribe);
-    void setExceptionHandler(std::function<void (async_client *client, const_message_ptr msg, std::exception e)>);
+    void setExceptionHandler(std::function<void (std::exception &e)>);
     void onConnected(async_client *client, const string& cause);
     void onMessage(async_client *client, const_message_ptr msg);
 
@@ -24,7 +24,7 @@ public:
 
 protected:
     map<string, SubscriberAbstract*> subscriberMap;
-    std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler;
+    std::function<void (std::exception &e)> exceptionHandler;
 };
 
 

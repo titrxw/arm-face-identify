@@ -31,31 +31,35 @@ Ptr<FaceRecognizer> Identify::getModelRecognizer() {
     return this->modelRecognizer;
 }
 
+void Identify::setPredictMatMapCallback(std::function<void (ArmFaceIdentify::PredictMat, string)> callback) {
+    this->predictMatCallback = callback;
+}
+
 ArmFaceIdentify::DialogVideoFaceIdentify *Identify::getFaceIdentifyHandler() {
     if (this->faceIdentifyHandler == nullptr) {
         this->faceIdentifyHandler = new ArmFaceIdentify::DialogVideoFaceIdentify(this->getCascadeClassifier(), this->getModelRecognizer(), this->eventDispatcher);
-        this->faceIdentifyHandler->setPredictMatMapValidator([this](vector<ArmFaceIdentify::PredictMat> predictMatMap) {
+        this->faceIdentifyHandler->setPredictMatMapCallback([this](vector<ArmFaceIdentify::PredictMat> predictMatMap, string flag) {
             if (predictMatMap.size() > 1) {
-                return false;
+                return;
             }
 
             if (predictMatMap[0].confidence < this->predictMatConfidence){
-                return true;
+                return;
             }
 
-            return false;
+            if (this->predictMatCallback != nullptr) {
+                this->predictMatCallback(predictMatMap[0], flag);
+            }
         });
     }
 
     return this->faceIdentifyHandler;
 }
 
-vector<ArmFaceIdentify::PredictMat> Identify::startIdentifyFromVideoCapture() {
+void Identify::startIdentifyFromVideoCapture() {
     VideoCapture capture(this->videoCaptureIndex);
-    vector<ArmFaceIdentify::PredictMat> predictMatMap = this->getFaceIdentifyHandler()->identifyFromVideoCapture(&capture);
+    this->getFaceIdentifyHandler()->identifyFromVideoCapture(&capture);
     capture.release();
-
-    return predictMatMap;
 }
 
 Identify::~Identify() {

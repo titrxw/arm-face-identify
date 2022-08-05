@@ -16,7 +16,7 @@ public:
 
 public:
     virtual string getTopic();
-    virtual google_function::CloudEvent onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent);
+    virtual void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent);
 
 protected:
     Device device;

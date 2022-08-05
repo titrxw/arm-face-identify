@@ -25,7 +25,8 @@ public:
     Ptr<FaceRecognizer> getModelRecognizer();
     ArmFaceIdentify::DialogVideoFaceIdentify *getFaceIdentifyHandler();
     void setPredictMatConfidence(double predictMatConfidence);
-    vector<ArmFaceIdentify::PredictMat> startIdentifyFromVideoCapture();
+    void setPredictMatMapCallback(std::function<void (ArmFaceIdentify::PredictMat, string)> callback);
+    void startIdentifyFromVideoCapture();
 
 protected:
     string cascadeFilePath;
@@ -36,6 +37,7 @@ protected:
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
     ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler;
+    std::function<void (ArmFaceIdentify::PredictMat, string)> predictMatCallback;
 };
 
 #endif // ARM_FACE_IDENTIFY_IDENTIFY_H

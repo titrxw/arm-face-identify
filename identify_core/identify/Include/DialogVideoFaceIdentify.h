@@ -18,15 +18,18 @@ namespace ArmFaceIdentify {
 
         const string DIALOG_NAME = "arm_face_identify_dialog";
 
-        vector<ArmFaceIdentify::PredictMat> identifyFromVideoCapture(VideoCapture *vc);
+        void identifyFromVideoCapture(VideoCapture *vc);
+        void setCanIdentifyNextMatWithFlag(string flag);
+        bool isCanIdentifyNextMat() const;
         void stopIdentifyFromVideo();
         void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
         void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);
-        void setPredictMatMapValidator(std::function<bool (vector<ArmFaceIdentify::PredictMat>)> validator);
+        void setPredictMatMapCallback(std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> validator);
 
     protected:
         bool isStopIdentify = false;
-        std::function<bool (vector<ArmFaceIdentify::PredictMat>)> predictMatMapValidator;
+        string canIdentifyNextMatFlag = "";
+        std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> predictMatMapCallback;
         bool ifNecessaryStop();
     };
 }

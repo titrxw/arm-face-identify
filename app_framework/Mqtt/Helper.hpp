@@ -11,6 +11,7 @@
 #include "mqtt/include/mqtt/message.h"
 #include "../Util/Encrypt.hpp"
 #include "../Util/CloudEvent.hpp"
+#include "nlohmann/json.hpp"
 
 using namespace std;
 
@@ -26,6 +27,40 @@ public:
 
     string static getDeviceReportTopic(const string& topicNamespace, const string& appid) {
         return "/iot/" + topicNamespace + "/device/" + appid + "/report";
+    }
+
+    void static exceptionReport(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::exception &e, string type, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        try {
+            nlohmann::json err;
+            err["error"] = e.what();
+            err["error_code"] = 500;
+            err["payload"] = cloudEvent.data();
+            cloudEvent.set_type(type + "_exception");
+            cloudEvent.set_data(to_string(err));
+            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
+        } catch (std::exception reportE) {
+            if (exceptionHandler != nullptr) {
+                exceptionHandler(reportE);
+            }
+        }
+
+        if (exceptionHandler != nullptr) {
+            exceptionHandler(e);
+        }
+    }
+
+    void static publishReplyMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
+    }
+
+    void static publishMsg(async_client *client, Device device, string topic, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        try {
+            client->publish(Helper::getMsgFromCloudEvent(topic, cloudEvent, device.appSecret));
+        } catch (std::exception reportE) {
+            if (exceptionHandler != nullptr) {
+                exceptionHandler(reportE);
+            }
+        }
     }
 
     const_message_ptr static getMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, const string& appSecret) {

@@ -4,6 +4,7 @@
 
 #include "SubscribeManager.h"
 #include "Helper.hpp"
+#include "nlohmann/json.hpp"
 
 SubscribeManager::SubscribeManager() = default;
 
@@ -11,7 +12,7 @@ void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
     this->subscriberMap[subscribe->getTopic()] = subscribe;
 }
 
-void SubscribeManager::setExceptionHandler(std::function<void (async_client *client, const_message_ptr msg, std::exception e)> exceptionHandler) {
+void SubscribeManager::setExceptionHandler(std::function<void (std::exception &e)> exceptionHandler) {
     this->exceptionHandler = exceptionHandler;
 }
 
@@ -32,26 +33,6 @@ void SubscribeManager::onConnected(async_client *client, const string &cause) {
 }
 
 void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
-    std::function<void (async_client *, Device, const_message_ptr, google_function::CloudEvent, std::exception &, string)> _exceptionHandler = [this](async_client *client, Device device, const_message_ptr msg, google_function::CloudEvent cloudEvent, std::exception &e, string type) {
-        try {
-            nlohmann::json err;
-            err["error"] = e.what();
-            err["error_code"] = 500;
-            err["payload"] = cloudEvent.data();
-            cloudEvent.set_type(type + "_exception");
-            cloudEvent.set_data(to_string(err));
-            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
-        } catch (std::exception reportE) {
-            if (this->exceptionHandler != nullptr) {
-                this->exceptionHandler(client, msg, reportE);
-            }
-        }
-
-        if (this->exceptionHandler != nullptr) {
-            this->exceptionHandler(client, msg, e);
-        }
-    };
-
     map<string, SubscriberAbstract*>::iterator iter;
     iter = this->subscriberMap.find(msg->get_topic());
     if(iter != this->subscriberMap.end()) {
@@ -62,24 +43,17 @@ void SubscribeManager::onMessage(async_client *client, const_message_ptr msg) {
             cloudEvent = Helper::getCloudEventFromMsg(msg, device.appSecret);
         } catch (nlohmann::json::exception &e) {
             if (this->exceptionHandler != nullptr) {
-                this->exceptionHandler(client, msg, e);
+                this->exceptionHandler(e);
             }
 
             return;
         }
 
         try {
-            cloudEvent = iter->second->onSubscribe(client, msg, cloudEvent);
+            iter->second->onSubscribe(client, msg, cloudEvent);
         } catch (std::exception &e) {
-            _exceptionHandler(client, device, msg, cloudEvent, e, "ctrl");
+            Helper::exceptionReport(client, device, cloudEvent, e, "ctrl", this->exceptionHandler);
             return;
-        }
-
-        //reply
-        try {
-            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
-        } catch (std::exception e) {
-            _exceptionHandler(client, device, msg, cloudEvent, e, "reply");
         }
     }
 }

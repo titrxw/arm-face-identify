@@ -24,15 +24,19 @@ void ArmFaceIdentify::DialogVideoFaceTrain::onDetectedFaceListener(ArmFaceIdenti
     putText(event->detectedFace.sourceMat, label, event->detectedFace.mat.tl(), FONT_HERSHEY_COMPLEX, 1.2, (0, 0, 255), 2, 0);
 }
 
-void ArmFaceIdentify::DialogVideoFaceTrain::setCanDetectedNextMat(bool can)
-{
-    this->canDetectedNextMat = can;
+void ArmFaceIdentify::DialogVideoFaceTrain::setCanDetectedNextMatWithFlag(string flag){
+    this->canDetectedNextMatFlag = flag;
+}
+
+bool ArmFaceIdentify::DialogVideoFaceTrain::isCanDetectedNextMat() const {
+    return waitKey(10) == 'n' || this->canDetectedNextMatFlag != "";
 }
 
 void ArmFaceIdentify::DialogVideoFaceTrain::stopDetectedFromVideo()
 {
     this->stopDetectedMat = true;
 }
+
 bool ArmFaceIdentify::DialogVideoFaceTrain::ifNecessaryStop() const
 {
     return waitKey(10) == 'k' || this->stopDetectedMat;
@@ -56,9 +60,11 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
             throw "video capture read frame empty";
         }
 
-        if (this->canDetectedNextMat)
+        imshow(DialogVideoFaceTrain::DIALOG_NAME, frame);
+
+        if (this->isCanDetectedNextMat())
         {
-            this->setCanDetectedNextMat(false);
+            this->setCanDetectedNextMatWithFlag("");
 
             vector<ArmFaceIdentify::DetectedMat> detectedFaceMap = this->detectFaceMatFromMat(this->cascade, frame);
             if (detectedFaceMap.size() == 1)
@@ -68,11 +74,10 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
                 imwrite(matFileName, detectedFaceMap[0].detectMat);
 
                 modeFileContent = modeFileContent.append(matFileName).append(";").append(ArmFaceIdentify::Str::toString(label)).append("\n");
+                ++picNum;
             }
             detectedFaceMap.clear();
         }
-
-        imshow(DialogVideoFaceTrain::DIALOG_NAME, frame);
 
         if (this->ifNecessaryStop())
         {

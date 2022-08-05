@@ -73,7 +73,7 @@ SubscribeManager *Application::getSubscribeManager() {
 
 void Application::startMqtt() {
     subscribeManager = this->getSubscribeManager();
-    subscribeManager->setExceptionHandler([this](async_client *client, const_message_ptr msg, std::exception e) {
+    subscribeManager->setExceptionHandler([this](std::exception &e) {
         this->getExceptionHandler()->handle(e);
     });
     subscribeManager->start(this->getDefaultMqttClient());

@@ -40,6 +40,8 @@ void IdentifyApplication::beforeStart() {
 
 void IdentifyApplication::afterStart() {
     Application::afterStart();
+
+    this->getFaceIdentifyHandler()->startIdentifyFromVideoCapture();
 }
 
 IdentifyApplication::~IdentifyApplication() {

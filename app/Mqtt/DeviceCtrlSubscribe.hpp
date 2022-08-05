@@ -13,22 +13,26 @@
 
 class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
 public:
-    explicit DeviceCtrlSubscribe(Device device, Identify *identify, Train *train) : SubscriberAbstract(device), identify(identify), train(train) {}
+    explicit DeviceCtrlSubscribe(Device device, Identify *identify, Train *train) : SubscriberAbstract(device), identify(identify), train(train) {
+
+    }
     ~DeviceCtrlSubscribe() = default;
+
+    void predictedMatCallback(ArmFaceIdentify::PredictMat predictMat, string flag) {
+
+    }
 
     string getTopic() override {
         return Helper::getDeviceCtrlTopic(this->device.appServerNamespace, this->device.appId);
     }
 
-    google_function::CloudEvent onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) override {
+    void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) override {
         if (cloudEvent.type() == APP_OPERATE_IDENTIFY) {
-            this->identify->startIdentifyFromVideoCapture();
+            this->identify->getFaceIdentifyHandler()->setCanIdentifyNextMatWithFlag(cloudEvent.id());
         }
         if (cloudEvent.type() == APP_OPERATE_TRAIN) {
 
         }
-
-        return cloudEvent;
     }
 
 protected:

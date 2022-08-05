@@ -30,37 +30,16 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::onPredictFaceListener(ArmFaceIden
     putText(event->predictFace.sourceMat, label, event->predictFace.mat.tl(), FONT_HERSHEY_COMPLEX, 1.2,  (0, 0, 255), 2, 0);
 }
 
-void ArmFaceIdentify::DialogVideoFaceIdentify::setPredictMatMapValidator(std::function<bool (vector<ArmFaceIdentify::PredictMat>)> validator) {
-    this->predictMatMapValidator = validator;
+void ArmFaceIdentify::DialogVideoFaceIdentify::setPredictMatMapCallback(std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> callback) {
+    this->predictMatMapCallback = callback;
 }
 
-vector<ArmFaceIdentify::PredictMat> ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
-    Mat frame;
-    vector<ArmFaceIdentify::PredictMat> predictFaceMap;
+void ArmFaceIdentify::DialogVideoFaceIdentify::setCanIdentifyNextMatWithFlag(string flag) {
+    this->canIdentifyNextMatFlag = flag;
+}
 
-    while (vc->read(frame)) {
-        if (frame.empty()) {
-            throw "video capture read frame empty";
-        }
-        if (this->ifNecessaryStop()) {
-            this->isStopIdentify = false;
-            break;
-        }
-
-        predictFaceMap = this->identifyMat(frame);
-
-        if (this->predictMatMapValidator == nullptr) {
-            break;
-        }
-        if (this->predictMatMapValidator != nullptr && this->predictMatMapValidator(predictFaceMap)) {
-            break;
-        }
-
-        imshow(DialogVideoFaceIdentify::DIALOG_NAME, frame);
-    }
-    cvDestroyWindow(DialogVideoFaceIdentify::DIALOG_NAME.c_str());
-
-    return predictFaceMap;
+bool ArmFaceIdentify::DialogVideoFaceIdentify::isCanIdentifyNextMat() const {
+    return this->canIdentifyNextMatFlag != "";
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
@@ -69,6 +48,44 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
 
 bool ArmFaceIdentify::DialogVideoFaceIdentify::ifNecessaryStop() {
     return waitKey(10) == 'k' || this->isStopIdentify;
+}
+
+void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
+    Mat frame;
+    vector<ArmFaceIdentify::PredictMat> predictFaceMap;
+
+    while (vc->read(frame)) {
+        if (frame.empty()) {
+            throw "video capture read frame empty";
+        }
+
+        imshow(DialogVideoFaceIdentify::DIALOG_NAME, frame);
+
+        if (this->ifNecessaryStop()) {
+            this->isStopIdentify = false;
+            break;
+        }
+
+        if (!this->isCanIdentifyNextMat()) {
+            continue;
+        }
+
+        predictFaceMap = this->identifyMat(frame);
+        if (predictFaceMap.size() == 0) {
+            continue;
+        }
+
+        if (this->predictMatMapCallback == nullptr) {
+            break;
+        }
+        if (this->predictMatMapCallback != nullptr) {
+            string flag = this->canIdentifyNextMatFlag;
+            this->setCanIdentifyNextMatWithFlag("");
+            this->predictMatMapCallback(predictFaceMap, flag);
+        }
+    }
+    cvDestroyWindow(DialogVideoFaceIdentify::DIALOG_NAME.c_str());
+    predictFaceMap.clear();
 }
 
 ArmFaceIdentify::DialogVideoFaceIdentify::~DialogVideoFaceIdentify() {
