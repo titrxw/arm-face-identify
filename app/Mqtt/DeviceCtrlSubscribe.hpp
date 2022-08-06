@@ -25,15 +25,19 @@ public:
             cloudEvent = this->cloudEventMap[flag];
             this->cloudEventMap.erase(flag);
         } else {
-            cloudEvent = CloudEvent::makeNewCloudEvent("1", device.appName, APP_OPERATE_IDENTIFY);
-        };
+            cloudEvent = CloudEvent::makeNewCloudEvent(device.appId, device.appName, APP_OPERATE_IDENTIFY);
+        }
 
         nlohmann::json payload;
         payload["identify_label"] = predictMat.label;
         payload["identify_mat"] = ""; //上传图片
         cloudEvent.set_data(to_string(payload));
 
-        Helper::publishReplyMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        if (!flag.empty()) {
+            Helper::publishReplyMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        } else {
+            Helper::publishReportMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        }
     }
 
     string getTopic() override {

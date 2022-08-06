@@ -18,8 +18,8 @@ void SubscribeManager::start() {
     this->subscribeClient->getClientCallback()->onConnected = std::bind(&SubscribeManager::onConnected, this, std::placeholders::_1, std::placeholders::_2);
     this->subscribeClient->getClientCallback()->onMessage = std::bind(&SubscribeManager::onMessage, this, std::placeholders::_1, std::placeholders::_2);
 
-    this->subscribeClient->connect();
     this->publishClient->connect();
+    this->subscribeClient->connect();
 }
 
 void SubscribeManager::onConnected(async_client *client, const string &cause) {

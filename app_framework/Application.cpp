@@ -60,7 +60,7 @@ Client *Application::makeMqttClient(const string& channel, Mqtt mqtt, Device dev
 }
 
 Client *Application::getPublishMqttClient() {
-    return this->makeMqttClient("subscribe", this->config.mqtt, this->config.device);
+    return this->makeMqttClient("publish", this->config.mqtt, this->config.device);
 }
 
 Client *Application::getSubscribeMqttClient() {

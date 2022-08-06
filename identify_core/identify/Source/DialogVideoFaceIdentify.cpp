@@ -38,10 +38,6 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::setCanIdentifyNextMatWithFlag(str
     this->canIdentifyNextMatFlag = flag;
 }
 
-bool ArmFaceIdentify::DialogVideoFaceIdentify::isCanIdentifyNextMat() const {
-    return !this->canIdentifyNextMatFlag.empty();
-}
-
 void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
     this->isStopIdentify = true;
 }
@@ -67,7 +63,7 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
         predictFaceMap = this->identifyMat(frame);
         imshow(DialogVideoFaceIdentify::DIALOG_NAME, frame);
 
-        if (!this->isCanIdentifyNextMat() || predictFaceMap.size() == 0) {
+        if (predictFaceMap.size() == 0) {
             continue;
         }
 

@@ -20,7 +20,6 @@ namespace ArmFaceIdentify {
 
         void identifyFromVideoCapture(VideoCapture *vc);
         void setCanIdentifyNextMatWithFlag(string flag);
-        bool isCanIdentifyNextMat() const;
         void stopIdentifyFromVideo();
         void onDetectedFaceListener(ArmFaceIdentify::DetectedFeatureMatEvent *event);
         void onPredictFaceListener(ArmFaceIdentify::PredictFeatureMatEvent *event);
@@ -28,7 +27,7 @@ namespace ArmFaceIdentify {
 
     protected:
         bool isStopIdentify = false;
-        string canIdentifyNextMatFlag = "";
+        string canIdentifyNextMatFlag;
         std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> predictMatMapCallback;
         bool ifNecessaryStop();
     };
