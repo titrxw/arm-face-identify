@@ -6,21 +6,20 @@
 #include "Helper.hpp"
 #include "nlohmann/json.hpp"
 
-SubscribeManager::SubscribeManager() = default;
+SubscribeManager::SubscribeManager(Client *subscribeClient, Client *publishClient, std::function<void (std::exception &e)> exceptionHandler) : subscribeClient(subscribeClient), publishClient(publishClient), exceptionHandler(exceptionHandler) {}
 
 void SubscribeManager::registerSubscriber(SubscriberAbstract *subscribe) {
+    subscribe->setPublishClient(this->publishClient);
+    subscribe->setExceptionHandler(this->exceptionHandler);
     this->subscriberMap[subscribe->getTopic()] = subscribe;
 }
 
-void SubscribeManager::setExceptionHandler(std::function<void (std::exception &e)> exceptionHandler) {
-    this->exceptionHandler = exceptionHandler;
-}
+void SubscribeManager::start() {
+    this->subscribeClient->getClientCallback()->onConnected = std::bind(&SubscribeManager::onConnected, this, std::placeholders::_1, std::placeholders::_2);
+    this->subscribeClient->getClientCallback()->onMessage = std::bind(&SubscribeManager::onMessage, this, std::placeholders::_1, std::placeholders::_2);
 
-void SubscribeManager::start(Client *client) {
-    client->getClientCallback()->onConnected = std::bind(&SubscribeManager::onConnected, this, std::placeholders::_1, std::placeholders::_2);
-    client->getClientCallback()->onMessage = std::bind(&SubscribeManager::onMessage, this, std::placeholders::_1, std::placeholders::_2);
-
-    client->connect();
+    this->subscribeClient->connect();
+    this->publishClient->connect();
 }
 
 void SubscribeManager::onConnected(async_client *client, const string &cause) {

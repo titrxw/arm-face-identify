@@ -10,6 +10,14 @@
 
 class CloudEvent {
     public:
+        google_function::CloudEvent static makeNewCloudEvent(string id, string source, string type) {
+            google_function::CloudEvent event = google_function::CloudEvent(id, source,type,google_function::CloudEvent::kDefaultSpecVersion);
+            event.set_subject("iot_device");
+            event.set_data_content_type("application/json");
+
+            return event;
+        }
+
         string static cloudEventToJsonStr(const google_function::CloudEvent& cloudEvent) {
             nlohmann::json jsonObj;
             jsonObj["id"] = cloudEvent.id();

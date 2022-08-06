@@ -20,7 +20,8 @@ public:
     ~Application();
 
     Client* makeMqttClient(const string& channel, Mqtt mqtt, Device device);
-    Client* getDefaultMqttClient();
+    Client* getPublishMqttClient();
+    Client* getSubscribeMqttClient();
     SubscribeManager* getSubscribeManager();
 
     void start();

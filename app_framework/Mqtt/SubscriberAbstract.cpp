@@ -8,8 +8,16 @@ string SubscriberAbstract::getTopic() {
     return "";
 }
 
-SubscriberAbstract::SubscriberAbstract(Device device, std::function<void (std::exception &e)> exceptionHandler) : device(device), exceptionHandler(exceptionHandler) {
+SubscriberAbstract::SubscriberAbstract(Device device) : device(device) {
 
+}
+
+void SubscriberAbstract::setPublishClient(Client *client) {
+    this->publishClient = client;
+}
+
+void SubscriberAbstract::setExceptionHandler(std::function<void(std::exception &)> exceptionHandler) {
+    this->exceptionHandler = exceptionHandler;
 }
 
 Device SubscriberAbstract::getDevice() {

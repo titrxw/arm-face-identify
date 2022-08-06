@@ -12,17 +12,18 @@ using namespace std;
 
 class SubscribeManager {
 public:
-    SubscribeManager();
+    SubscribeManager(Client *subscribeClient, Client *publishClient, std::function<void (std::exception &e)> exceptionHandler = nullptr);
     ~SubscribeManager();
 
     void registerSubscriber(SubscriberAbstract *subscribe);
-    void setExceptionHandler(std::function<void (std::exception &e)>);
     void onConnected(async_client *client, const string& cause);
     void onMessage(async_client *client, const_message_ptr msg);
 
-    void start(Client *client);
+    void start();
 
 protected:
+    Client *subscribeClient;
+    Client *publishClient;
     map<string, SubscriberAbstract*> subscriberMap;
     std::function<void (std::exception &e)> exceptionHandler;
 };

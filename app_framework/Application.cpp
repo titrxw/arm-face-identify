@@ -11,7 +11,7 @@ Application::Application(Config config) : config(config) {
 }
 
 string Application::getAppPath() {
-    return Filesystem::getCurUserDocDir() + "/" + this->config.app.appName;
+    return Filesystem::getCurUserDocDir() + "/" + this->config.device.appName;
 }
 
 string Application::getRuntimePath() {
@@ -59,13 +59,19 @@ Client *Application::makeMqttClient(const string& channel, Mqtt mqtt, Device dev
     return this->clientMap[channel];
 }
 
-Client *Application::getDefaultMqttClient() {
-    return this->makeMqttClient("default", this->config.mqtt, this->config.device);
+Client *Application::getPublishMqttClient() {
+    return this->makeMqttClient("subscribe", this->config.mqtt, this->config.device);
+}
+
+Client *Application::getSubscribeMqttClient() {
+    return this->makeMqttClient("subscribe", this->config.mqtt, this->config.device);
 }
 
 SubscribeManager *Application::getSubscribeManager() {
     if (this->subscribeManager == nullptr) {
-        this->subscribeManager = new SubscribeManager();
+        this->subscribeManager = new SubscribeManager(this->getSubscribeMqttClient(), this->getPublishMqttClient(), [this](std::exception &e) {
+            this->getExceptionHandler()->handle(e);
+        });
     }
 
     return this->subscribeManager;
@@ -73,10 +79,7 @@ SubscribeManager *Application::getSubscribeManager() {
 
 void Application::startMqtt() {
     subscribeManager = this->getSubscribeManager();
-    subscribeManager->setExceptionHandler([this](std::exception &e) {
-        this->getExceptionHandler()->handle(e);
-    });
-    subscribeManager->start(this->getDefaultMqttClient());
+    subscribeManager->start();
 }
 
 void Application::beforeStart() {

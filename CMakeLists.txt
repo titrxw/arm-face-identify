@@ -63,7 +63,6 @@ add_executable(${projectName}
         config/Config.h
         config/Mqtt.h
         config/Device.h
-        config/App.h
         config/FaceIdentify.h
         app/Define.h app_framework/Util/Base64.hpp)
 
