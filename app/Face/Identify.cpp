@@ -47,6 +47,13 @@ ArmFaceIdentify::DialogVideoFaceIdentify *Identify::getFaceIdentifyHandler() {
                 return;
             }
 
+            time_t curTime = time(NULL);
+            if (this->curIdentifyLabel == predictMatMap[0].label && abs(curTime - this->curIdentifyLatestTime) < 60) {
+                return;
+            }
+
+            this->curIdentifyLabel = predictMatMap[0].label;
+            this->curIdentifyLatestTime = curTime;
             if (this->predictMatCallback != nullptr) {
                 this->predictMatCallback(predictMatMap[0], flag);
             }

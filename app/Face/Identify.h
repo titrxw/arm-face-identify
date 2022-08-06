@@ -7,6 +7,7 @@
 
 #include <sstream>
 #include "vector"
+#include <time.h>
 #include "opencv2/face.hpp"
 #include "opencv2/opencv.hpp"
 #include "../../identify_core/identify/Include/DialogVideoFaceIdentify.h"
@@ -38,6 +39,9 @@ protected:
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
     ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler;
     std::function<void (ArmFaceIdentify::PredictMat, string)> predictMatCallback;
+
+    int curIdentifyLabel = 0;
+    time_t curIdentifyLatestTime;
 };
 
 #endif // ARM_FACE_IDENTIFY_IDENTIFY_H
