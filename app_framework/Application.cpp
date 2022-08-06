@@ -69,7 +69,7 @@ Client *Application::getSubscribeMqttClient() {
 
 SubscribeManager *Application::getSubscribeManager() {
     if (this->subscribeManager == nullptr) {
-        this->subscribeManager = new SubscribeManager(this->getSubscribeMqttClient(), this->getPublishMqttClient(), [this](std::exception &e) {
+        this->subscribeManager = new SubscribeManager(this->getSubscribeMqttClient(), this->getSubscribeMqttClient(), [this](std::exception &e) {
             this->getExceptionHandler()->handle(e);
         });
     }

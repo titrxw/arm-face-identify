@@ -38,7 +38,7 @@ public:
             cloudEvent.set_type(type + "_exception");
             cloudEvent.set_data(to_string(err));
             client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
-        } catch (std::exception reportE) {
+        } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
             }
@@ -60,7 +60,7 @@ public:
     void static publishMsg(async_client *client, Device device, string topic, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         try {
             client->publish(Helper::getMsgFromCloudEvent(topic, cloudEvent, device.appSecret));
-        } catch (std::exception reportE) {
+        } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
             }

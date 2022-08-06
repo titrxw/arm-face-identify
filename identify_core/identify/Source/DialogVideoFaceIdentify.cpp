@@ -51,13 +51,13 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
     vector<ArmFaceIdentify::PredictMat> predictFaceMap;
 
     while (vc->read(frame)) {
+        if (frame.empty()) {
+            throw "video capture read frame empty";
+        }
+
         if (this->ifNecessaryStop()) {
             this->isStopIdentify = false;
             break;
-        }
-
-        if (frame.empty()) {
-            throw "video capture read frame empty";
         }
 
         predictFaceMap = this->identifyMat(frame);
