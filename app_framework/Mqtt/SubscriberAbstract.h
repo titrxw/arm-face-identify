@@ -11,7 +11,7 @@
 
 class SubscriberAbstract {
 public:
-    explicit SubscriberAbstract(Device device);
+    explicit SubscriberAbstract(Device device, std::function<void (std::exception &e)> exceptionHandler = nullptr);
     Device getDevice();
 
 public:
@@ -20,6 +20,7 @@ public:
 
 protected:
     Device device;
+    std::function<void (std::exception &e)> exceptionHandler;
 };
 
 

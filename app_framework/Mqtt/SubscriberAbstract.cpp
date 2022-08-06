@@ -8,7 +8,7 @@ string SubscriberAbstract::getTopic() {
     return "";
 }
 
-SubscriberAbstract::SubscriberAbstract(Device device) : device(device) {
+SubscriberAbstract::SubscriberAbstract(Device device, std::function<void (std::exception &e)> exceptionHandler) : device(device), exceptionHandler(exceptionHandler) {
 
 }
 
