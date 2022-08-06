@@ -8,11 +8,9 @@
 #include <sstream>
 #include "cryptopp/include/cryptopp/aes.h"
 #include "cryptopp/include/cryptopp/cryptlib.h"
-#include "cryptopp/include/cryptopp/base64.h"
 #include "cryptopp/include/cryptopp/modes.h"
+#include "Base64.hpp"
 
-using CryptoPP::Base64Encoder;
-using CryptoPP::Base64Decoder;
 using CryptoPP::Exception;
 using CryptoPP::StringSink;
 using CryptoPP::StringSource;
@@ -39,21 +37,12 @@ public:
         ); // StringSource
 
         // Pretty print
-        string encoded;
-        StringSource(cipher, true,
-                     new Base64Encoder(
-                             new StringSink(encoded)
-                     ) // HexEncoder
-        ); // StringSource
-        return encoded;
+        return Base64::encode(cipher);
     }
     string static decrypt(const string& plain, const string& key) {
-        string encodeByte;
         string iv = key.substr(0, 16);
 
-        StringSource(plain, true, new Base64Decoder(
-                new StringSink(encodeByte)
-        ));
+        string encodeByte = Base64::decode(plain);
 
         string recovered;
         CBC_Mode<AES>::Decryption d;

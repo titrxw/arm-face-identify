@@ -7,6 +7,7 @@
 
 #include "../../app_framework/Mqtt/SubscriberAbstract.h"
 #include "../../app_framework/Mqtt/Helper.hpp"
+#include "../../app_framework/Util/Base64.hpp"
 #include "../Face/Identify.h"
 #include "../Face/Train.h"
 #include "../Define.h"
@@ -23,6 +24,11 @@ public:
         google_function::CloudEvent cloudEvent = this->cloudEventMap[flag];
         this->cloudEventMap.erase(flag);
         this->clientMap.erase(flag);
+
+        nlohmann::json payload;
+        payload["identify_label"] = predictMat.label;
+        payload["identify_mat"] = "";
+        cloudEvent.set_data(to_string(payload));
 
         Helper::publishReplyMsg(client, this->getDevice(), cloudEvent, this->exceptionHandler);
     }

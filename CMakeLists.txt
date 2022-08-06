@@ -65,7 +65,7 @@ add_executable(${projectName}
         config/Device.h
         config/App.h
         config/FaceIdentify.h
-        app/Define.h )
+        app/Define.h app_framework/Util/Base64.hpp)
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
