@@ -77,8 +77,6 @@ int main()
     config = (Config)j;
 
     (new IdentifyApplication(config))->start();
-    while (std::tolower(std::cin.get()) != 'q')
-        ;
 //    new ::Train("dsf", "sdfdsf");
 //    trainFaceFromVideo();
 //    trainFace();
