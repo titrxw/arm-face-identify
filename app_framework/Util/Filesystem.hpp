@@ -82,7 +82,7 @@ public:
         }
 
         for(int idx=0; idx<tGlob.gl_pathc; idx++){
-            paths[idx] = tGlob.gl_pathv[idx];
+            paths.push_back(tGlob.gl_pathv[idx]);
         }
 
         globfree(&tGlob);
