@@ -4,6 +4,7 @@
 
 #include "IdentifyApplication.h"
 #include "./Mqtt/DeviceCtrlSubscribe.hpp"
+#include "../app_framework/Util/Filesystem.hpp"
 
 IdentifyApplication::IdentifyApplication(Config config) : Application(config) {
 
@@ -11,8 +12,7 @@ IdentifyApplication::IdentifyApplication(Config config) : Application(config) {
 
 Identify *IdentifyApplication::getFaceIdentifyHandler() {
     if (this->identify == nullptr) {
-        this->identify = new Identify(this->getAppPath() + FACE_CASCADE_PATH, vector<string>{
-            this->getAppPath() + FACE_MODEL_DIR + "default_model.xml"}, this->config.faceIdentify.videoCaptureIndex);
+        this->identify = new Identify(this->getAppPath() + FACE_CASCADE_PATH, Filesystem::glob(this->getAppPath() + FACE_MODEL_DIR + "*_model.xml"), this->config.faceIdentify.videoCaptureIndex);
         this->identify->setPredictMatConfidence(this->config.faceIdentify.predictMatConfidence);
     }
 

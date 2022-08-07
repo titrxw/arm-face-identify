@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 #include <sys/stat.h>
+#include <glob.h>
 
 class Filesystem {
 public:
@@ -71,6 +72,22 @@ public:
             int res = mkdir(it.c_str(), mode);
             std::cout<<res;
         }
+    }
+
+    vector<string> static glob(string globPattern) {
+        vector<string> paths;
+        glob_t tGlob;
+        if(0 != ::glob(globPattern.c_str(), GLOB_ERR, NULL, &tGlob)){
+            return paths;
+        }
+
+        for(int idx=0; idx<tGlob.gl_pathc; idx++){
+            paths[idx] = tGlob.gl_pathv[idx];
+        }
+
+        globfree(&tGlob);
+
+        return paths;
     }
 };
 
