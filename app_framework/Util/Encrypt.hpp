@@ -6,9 +6,12 @@
 #define ARM_FACE_IDENTIFY_ENCRYPT_HPP
 
 #include <sstream>
+#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include "cryptopp/include/cryptopp/aes.h"
 #include "cryptopp/include/cryptopp/cryptlib.h"
 #include "cryptopp/include/cryptopp/modes.h"
+#include "cryptopp/include/cryptopp/hex.h"
+#include "cryptopp/include/cryptopp/md5.h"
 #include "Base64.hpp"
 
 using CryptoPP::Exception;
@@ -21,7 +24,7 @@ using namespace std;
 
 class Encrypt {
 public:
-    string static encrypt(const string& plain, const string& key) {
+    string static aesCBCEncrypt(const string& plain, const string& key) {
         string cipher;
         string iv = key.substr(0, 16);
 
@@ -32,14 +35,15 @@ public:
         //  padding as required.
         StringSource s(plain, true,
                        new StreamTransformationFilter(e,
-                                                      new StringSink(cipher)
-                       ) // StreamTransformationFilter
-        ); // StringSource
+                      new StringSink(cipher)
+                      ) // StreamTransformationFilter
+                      ); // StringSource
 
-        // Pretty print
-        return Base64::encode(cipher);
+                      // Pretty print
+                      return Base64::encode(cipher);
     }
-    string static decrypt(const string& plain, const string& key) {
+
+    string static aesCBCDecrypt(const string& plain, const string& key) {
         string iv = key.substr(0, 16);
 
         string encodeByte = Base64::decode(plain);
@@ -53,10 +57,18 @@ public:
         StringSource s(encodeByte, true,
                        new StreamTransformationFilter(d,
                                                       new StringSink(recovered)
-                       ) // StreamTransformationFilter
-        ); // StringSource
+                                                      ) // StreamTransformationFilter
+                                                      ); // StringSource
 
-        return recovered;
+                                                      return recovered;
+    }
+
+    string static md5(const string& src) {
+        string dst;
+        CryptoPP::Weak::MD5 md5;
+        StringSource(src, true, new CryptoPP::HashFilter(md5, new CryptoPP::HexEncoder(new StringSink(dst))));
+
+        return dst;
     }
 };
 
