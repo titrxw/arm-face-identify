@@ -15,6 +15,7 @@ public:
     }
     void report(std::exception &e) {
         this->logger->debug(e.what());
+        this->logger->flush();
     }
     void handle(std::exception &e) {
         this->report(e);

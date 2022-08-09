@@ -33,6 +33,14 @@ public:
         return std::string(buffer.str());
     }
 
+    void static unlink(const string &filePath) {
+        try {
+            ::unlink(filePath.c_str());
+        } catch (std::exception &e) {
+            ;
+        }
+    }
+
     string static getCurUserHomeDir() {
         string path = "~";
         char const* home = getenv("HOME");
@@ -51,6 +59,10 @@ public:
 
     string static getCurUserDocDir() {
         return Filesystem::getCurUserHomeDir() + "/documents";
+    }
+
+    bool static fileExists(const string& filePath, int mode = R_OK) {
+        return access(filePath.c_str(), mode) == 0;
     }
 
     bool static dirExists(const string& dir, int mode = X_OK) {

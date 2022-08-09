@@ -25,15 +25,18 @@ public:
 
     void predictedMatCallback(ArmFaceIdentify::PredictMat predictMat, string flag) {
         string remoteUrl;
+        string matFilePath = this->matTmpFileDir + Util::randomStr(16) + ".jpeg";
         try {
-            string matFilePath = this->matTmpFileDir + Util::randomStr(16) + ".jpeg";
             imwrite(matFilePath, predictMat.sourceMat);
 
             nlohmann::json result = this->getHttpClient()
             ->uploadFile("/api/util/attach/upload/image", matFilePath, {}, {}, true);
 
             remoteUrl = result.at("url").get<std::string>();
+            Filesystem::unlink(matFilePath);
         } catch (std::exception &e) {
+            if (Filesystem::fileExists(matTmpFileDir)) Filesystem::unlink(matFilePath);
+
             this->exceptionHandler(e);
             return;
         }
