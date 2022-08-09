@@ -44,7 +44,7 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
 }
 
 bool ArmFaceIdentify::DialogVideoFaceIdentify::ifNecessaryStop() {
-    return this->isStopIdentify;
+    return waitKey(10) == 'k' || this->isStopIdentify;
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
@@ -52,6 +52,7 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
     vector<ArmFaceIdentify::PredictMat> predictFaceMap;
     const string dialogName = "arm_face_identify_dialog";
     while (vc->read(frame)) {
+
         if (frame.empty()) {
             throw "video capture read frame empty";
         }
@@ -61,8 +62,8 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
             break;
         }
 
-        imshow(dialogName, frame);
         predictFaceMap = this->identifyMat(frame);
+        imshow(dialogName, frame);
 
         if (predictFaceMap.size() == 0) {
             continue;
