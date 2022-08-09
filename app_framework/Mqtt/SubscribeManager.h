@@ -22,8 +22,8 @@ public:
     void start();
 
 protected:
-    Client *subscribeClient;
-    Client *publishClient;
+    Client *subscribeClient = nullptr;
+    Client *publishClient = nullptr;
     map<string, SubscriberAbstract*> subscriberMap;
     std::function<void (std::exception &e)> exceptionHandler;
 };

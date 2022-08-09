@@ -41,9 +41,9 @@ protected:
 protected:
     Config config;
     shared_ptr<spdlog::logger> logger;
-    ExceptionHandler *exceptionHandler;
+    ExceptionHandler *exceptionHandler = nullptr;
     map<string, Client*>clientMap;
-    SubscribeManager *subscribeManager{};
+    SubscribeManager *subscribeManager = nullptr;
 };
 
 

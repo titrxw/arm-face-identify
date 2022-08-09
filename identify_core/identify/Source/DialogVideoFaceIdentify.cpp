@@ -11,6 +11,7 @@
 ArmFaceIdentify::DialogVideoFaceIdentify::DialogVideoFaceIdentify(Ptr<CascadeClassifier> cascade, Ptr<FaceRecognizer> modelRecognizer,
                                                  EventDispatcher<int, void(
         ArmFaceIdentify::BaseEvent *)> *eventDispatcher) : ArmFaceIdentify::FaceIdentify(cascade, modelRecognizer, eventDispatcher) {
+    this->isStopIdentify = false;
     this->getEventDispatcher()->appendListener(ArmFaceIdentify::Event::DETECTED_FEATURE_IMAGE_FROM_FRAME, [this](ArmFaceIdentify::BaseEvent *event) {
         this->onDetectedFaceListener((ArmFaceIdentify::DetectedFeatureMatEvent *)event);
     });
@@ -43,13 +44,13 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::stopIdentifyFromVideo() {
 }
 
 bool ArmFaceIdentify::DialogVideoFaceIdentify::ifNecessaryStop() {
-    return waitKey(10) == 'k' || this->isStopIdentify;
+    return this->isStopIdentify;
 }
 
 void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCapture *vc) {
     Mat frame;
     vector<ArmFaceIdentify::PredictMat> predictFaceMap;
-
+    const string dialogName = "arm_face_identify_dialog";
     while (vc->read(frame)) {
         if (frame.empty()) {
             throw "video capture read frame empty";
@@ -60,8 +61,8 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
             break;
         }
 
+        imshow(dialogName, frame);
         predictFaceMap = this->identifyMat(frame);
-        imshow(DialogVideoFaceIdentify::DIALOG_NAME, frame);
 
         if (predictFaceMap.size() == 0) {
             continue;
@@ -76,7 +77,7 @@ void ArmFaceIdentify::DialogVideoFaceIdentify::identifyFromVideoCapture(VideoCap
             this->predictMatMapCallback(predictFaceMap, flag);
         }
     }
-    cvDestroyWindow(DialogVideoFaceIdentify::DIALOG_NAME.c_str());
+    cvDestroyWindow(dialogName.c_str());
     predictFaceMap.clear();
 }
 

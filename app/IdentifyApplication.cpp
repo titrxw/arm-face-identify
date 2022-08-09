@@ -28,7 +28,7 @@ Train *IdentifyApplication::getFaceTrainHandler() {
 }
 
 void IdentifyApplication::registerSubscribe() {
-    this->getSubscribeManager()->registerSubscriber(new DeviceCtrlSubscribe(this->config.device, this->getFaceIdentifyHandler(),
+    this->getSubscribeManager()->registerSubscriber(new DeviceCtrlSubscribe(this->config, this->getFaceIdentifyHandler(),
                                                                             this->getFaceTrainHandler()));
 }
 

@@ -15,6 +15,7 @@ using namespace configor;
 class Server {
 public:
     string httpServerAddress;
+
     CONFIGOR_BIND(json, Server, REQUIRED(httpServerAddress, "http_server_address"));
 };
 

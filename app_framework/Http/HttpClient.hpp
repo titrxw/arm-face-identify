@@ -14,6 +14,7 @@
 #include "../Util/Encrypt.hpp"
 #include "../Util/Util.h"
 #include "../Util/Filesystem.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -80,7 +81,7 @@ public:
         return params;
     }
 
-    map<string, string> post(const string& path, map<string, string> params, map<string, string> headers = {}, bool withSign = true) {
+    nlohmann::json post(const string& path, map<string, string> params, map<string, string> headers = {}, bool withSign = true) {
         if (withSign) {
             params = this->replenishSign(params);
         }
@@ -103,7 +104,7 @@ public:
         return this->parseResponse(this->client->Post(path, httpHeaders, httpParams));
     }
 
-    map<string, string> get(const string& path, map<string, string> params, map<string, string> headers = {}, bool withSign = true) {
+    nlohmann::json get(const string& path, map<string, string> params, map<string, string> headers = {}, bool withSign = true) {
         if (withSign) {
             params = this->replenishSign(params);
         }
@@ -126,7 +127,7 @@ public:
         return this->parseResponse(this->client->Get(path, httpParams, httpHeaders));
     }
 
-    map<string, string> uploadFile(const string& path, string filePath, map<string, string> params = {}, map<string, string> headers = {}, bool withSign = true) {
+    nlohmann::json uploadFile(const string& path, string filePath, map<string, string> params = {}, map<string, string> headers = {}, bool withSign = true) {
         if (withSign) {
             params = this->replenishSign(params);
         }
@@ -152,15 +153,24 @@ public:
     }
 
 protected:
-    map<string, string> parseResponse(httplib::Result res) {
+    nlohmann::json parseResponse(httplib::Result res) {
         if (res) {
-            cout << res->status << endl;
-            cout << res->body << endl;
+            nlohmann::json jsonObj = nlohmann::json::parse(res->body);
+            if (!jsonObj.contains("data") || !jsonObj.contains("code") ||
+                !jsonObj.contains("msg")) {
+                throw nlohmann::json::other_error::create(400,
+                                                          "JSON message missing `data`, `code`, and/or `msg` fields", nullptr);
+            }
+
+            if (jsonObj.at("code").get<std::int64_t>() != 200) {
+                throw std::logic_error(jsonObj.at("msg").get<std::string>());
+            }
+
+            return jsonObj.at("data");
+
         } else {
             throw std::logic_error(to_string(res.error()));
         }
-
-        return {};
     }
 };
 

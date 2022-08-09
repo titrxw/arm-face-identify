@@ -31,7 +31,7 @@ protected:
     Ptr<CascadeClassifier> cascade;
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
-    ArmFaceIdentify::DialogVideoFaceTrain *faceTrainHandler;
+    ArmFaceIdentify::DialogVideoFaceTrain *faceTrainHandler = nullptr;
 };
 
 #endif // ARM_FACE_IDENTIFY_TRAIN_APP_H

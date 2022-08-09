@@ -21,13 +21,13 @@ class ClientCallback : public virtual callback,
 protected:
     int reConnectRetry{};
     int maxConnectRetry = 5;
-    async_client *client;
+    async_client *client = nullptr;
     connect_options connectOptions;
 
 public:
 
-    OnConnected onConnected;
-    OnMessage onMessage;
+    OnConnected onConnected = nullptr;
+    OnMessage onMessage = nullptr;
 
 public:
     ClientCallback(async_client *client, connect_options connectOptions, int maxConnectRetry = 5) : client(client), connectOptions(std::move(connectOptions)), maxConnectRetry(maxConnectRetry) {}

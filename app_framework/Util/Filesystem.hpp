@@ -71,7 +71,7 @@ public:
         return dirPath;
     }
 
-    void static createDir(string dir, int mode = S_IRWXU) {
+    void static createDir(string dir, int mode = 0000777) {
         if (Filesystem::dirExists(dir)){
             return;
         }
@@ -91,8 +91,7 @@ public:
 
         for (const auto& it : dirList)
         {
-            int res = mkdir(it.c_str(), mode);
-            std::cout<<res;
+            mkdir(it.c_str(), mode);
         }
     }
 

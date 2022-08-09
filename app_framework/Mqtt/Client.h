@@ -27,8 +27,8 @@ protected:
     string userName;
     string password;
     connect_options connectOptions;
-    async_client *client;
-    ClientCallback *clientCallback;
+    async_client *client = nullptr;
+    ClientCallback *clientCallback = nullptr;
 };
 
 

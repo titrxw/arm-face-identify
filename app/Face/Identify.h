@@ -37,7 +37,7 @@ protected:
     Ptr<CascadeClassifier> cascade;
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
-    ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler;
+    ArmFaceIdentify::DialogVideoFaceIdentify *faceIdentifyHandler = nullptr;
     std::function<void (ArmFaceIdentify::PredictMat, string)> predictMatCallback;
 
     int curIdentifyLabel = 0;

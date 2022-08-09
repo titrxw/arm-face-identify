@@ -23,8 +23,8 @@ protected:
     Train *getFaceTrainHandler();
 
 protected:
-    Identify *identify;
-    Train *train;
+    Identify *identify = nullptr;
+    Train *train = nullptr;
 };
 
 #endif //ARM_FACE_IDENTIFY_IDENTIFYAPPLICATION_H

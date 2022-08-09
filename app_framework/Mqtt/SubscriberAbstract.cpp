@@ -8,7 +8,7 @@ string SubscriberAbstract::getTopic() {
     return "";
 }
 
-SubscriberAbstract::SubscriberAbstract(Device device) : device(device) {
+SubscriberAbstract::SubscriberAbstract(Config config) : config(config) {
 
 }
 
@@ -21,9 +21,25 @@ void SubscriberAbstract::setExceptionHandler(std::function<void(std::exception &
 }
 
 Device SubscriberAbstract::getDevice() {
-    return this->device;
+    return this->config.device;
 }
 
 void SubscriberAbstract::onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) {
     ;
+}
+
+HttpClient *SubscriberAbstract::getHttpClient() {
+    if (this->httpClient == nullptr) {
+        this->httpClient = (new HttpClient(this->config.server.httpServerAddress))->withAppId(this->config.device.appId)
+                ->withAppSecret(this->config.device.appSecret);
+    }
+
+    return this->httpClient;
+}
+
+SubscriberAbstract::~SubscriberAbstract() {
+    if (this->httpClient != nullptr) {
+        delete this->httpClient;
+        this->httpClient = nullptr;
+    }
 }

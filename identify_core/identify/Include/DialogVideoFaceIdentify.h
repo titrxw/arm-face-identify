@@ -16,8 +16,6 @@ namespace ArmFaceIdentify {
                                 EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *)> *eventDispatcher);
         ~DialogVideoFaceIdentify();
 
-        const string DIALOG_NAME = "arm_face_identify_dialog";
-
         void identifyFromVideoCapture(VideoCapture *vc);
         void setCanIdentifyNextMatWithFlag(string flag);
         void stopIdentifyFromVideo();
@@ -26,7 +24,7 @@ namespace ArmFaceIdentify {
         void setPredictMatMapCallback(std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> validator);
 
     protected:
-        bool isStopIdentify = false;
+        bool isStopIdentify;
         string canIdentifyNextMatFlag;
         std::function<void (vector<ArmFaceIdentify::PredictMat>, string)> predictMatMapCallback;
         bool ifNecessaryStop();

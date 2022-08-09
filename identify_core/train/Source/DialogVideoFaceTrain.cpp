@@ -52,7 +52,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
     imgDir = imgDir.append("img/").append(ArmFaceIdentify::Str::toString(label)).append("/");
     ArmFaceIdentify::File::mkdirs(imgDir);
     ArmFaceIdentify::File::removeDir(imgDir);
-
+    const string dialogName = "arm_face_identify_dialog";
     while (vc->read(frame))
     {
         if (frame.empty())
@@ -60,7 +60,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
             throw "video capture read frame empty";
         }
 
-        imshow(DialogVideoFaceTrain::DIALOG_NAME, frame);
+        imshow(dialogName, frame);
 
         if (this->isCanDetectedNextMat())
         {
@@ -85,7 +85,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
             break;
         }
     }
-    cvDestroyWindow(DialogVideoFaceTrain::DIALOG_NAME.c_str());
+    cvDestroyWindow(dialogName.c_str());
 
     string faceSampleFile(this->targetDir);
     faceSampleFile = faceSampleFile.append(ArmFaceIdentify::Str::toString(label)).append("_").append(DialogVideoFaceTrain::SAMPLE_FILE_NAME);
