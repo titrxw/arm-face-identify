@@ -6,6 +6,7 @@
 #define ARM_FACE_IDENTIFY_CLIENTCALLBACK_HPP
 
 #include <functional>
+#include "exception"
 #include <utility>
 #include "mqtt/include/mqtt/async_client.h"
 
@@ -40,7 +41,7 @@ public:
     // to just call the async_client::reconnect() method.
     void reconnect() {
         if (!this->connectOptions.get_automatic_reconnect()) {
-            throw "mqtt client lost";
+            throw std::logic_error("mqtt client lost");
         }
 
         std::this_thread::sleep_for(this->connectOptions.get_keep_alive_interval());

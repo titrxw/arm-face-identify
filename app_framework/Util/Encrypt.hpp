@@ -68,6 +68,10 @@ public:
         CryptoPP::Weak::MD5 md5;
         StringSource(src, true, new CryptoPP::HashFilter(md5, new CryptoPP::HexEncoder(new StringSink(dst))));
 
+        for(char & i : dst){
+            i = tolower(i);
+        }
+
         return dst;
     }
 };

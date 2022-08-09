@@ -64,7 +64,7 @@ add_executable(${projectName}
         config/Mqtt.h
         config/Device.h
         config/FaceIdentify.h
-        app/Define.h app_framework/Util/Base64.hpp app_framework/Http/HttpClient.hpp config/Server.h)
+        app/Define.h app_framework/Util/Base64.hpp app_framework/Http/HttpClient.hpp config/Server.h app_framework/Util/Util.h app_framework/Http/HttpException.h)
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

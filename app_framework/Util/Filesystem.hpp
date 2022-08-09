@@ -7,10 +7,32 @@
 
 #include <unistd.h>
 #include <sys/stat.h>
+#include <fstream>
 #include <glob.h>
 
 class Filesystem {
 public:
+    string static getFileNameFromPath(std::string path) {
+        string name;
+
+        for (int i= path.size()-1;i>0;i--) {
+            if (path[i] == '\\' || path[i] == '/') {
+                name = path.substr(i+1);
+                break;
+            }
+        }
+        name = path;
+
+        return name;
+    }
+
+    string static read(const string &filePath, ios_base::openmode mode = ios::out|ios::in) {
+        ifstream infile(filePath, mode);
+        std::stringstream buffer;
+        buffer << infile.rdbuf();
+        return std::string(buffer.str());
+    }
+
     string static getCurUserHomeDir() {
         string path = "~";
         char const* home = getenv("HOME");
