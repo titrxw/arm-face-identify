@@ -33,6 +33,17 @@ public:
         return std::string(buffer.str());
     }
 
+    void static write(const string &filePath, const string& content, ios_base::openmode mode = ios::trunc|ios::out) {
+        ofstream outfile(filePath, mode);
+        if (!outfile.is_open()) {
+            throw string("file ").append(filePath).append(" can not be open!");
+        }
+
+        outfile << content;
+
+        outfile.close();
+    }
+
     void static unlink(const string &filePath) {
         try {
             ::unlink(filePath.c_str());

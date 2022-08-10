@@ -11,6 +11,7 @@
 #include "map"
 #include "exception"
 #include "httplib/httplib.h"
+#include "HttpUrl.hpp"
 #include "../Util/Encrypt.hpp"
 #include "../Util/Util.h"
 #include "../Util/Filesystem.hpp"
@@ -127,7 +128,7 @@ public:
         return this->parseResponse(this->client->Get(path, httpParams, httpHeaders));
     }
 
-    nlohmann::json uploadFile(const string& path, string filePath, map<string, string> params = {}, map<string, string> headers = {}, bool withSign = true) {
+    nlohmann::json uploadFile(const string& path, const string& filePath, map<string, string> params = {}, map<string, string> headers = {}, bool withSign = true) {
         if (withSign) {
             params = this->replenishSign(params);
         }
@@ -150,6 +151,34 @@ public:
         }
 
         return this->parseResponse(this->client->Post(path, httpHeaders, httpParams));
+    }
+
+    bool downloadFile(const string& remoteUrl, const string& localSavePath) {
+        HttpUrl httpUrl;
+
+        if(!httpUrl.parse(remoteUrl.c_str())){
+            return false;
+        }
+        string host = httpUrl.get_proto();
+        host += "://";
+        host += httpUrl.get_domain();
+        host = host.substr(0, host.length() - 1);
+
+        string path = httpUrl.get_url_path();
+        if (!to_string(httpUrl.get_url_params()).empty()) {
+            path += "?";
+            path += httpUrl.get_url_params();
+        }
+
+        httplib::Client client(host);
+        auto res = client.Get(path);
+        if (res) {
+            Filesystem::write(localSavePath, res->body);
+
+            return true;
+        }
+
+        throw std::logic_error(to_string(res.error()));
     }
 
 protected:

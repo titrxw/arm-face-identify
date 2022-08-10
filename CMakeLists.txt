@@ -68,7 +68,8 @@ add_executable(${projectName}
         app_framework/Util/Base64.hpp
         app_framework/Http/HttpClient.hpp
         config/Server.h
-        app_framework/Util/Util.h)
+        app_framework/Util/Util.h
+        app_framework/Http/HttpUrl.hpp)
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
