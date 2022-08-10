@@ -9,6 +9,8 @@
 #define	HTTPS_PREFIX	"https://"
 #define SKIP_WHILE(cond, ptr) { while(*ptr && (cond)) ptr++; }
 
+#include "string"
+
 using namespace std;
 
 class  HttpUrl {
