@@ -72,7 +72,7 @@ public:
 
         int remoteUrlSize = remoteUrls.size();
         if (remoteUrlSize < 8) {
-            std::logic_error("训练图片数量不能小于8张");
+            throw std::logic_error("训练图片数量不能小于8张");
         }
 
         vector<std::string> localPaths;
