@@ -101,6 +101,8 @@ public:
         }
 
         if (!modelPath.empty()) {
+            this->identify->getModelRecognizer()->read(modelPath);
+
             //success
             nlohmann::json payload;
             payload["result"] = "success";
