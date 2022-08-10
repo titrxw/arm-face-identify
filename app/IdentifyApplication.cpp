@@ -33,6 +33,13 @@ void IdentifyApplication::registerSubscribe() {
 }
 
 void IdentifyApplication::beforeStart() {
+    if (!Filesystem::dirExists(this->getAppPath() + FACE_CASCADE_PATH)) {
+        Filesystem::createDir(this->getAppPath() + FACE_CASCADE_PATH);
+    }
+    if (!Filesystem::dirExists(this->getAppPath() + FACE_MODEL_DIR)) {
+        Filesystem::createDir(this->getAppPath() + FACE_MODEL_DIR);
+    }
+
     Application::beforeStart();
 
     this->registerSubscribe();

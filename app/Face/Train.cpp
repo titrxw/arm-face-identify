@@ -3,6 +3,7 @@
 //
 
 #include "Train.h"
+#include "../../app_framework/Util/Filesystem.hpp"
 
 Train::Train(const string& cascadeFilePath, string targetDir) : cascadeFilePath(cascadeFilePath), targetDir(targetDir) {
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
@@ -32,8 +33,20 @@ ArmFaceIdentify::DialogVideoFaceTrain *Train::getFaceTrainHandler() {
     return this->faceTrainHandler;
 }
 
-string Train::trainFromRemoteImgUrls(vector<string> remoteImgUrls) {
-    return std::string();
+string Train::trainFromRemoteImgUrls(int label, vector<std::string> localPaths) {
+    string labelStr = to_string(label);
+    int localPathSize = localPaths.size();
+    string modeFileContent;
+    for (int i = 0; i < localPathSize; ++i) {
+        modeFileContent = modeFileContent.append(localPaths[i]).append(";").append(labelStr).append("\n");
+    }
+    string samplePath = this->targetDir + labelStr + "_model.txt";
+    Filesystem::write(samplePath, modeFileContent);
+
+    string filePath = this->targetDir + labelStr + "_model.xml";
+    this->getFaceTrainHandler()->trainAndSave(samplePath, filePath);
+
+    return filePath;
 }
 
 Train::~Train() {
