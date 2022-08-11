@@ -33,7 +33,11 @@ ArmFaceIdentify::DialogVideoFaceTrain *Train::getFaceTrainHandler() {
     return this->faceTrainHandler;
 }
 
-string Train::trainFromRemoteImgUrls(int label, vector<std::string> localPaths) {
+string Train::getFaceModelSavePath(int label) {
+    return this->targetDir + to_string(label) + "_model.xml";
+}
+
+string Train::addFaceModelFromRemoteImgUrls(int label, vector<std::string> localPaths) {
     string labelStr = to_string(label);
     int localPathSize = localPaths.size();
     string modeFileContent;
@@ -43,10 +47,18 @@ string Train::trainFromRemoteImgUrls(int label, vector<std::string> localPaths) 
     string samplePath = this->targetDir + labelStr + "_model.txt";
     Filesystem::write(samplePath, modeFileContent);
 
-    string filePath = this->targetDir + labelStr + "_model.xml";
+    string filePath = this->getFaceModelSavePath(label);
     this->getFaceTrainHandler()->trainAndSave(samplePath, filePath);
+    Filesystem::unlink(samplePath);
 
     return filePath;
+}
+
+string Train::deleteFaceModel(int label) {
+    string filePath = this->getFaceModelSavePath(label);
+    if (Filesystem::fileExists(filePath)) {
+        Filesystem::unlink(filePath);
+    }
 }
 
 Train::~Train() {

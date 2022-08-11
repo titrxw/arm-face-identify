@@ -23,7 +23,9 @@ public:
     Ptr<CascadeClassifier> getCascadeClassifier();
     Ptr<FaceRecognizer> getModelRecognizer();
     ArmFaceIdentify::DialogVideoFaceTrain *getFaceTrainHandler();
-    string trainFromRemoteImgUrls(int label, vector<string> localPaths);
+    string getFaceModelSavePath(int label);
+    string addFaceModelFromRemoteImgUrls(int label, vector<string> localPaths);
+    string deleteFaceModel(int label);
 
 protected:
     string cascadeFilePath;

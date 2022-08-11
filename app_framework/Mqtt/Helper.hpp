@@ -53,6 +53,14 @@ public:
         Helper::publishMsg(client, device, Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
     }
 
+    void static publishReplySuccessMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        nlohmann::json payload;
+        payload["status"] = "success";
+        cloudEvent.set_data(to_string(payload));
+
+        Helper::publishReplyMsg(client, device, cloudEvent, exceptionHandler);
+    }
+
     void static publishReplyMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
     }

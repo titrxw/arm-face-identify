@@ -64,7 +64,16 @@ public:
         Helper::publishReportMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
     }
 
-    void trainRemoteUrls(google_function::CloudEvent cloudEvent, int label, vector<std::string> remoteUrls) {
+    void addFaceModel(google_function::CloudEvent cloudEvent) {
+        nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
+        if (!jsonObj.contains("label") || !jsonObj.contains("urls")) {
+            throw nlohmann::json::other_error::create(400,
+                                                      "JSON message missing `label`, `urls` fields", nullptr);
+        }
+
+        int label = jsonObj.at("label").get<int64_t>();
+        vector<std::string> remoteUrls = jsonObj.at("urls").get<vector<std::string>>();
+
         string trainDir = this->matTrainTmpFileDir + to_string(label) + "/";
         if (!Filesystem::dirExists(trainDir)) {
             Filesystem::createDir(trainDir);
@@ -93,7 +102,7 @@ public:
 
         string modelPath;
         if (remoteUrlSize == localPathSize) {
-            modelPath = this->train->trainFromRemoteImgUrls(label, localPaths);
+            modelPath = this->train->addFaceModelFromRemoteImgUrls(label, localPaths);
         }
 
         for (int i = 0; i < localPathSize; ++i) {
@@ -103,27 +112,30 @@ public:
         if (!modelPath.empty()) {
             this->identify->getModelRecognizer()->read(modelPath);
 
-            //success
-            nlohmann::json payload;
-            payload["result"] = "success";
-            cloudEvent.set_data(to_string(payload));
-            Helper::publishReplyMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+            Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
         }
+    }
+
+    void deleteFaceModel(google_function::CloudEvent cloudEvent) {
+        nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
+        if (!jsonObj.contains("label")) {
+            throw nlohmann::json::other_error::create(400,
+                                                      "JSON message missing `label` fields", nullptr);
+        }
+
+        this->train->deleteFaceModel(jsonObj.at("label").get<int64_t>());
+        this->identify->reloadModelRecognizer();
+
+        Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
     }
 
     void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) override {
         if (cloudEvent.type() == APP_OPERATE_ADD_FACE_MODEL) {
-            nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
-            if (!jsonObj.contains("label") || !jsonObj.contains("urls")) {
-                throw nlohmann::json::other_error::create(400,
-                                                          "JSON message missing `label`, `urls` fields", nullptr);
-            }
+            this->addFaceModel(cloudEvent);
+        }
 
-            try {
-                this->trainRemoteUrls(cloudEvent, jsonObj.at("label").get<int64_t>(), jsonObj.at("urls").get<vector<std::string>>());
-            } catch (std::exception &e) {
-                this->exceptionHandler(e);
-            }
+        if (cloudEvent.type() == APP_OPERATE_DELETE_FACE_MODEL) {
+            this->deleteFaceModel(cloudEvent);
         }
     }
 

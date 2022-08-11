@@ -25,6 +25,7 @@ public:
     Ptr<CascadeClassifier> getCascadeClassifier();
     Ptr<FaceRecognizer> getModelRecognizer();
     ArmFaceIdentify::DialogVideoFaceIdentify *getFaceIdentifyHandler();
+    void reloadModelRecognizer();
     void setPredictMatConfidence(double predictMatConfidence);
     void setPredictMatMapCallback(std::function<void (ArmFaceIdentify::PredictMat, string)> callback);
     void startIdentifyFromVideoCapture();

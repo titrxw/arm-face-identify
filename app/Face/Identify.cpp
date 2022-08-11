@@ -3,6 +3,7 @@
 //
 
 #include "Identify.h"
+#include "../../app_framework/Util/Filesystem.hpp"
 
 Identify::Identify(const string& cascadeFilePath, vector<string> modelFilesPath, int videoCaptureIndex) : cascadeFilePath(cascadeFilePath), modelFilesPath(modelFilesPath), videoCaptureIndex(videoCaptureIndex) {
     this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
@@ -23,12 +24,27 @@ Ptr<CascadeClassifier> Identify::getCascadeClassifier() {
 Ptr<FaceRecognizer> Identify::getModelRecognizer() {
     if (this->modelRecognizer == nullptr) {
         this->modelRecognizer = EigenFaceRecognizer::create();
-        for (int i = 0; i < this->modelFilesPath.size(); i++) {
-            this->modelRecognizer->read(this->modelFilesPath[i]);
-        }
+        this->reloadModelRecognizer();
     }
 
     return this->modelRecognizer;
+}
+
+void Identify::reloadModelRecognizer() {
+    this->modelRecognizer->clear();
+
+    vector<string>tmp;
+    int size = this->modelFilesPath.size();
+
+    for (int i = 0; i < size; i++) {
+        if (Filesystem::fileExists(this->modelFilesPath[i])) {
+            this->modelRecognizer->read(this->modelFilesPath[i]);
+            tmp.push_back(this->modelFilesPath[i]);
+        }
+    }
+
+    this->modelFilesPath.clear();
+    this->modelFilesPath = tmp;
 }
 
 void Identify::setPredictMatMapCallback(std::function<void (ArmFaceIdentify::PredictMat, string)> callback) {
