@@ -25,7 +25,7 @@ public:
     ArmFaceIdentify::DialogVideoFaceTrain *getFaceTrainHandler();
     string getFaceModelSavePath(int label);
     string addFaceModelFromRemoteImgUrls(int label, vector<string> localPaths);
-    string deleteFaceModel(int label);
+    void deleteFaceModel(int label);
 
 protected:
     string cascadeFilePath;

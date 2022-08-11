@@ -54,7 +54,7 @@ string Train::addFaceModelFromRemoteImgUrls(int label, vector<std::string> local
     return filePath;
 }
 
-string Train::deleteFaceModel(int label) {
+void Train::deleteFaceModel(int label) {
     string filePath = this->getFaceModelSavePath(label);
     if (Filesystem::fileExists(filePath)) {
         Filesystem::unlink(filePath);
