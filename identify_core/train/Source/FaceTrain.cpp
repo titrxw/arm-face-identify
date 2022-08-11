@@ -37,7 +37,7 @@ void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<M
 }
 
 void ArmFaceIdentify::FaceTrain::trainMats(vector<Mat> &mats, vector<int> &matLabels, const string &targetFile) {
-    this->modelRecognizer->train(mats, matLabels);
+    this->modelRecognizer->update(mats, matLabels);
     if (!targetFile.empty()) {
         this->modelRecognizer->save(targetFile);
     }

@@ -23,7 +23,7 @@ Ptr<CascadeClassifier> Identify::getCascadeClassifier() {
 
 Ptr<FaceRecognizer> Identify::getModelRecognizer() {
     if (this->modelRecognizer == nullptr) {
-        this->modelRecognizer = EigenFaceRecognizer::create();
+        this->modelRecognizer = LBPHFaceRecognizer::create();
         this->reloadModelRecognizer();
     }
 

@@ -19,7 +19,7 @@ Ptr<CascadeClassifier> Train::getCascadeClassifier() {
 
 Ptr<FaceRecognizer> Train::getModelRecognizer() {
     if (this->modelRecognizer == nullptr) {
-        this->modelRecognizer = EigenFaceRecognizer::create();
+        this->modelRecognizer = LBPHFaceRecognizer::create();
     }
 
     return this->modelRecognizer;
@@ -34,7 +34,7 @@ ArmFaceIdentify::DialogVideoFaceTrain *Train::getFaceTrainHandler() {
 }
 
 string Train::getFaceModelSavePath(int label) {
-    return this->targetDir + to_string(label) + "_model.xml";
+    return this->targetDir  + "default_model.xml";
 }
 
 string Train::addFaceModelFromRemoteImgUrls(int label, vector<std::string> localPaths) {
