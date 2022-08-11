@@ -112,7 +112,7 @@ public:
     }
 
     void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) override {
-        if (cloudEvent.type() == APP_OPERATE_TRAIN) {
+        if (cloudEvent.type() == APP_OPERATE_ADD_FACE_MODEL) {
             nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
             if (!jsonObj.contains("label") || !jsonObj.contains("urls")) {
                 throw nlohmann::json::other_error::create(400,
