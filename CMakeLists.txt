@@ -53,10 +53,7 @@ add_executable(${projectName}
         app_framework/Application.cpp
         app_framework/Application.h
 
-        app/Face/Train.cpp
-        app/Face/Train.h
-        app/Face/Identify.cpp
-        app/Face/Identify.h
+        app/Face/Identify.hpp
         app/IdentifyApplication.cpp
         app/IdentifyApplication.h
         app/Mqtt/DeviceCtrlSubscribe.hpp
@@ -68,8 +65,7 @@ add_executable(${projectName}
         app_framework/Util/Base64.hpp
         app_framework/Http/HttpClient.hpp
         config/Server.h
-        app_framework/Util/Util.h
-        app_framework/Http/HttpUrl.hpp)
+        app_framework/Util/Util.h)
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
@@ -123,6 +119,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp_l.so")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/linux/libopencv_face.so")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/curl/lib/libcurl.so")
 endif()
 
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录

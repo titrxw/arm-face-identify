@@ -8,23 +8,16 @@
 #include "../../app_framework/Mqtt/SubscriberAbstract.h"
 #include "../../app_framework/Mqtt/Helper.hpp"
 #include "../../app_framework/Util/Base64.hpp"
-#include "../Face/Identify.h"
-#include "../Face/Train.h"
+#include "../Face/Identify.hpp"
 #include "../Define.h"
-
-const string JPG_EXT = ".jpeg";
 
 class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
 public:
-    explicit DeviceCtrlSubscribe(Config config, Identify *identify, Train *train) : SubscriberAbstract(config), identify(identify), train(train) {
+    explicit DeviceCtrlSubscribe(Config config, Identify *identify) : SubscriberAbstract(config), identify(identify) {
         this->identify->setPredictMatMapCallback(std::bind(&DeviceCtrlSubscribe::predictedMatCallback, this, std::placeholders::_1, std::placeholders::_2));
         this->matIdentifyTmpFileDir = Filesystem::getCurUserDocDir() + "/" + this->config.device.appName + "/runtimes/identify/";
         if (!Filesystem::dirExists(this->matIdentifyTmpFileDir )) {
             Filesystem::createDir(this->matIdentifyTmpFileDir);
-        }
-        this->matTrainTmpFileDir = Filesystem::getCurUserDocDir() + "/" + this->config.device.appName + "/runtimes/train/";
-        if (!Filesystem::dirExists(this->matTrainTmpFileDir )) {
-            Filesystem::createDir(this->matTrainTmpFileDir);
         }
     }
     ~DeviceCtrlSubscribe() = default;
@@ -72,48 +65,18 @@ public:
         }
 
         int label = jsonObj.at("label").get<int64_t>();
-        vector<std::string> remoteUrls = jsonObj.at("urls").get<vector<std::string>>();
-
-        string trainDir = this->matTrainTmpFileDir + to_string(label) + "/";
-        if (!Filesystem::dirExists(trainDir)) {
-            Filesystem::createDir(trainDir);
-        }
-
-        int remoteUrlSize = remoteUrls.size();
-        if (remoteUrlSize < 8) {
-            throw std::logic_error("训练图片数量不能小于8张");
-        }
-
-        vector<std::string> localPaths;
-        localPaths.resize(remoteUrlSize);
-        for (int i = 0; i < remoteUrlSize; ++i) {
-            string filePath = trainDir + Encrypt::md5(remoteUrls[i]) + JPG_EXT;
-
-            try {
-                if (this->getHttpClient()->downloadFile(remoteUrls[i], filePath)) {
-                    localPaths.push_back(filePath);
-                }
-            } catch (std::exception &e) {
-                this->exceptionHandler(e);
-                break;
+        try {
+            this->identify->addFaceModelFromRemoteImgUrls(label, jsonObj.at("urls").get<vector<std::string>>());
+        } catch (std::exception &e) {
+            string modelDir = this->identify->getFaceModelImgSavePathWithLabel(label);
+            if (Filesystem::dirExists(modelDir)) {
+                Filesystem::removeDir(modelDir);
             }
-        }
-        int localPathSize = localPaths.size();
 
-        string modelPath;
-        if (remoteUrlSize == localPathSize) {
-            modelPath = this->train->addFaceModelFromRemoteImgUrls(label, localPaths);
+            throw e;
         }
 
-        for (int i = 0; i < localPathSize; ++i) {
-            Filesystem::unlink(localPaths[i]);
-        }
-
-        if (!modelPath.empty()) {
-            this->identify->getModelRecognizer()->read(modelPath);
-
-            Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
-        }
+        Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
     }
 
     void deleteFaceModel(google_function::CloudEvent cloudEvent) {
@@ -123,8 +86,7 @@ public:
                                                       "JSON message missing `label` fields", nullptr);
         }
 
-        this->train->deleteFaceModel(jsonObj.at("label").get<int64_t>());
-        this->identify->reloadModelRecognizer();
+        this->identify->deleteFaceModel(jsonObj.at("label").get<int64_t>());
 
         Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
     }
@@ -141,9 +103,7 @@ public:
 
 protected:
     Identify *identify;
-    Train *train;
     string matIdentifyTmpFileDir;
-    string matTrainTmpFileDir;
 };
 
 #endif //ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP

@@ -9,9 +9,30 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <glob.h>
+#include <dirent.h>
 
 class Filesystem {
 public:
+    string static getCurUserHomeDir() {
+        string path = "~";
+        char const* home = getenv("HOME");
+        if (home or ((home = getenv("USERPROFILE")))) {
+            path.replace(0, 1, home);
+        } else {
+            char const *hdrive = getenv("HOMEDRIVE"),
+            *hpath = getenv("HOMEPATH");
+            assert(hdrive);  // or other error handling
+            assert(hpath);
+            path.replace(0, 1, std::string(hdrive) + hpath);
+        }
+
+        return path;
+    }
+
+    string static getCurUserDocDir() {
+        return Filesystem::getCurUserHomeDir() + "/documents";
+    }
+
     string static getFileNameFromPath(std::string path) {
         string name;
 
@@ -50,26 +71,6 @@ public:
         } catch (std::exception &e) {
             ;
         }
-    }
-
-    string static getCurUserHomeDir() {
-        string path = "~";
-        char const* home = getenv("HOME");
-        if (home or ((home = getenv("USERPROFILE")))) {
-            path.replace(0, 1, home);
-        } else {
-            char const *hdrive = getenv("HOMEDRIVE"),
-            *hpath = getenv("HOMEPATH");
-            assert(hdrive);  // or other error handling
-            assert(hpath);
-            path.replace(0, 1, std::string(hdrive) + hpath);
-        }
-
-        return path;
-    }
-
-    string static getCurUserDocDir() {
-        return Filesystem::getCurUserHomeDir() + "/documents";
     }
 
     bool static fileExists(const string& filePath, int mode = R_OK) {
@@ -116,6 +117,67 @@ public:
         {
             mkdir(it.c_str(), mode);
         }
+    }
+
+    void static removeDir(const string &dirPath)  {
+        struct dirent *dirp;
+
+        DIR* dir = opendir(dirPath.c_str());
+
+        while ((dirp = readdir(dir)) != nullptr) {
+            // 完整路径
+            string name = dirp->d_name;
+            const string& path = dirPath;
+            if (dirp->d_type == DT_REG) {
+                Filesystem::unlink(path+name);
+            } else if (dirp->d_type == DT_DIR) {
+                if(name!="." && name!=".."){
+                    Filesystem::removeDir(path+name+"/");
+                }
+            }
+        }
+
+        closedir(dir);
+    }
+
+    vector<string> static getChildDirs(const string &dirPath) {
+        struct dirent *dirp;
+
+        DIR* dir = opendir(dirPath.c_str());
+        vector<string> dirs;
+        while ((dirp = readdir(dir)) != nullptr) {
+            // 完整路径
+            string name = dirp->d_name;
+            const string& path = dirPath;
+            if (dirp->d_type == DT_DIR) {
+                if(name!="." && name!="..") {
+                    dirs.push_back(name);
+                }
+            }
+        }
+
+        closedir(dir);
+
+        return dirs;
+    }
+
+    vector<string> static getDirFiles(const string &dirPath) {
+        struct dirent *dirp;
+
+        DIR* dir = opendir(dirPath.c_str());
+        vector<string> files;
+        while ((dirp = readdir(dir)) != nullptr) {
+            // 完整路径
+            string name = dirp->d_name;
+            const string& path = dirPath;
+            if (dirp->d_type == DT_REG) {
+                files.push_back(name);
+            }
+        }
+
+        closedir(dir);
+
+        return files;
     }
 
     vector<string> static glob(string globPattern) {

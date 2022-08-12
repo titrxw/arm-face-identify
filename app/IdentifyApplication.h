@@ -7,8 +7,7 @@
 
 #include "Define.h"
 #include "../app_framework/Application.h"
-#include "./Face/Identify.h"
-#include "./Face/Train.h"
+#include "./Face/Identify.hpp"
 
 class IdentifyApplication : public Application{
 public:
@@ -20,11 +19,9 @@ protected:
     void beforeStart() override;
     void afterStart() override;
     Identify *getFaceIdentifyHandler();
-    Train *getFaceTrainHandler();
 
 protected:
     Identify *identify = nullptr;
-    Train *train = nullptr;
 };
 
 #endif //ARM_FACE_IDENTIFY_IDENTIFYAPPLICATION_H
