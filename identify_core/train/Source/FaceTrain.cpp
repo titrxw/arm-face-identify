@@ -28,8 +28,10 @@ void ArmFaceIdentify::FaceTrain::loadSourceFile(const string &filename, vector<M
             if (!File::exists(path)) {
                 throw path.append( "not exists!");
             }
-            Mat img = imread(path, 0);
-            resize(img, img, Size(92, 112));
+
+            Mat img = imread(path,IMREAD_GRAYSCALE);//读取灰度图
+            //调整图片为128*128,参数：（原图矩阵，目标图矩阵，图尺寸，x比例，y比例，插值类型）
+            resize(img,img,Size(128,128),0,0,INTER_LINEAR);
             mats.push_back(img);
             matLabels.push_back(atoi(label.c_str()));
         }

@@ -33,7 +33,7 @@ public:
             imwrite(matFilePath, predictMat.sourceMat);
 
             nlohmann::json result = this->getHttpClient()
-            ->uploadFile("/api/util/attach/upload/image", matFilePath, {}, {}, true);
+            ->uploadFile(this->config.server.httpServerAddress + "/api/util/attach/upload/image", matFilePath, {}, {}, true);
 
             remoteUrl = result.at("url").get<std::string>();
             Filesystem::unlink(matFilePath);

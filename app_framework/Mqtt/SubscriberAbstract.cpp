@@ -30,7 +30,7 @@ void SubscriberAbstract::onSubscribe(async_client *client, const_message_ptr msg
 
 HttpClient *SubscriberAbstract::getHttpClient() {
     if (this->httpClient == nullptr) {
-        this->httpClient = (new HttpClient(this->config.server.httpServerAddress))->withAppId(this->config.device.appId)
+        this->httpClient = (new HttpClient())->withAppId(this->config.device.appId)
                 ->withAppSecret(this->config.device.appSecret);
     }
 

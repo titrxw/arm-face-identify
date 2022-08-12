@@ -117,6 +117,11 @@ public:
         return escaped.str();
     }
 
+    unsigned int static HttpPostWriteBack(char *ptr, size_t size, size_t nmemb, void *userdata){
+        ((std::string*)userdata)->append(ptr, nmemb);
+        return nmemb;
+    }
+
     nlohmann::json post(const string& url, map<string, string> params, map<string, string> headers = {}, int connectTimeout = 10, int timeout = 10, bool withSign = true) {
         if (withSign) {
             params = this->replenishSign(params);
@@ -134,8 +139,12 @@ public:
             curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-            curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&strResponse);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpClient::HttpPostWriteBack);
+            if (0 == strncmp(url.c_str(), "https:", 6)) {
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             struct curl_slist *curlHeaders = nullptr;
             curlHeaders = curl_slist_append(curlHeaders, "Content-Type: application/x-www-form-urlencoded");
@@ -186,8 +195,12 @@ public:
             curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-            curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&strResponse);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpClient::HttpPostWriteBack);
+            if (0 == strncmp(url.c_str(), "https:", 6)) {
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             struct curl_slist *curlHeaders = nullptr;
             if (!headers.empty()) {
@@ -230,11 +243,15 @@ public:
             curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-            curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-            curl_easy_setopt(curl, CURLOPT_HEADER, 1);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&strResponse);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &strResponse);
+            curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpClient::HttpPostWriteBack);
+            if (0 == strncmp(url.c_str(), "https:", 6)) {
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             struct curl_slist *curlHeaders = nullptr;
             if (!headers.empty()) {
@@ -249,7 +266,7 @@ public:
 
             struct curl_httppost *formPost = nullptr;
             struct curl_httppost *lastptr = nullptr;
-            params.emplace(Filesystem::getFileNameFromPath(filePath), filePath);
+            curl_formadd(&formPost, &lastptr, CURLFORM_PTRNAME, "file", CURLFORM_FILE, filePath.c_str(), CURLFORM_END);
             if (!params.empty()) {
                 map<string, string>::iterator piter;
                 piter = params.begin();
@@ -269,7 +286,6 @@ public:
                 curl_slist_free_all(curlHeaders);
             }
             curl_formfree(formPost);
-            curl_formfree(lastptr);
             curl_easy_cleanup(curl);
 
             if (res != CURLE_OK) {
@@ -295,14 +311,23 @@ public:
             curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-            curl_easy_setopt(curl, CURLOPT_HEADER, 1);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&strResponse);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpClient::HttpPostWriteBack);
+            if (0 == strncmp(remoteUrl.c_str(), "https:", 6)) {
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             res = curl_easy_perform(curl);
             curl_easy_cleanup(curl);
 
             if (res != CURLE_OK) {
                 throw std::logic_error(curl_easy_strerror(res));
+            }
+            long response_code;
+            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+            if (response_code != 200) {
+                return false;
             }
 
             Filesystem::write(localSavePath, strResponse);

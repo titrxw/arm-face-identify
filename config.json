@@ -1,6 +1,6 @@
 {
   "server": {
-    "http_server_address": "http://localhost:8080"
+    "http_server_address": "http://127.0.0.1:8080"
   },
   "mqtt": {
     "server_address": "tcp://127.0.0.1:1883"
@@ -13,6 +13,6 @@
   },
   "face_identify": {
     "video_captcha_index": 0,
-    "predict_mat_confidence": 2700.00
+    "predict_mat_confidence": 75
   }
 }

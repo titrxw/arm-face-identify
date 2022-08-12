@@ -115,7 +115,8 @@ public:
                 }
 
                 time_t curTime = time(NULL);
-                if (this->curIdentifyLabel == predictMatMap[0].label && abs(curTime - this->curIdentifyLatestTime) < 60) {
+                int timeStep = abs(curTime - this->curIdentifyLatestTime);
+                if (this->curIdentifyLabel == predictMatMap[0].label && timeStep < 60) {
                     return;
                 }
 
@@ -146,7 +147,7 @@ public:
         return this->modelSaveDir + "img/" + to_string(label) + "/";
     }
 
-    string addFaceModelFromRemoteImgUrls(int label, vector<std::string> remoteUrls) {
+    void addFaceModelFromRemoteImgUrls(int label, vector<std::string> remoteUrls) {
         int remoteUrlSize = remoteUrls.size();
         if (remoteUrlSize < 8) {
             throw std::logic_error("训练图片数量不能小于8张");
@@ -158,7 +159,6 @@ public:
         }
 
         vector<std::string> localPaths;
-        localPaths.resize(remoteUrlSize);
         for (int i = 0; i < remoteUrlSize; ++i) {
             string filePath = trainDir + Encrypt::md5(remoteUrls[i]) + JPG_EXT;
 
@@ -167,11 +167,12 @@ public:
             }
         }
         remoteUrls.clear();
-        localPaths.clear();
         int localPathSize = localPaths.size();
+        localPaths.clear();
 
         if (remoteUrlSize == localPathSize) {
             this->reTrainFaceModel();
+            return;
         }
 
         throw std::logic_error("图片下载失败");
@@ -195,12 +196,12 @@ public:
             int label = atoi(dirs[i].c_str());
             if (label > 0) {
                 vector<string> files = Filesystem::getDirFiles(modelImgSavePath + dirs[i]);
-                int fileSize = dirs.size();
+                int fileSize = files.size();
                 if (fileSize <= 0) {
                     continue;
                 }
                 for (int j = 0; j < fileSize; ++j) {
-                    modelFileContent = modelFileContent.append(modelImgSavePath + dirs[i] + files[j]).append(";").append(to_string(label)).append("\n");
+                    modelFileContent = modelFileContent.append(modelImgSavePath + dirs[i] + "/" + files[j]).append(";").append(to_string(label)).append("\n");
                 }
                 files.clear();
             }

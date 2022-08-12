@@ -95,6 +95,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
         target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.dylib")
         target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp_m.so")
         target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/mac/libopencv_face.3.4.14.dylib")
+        target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/curl/lib/mac/libcurl.dylib")
     endif()
 
 endif()
@@ -119,7 +120,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp_l.so")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/linux/libopencv_face.so")
-    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/curl/lib/libcurl.so")
+    target_link_libraries(${projectName} "vendor/curl/lib/linux/libcurl.so")
 endif()
 
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录

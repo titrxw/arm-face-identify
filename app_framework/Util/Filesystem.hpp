@@ -34,7 +34,7 @@ public:
     }
 
     string static getFileNameFromPath(std::string path) {
-        string name;
+        string name = path;
 
         for (int i= path.size()-1;i>0;i--) {
             if (path[i] == '\\' || path[i] == '/') {
@@ -42,7 +42,6 @@ public:
                 break;
             }
         }
-        name = path;
 
         return name;
     }

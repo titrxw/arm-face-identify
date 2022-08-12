@@ -62,7 +62,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
 
         imshow(dialogName, frame);
 
-        if (this->isCanDetectedNextMat())
+        if (this->isCanDetectedNextMat() && picNum < 18)
         {
             this->setCanDetectedNextMatWithFlag("");
 
@@ -79,7 +79,7 @@ string ArmFaceIdentify::DialogVideoFaceTrain::makeSampleFileFromVideoCapture(Vid
             detectedFaceMap.clear();
         }
 
-        if (this->ifNecessaryStop())
+        if (this->ifNecessaryStop() || picNum > 18)
         {
             this->stopDetectedMat = false;
             break;
