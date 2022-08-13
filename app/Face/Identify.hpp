@@ -55,6 +55,10 @@ public:
             delete this->faceIdentifyHandler;
             this->faceIdentifyHandler = nullptr;
         }
+        if (this->faceTrainHandler != nullptr) {
+            delete this->faceTrainHandler;
+            this->faceTrainHandler = nullptr;
+        }
     }
 
     string getFaceDefaultModelFilePath() {
