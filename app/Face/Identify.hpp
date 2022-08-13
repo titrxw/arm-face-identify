@@ -243,7 +243,7 @@ protected:
     string cascadeFilePath;
     string modelSaveDir;
     int videoCaptureIndex;
-    double predictMatConfidence = 2000;
+    double predictMatConfidence;
     Ptr<CascadeClassifier> cascade;
     Ptr<FaceRecognizer> modelRecognizer;
     EventDispatcher<int, void(ArmFaceIdentify::BaseEvent *event)> *eventDispatcher = nullptr;
