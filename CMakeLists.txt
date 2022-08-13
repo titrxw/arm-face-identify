@@ -52,6 +52,9 @@ add_executable(${projectName}
         app_framework/Exception/ExceptionHandler.hpp
         app_framework/Application.cpp
         app_framework/Application.h
+        app_framework/Util/Base64.hpp
+        app_framework/Http/HttpClient.hpp
+        app_framework/Util/Util.h
 
         app/Face/Identify.hpp
         app/IdentifyApplication.cpp
@@ -62,10 +65,8 @@ add_executable(${projectName}
         config/Device.h
         config/FaceIdentify.h
         app/Define.h
-        app_framework/Util/Base64.hpp
-        app_framework/Http/HttpClient.hpp
         config/Server.h
-        app_framework/Util/Util.h)
+        )
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")
