@@ -224,8 +224,13 @@ public:
         string sampleFilePath = this->modelSaveDir +  "model.txt";
         Filesystem::write(sampleFilePath, modelFileContent);
 
-        this->getFaceTrainHandler()->trainAndSave(sampleFilePath, this->getAppFaceModelFilePath());
-        Filesystem::unlink(sampleFilePath);
+        try {
+            this->getFaceTrainHandler()->trainAndSave(sampleFilePath, this->getAppFaceModelFilePath());
+            Filesystem::unlink(sampleFilePath);
+        } catch (std::exception &e) {
+            Filesystem::unlink(sampleFilePath);
+            throw e;
+        }
     }
 
     void startIdentifyFromVideoCapture() {
