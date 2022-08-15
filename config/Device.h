@@ -19,7 +19,7 @@ public:
     string appId;
     string appSecret;
 
-    CONFIGOR_BIND(json, Device, REQUIRED(appName, "app_name"), REQUIRED(appServerNamespace, "app_server_namespace"), REQUIRED(appId, "app_id"), REQUIRED(appSecret, "app_secret"));
+    CONFIGOR_BIND(json, Device, REQUIRED(appServerNamespace, "app_server_namespace"), REQUIRED(appId, "app_id"), REQUIRED(appSecret, "app_secret"));
 };
 
 #endif //ARM_FACE_IDENTIFY_DEVICE_H

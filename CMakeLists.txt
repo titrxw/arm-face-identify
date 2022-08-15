@@ -131,6 +131,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATC
 
     MESSAGE(STATUS "install dir: ${CMAKE_INSTALL_PREFIX}")
 
+    install(FILES ${PROJECT_SOURCE_DIR}/config.json DESTINATION ./)
     install(FILES ${PROJECT_SOURCE_DIR}/data/haarcascade_frontalface_alt.xml DESTINATION identify/cascade)
     install(FILES ${PROJECT_SOURCE_DIR}/data/default_model.xml DESTINATION identify/model)
 endif()
