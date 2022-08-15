@@ -124,6 +124,17 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
     target_link_libraries(${projectName} "vendor/curl/lib/linux/libcurl.so")
 endif()
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
+    set(homeDir $ENV{HOME})
+
+    set(CMAKE_INSTALL_PREFIX ${homeDir}/documents/${projectName})
+
+    MESSAGE(STATUS "install dir: ${CMAKE_INSTALL_PREFIX}")
+
+    install(FILES ${PROJECT_SOURCE_DIR}/data/haarcascade_frontalface_alt.xml DESTINATION identify/cascade)
+    install(FILES ${PROJECT_SOURCE_DIR}/data/default_model.xml DESTINATION identify/model)
+endif()
+
 #### boost/filesystem.so  boost v1.77.0 boost build完成后把filesystem.so复制到vendor目录
 #add_library(boost_filesystem
 #        SHARED
@@ -143,5 +154,3 @@ endif()
 
 #树莓派
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/arm-face-identify -DCMAKE_CXX_STANDARD=11 -DCMAKE_SHARED_LINKER_FLAGS='-latomic'  ..
-
-install(DIRECTORY data/ DESTINATION data)
