@@ -10,6 +10,8 @@
 #include "FaceIdentify.h"
 #include "Server.h"
 
+#define APP_NAME "arm_face_identify"
+
 class Config {
 public:
     Device device;

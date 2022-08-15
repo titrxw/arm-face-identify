@@ -3,8 +3,6 @@
 #include "config/Config.h"
 #include "config/Device.h"
 
-#define APP_NAME "arm_face_identify"
-
 int main()
 {
     Config config;
