@@ -37,17 +37,17 @@ RUN cd ~/opencv && \
     cd ~/opencv/opencv-3.4.14/build && \
     cmake -DOPENCV_EXTRA_MODULES_PATH=~/opencv/opencv_contrib-3.4.14/modules/face .. &&\
     make -j4 && \
-    make install && \ 
+    make install && \
     ldconfig
 
 
-# RUN cd /home/arm-face-identify &&\
-# mkdir build && \ 
-# cd build && \
-# cmake .. &&\
-# make -j4 && \
-# make install && \ 
-# ldconfig
+ RUN cd /home/arm-face-identify &&\
+ mkdir build && \
+ cd build && \
+ cmake .. &&\
+ make -j4 && \
+ make install && \
+ ldconfig
 
 CMD ["bash", "-c", "tail -f /dev/null"]
 
