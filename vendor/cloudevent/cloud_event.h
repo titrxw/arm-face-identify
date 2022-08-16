@@ -16,7 +16,6 @@
 #define FUNCTIONS_FRAMEWORK_CPP_GOOGLE_CLOUD_FUNCTIONS_CLOUD_EVENT_H
 
 #include <chrono>
-#include <optional>
 #include <string>
 
 using namespace std;
