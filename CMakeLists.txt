@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.5)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 11)
 set(projectName arm_face_identify)
-set(CMAKE_C_COMPILER "clang")
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
 # Define project name
 project(${projectName})
@@ -77,6 +77,7 @@ find_package(PkgConfig REQUIRED)
 
 ## vendor
 include_directories("${PROJECT_SOURCE_DIR}/vendor")
+include_directories("${PROJECT_SOURCE_DIR}/vendor/ssl/include")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")
     ## opencv
@@ -116,12 +117,19 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(
         target_link_libraries(${projectName} atomic)
     endif()
 
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/ssl/lib/libssl.a")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/ssl/lib/libssl.so")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/ssl/lib/libssl.so.1.1")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/crypto/lib/libcrypto.so")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/crypto/lib/libcrypto.so.1.1")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8.6.0")
+
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqtt3as.so")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/mqtt/lib/libpaho-mqttpp3.so.1")
-    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp_l.so")
-    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/cryptopp/lib/libcryptopp.so.8")
     target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/opencv/lib/linux/libopencv_face.so")
-    target_link_libraries(${projectName} "vendor/curl/lib/linux/libcurl.so")
+    target_link_libraries(${projectName} "${PROJECT_SOURCE_DIR}/vendor/curl/lib/linux/libcurl.so")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(arm.*|ARM.*)")

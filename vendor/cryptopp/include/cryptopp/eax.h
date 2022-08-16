@@ -20,50 +20,84 @@ class CRYPTOPP_NO_VTABLE EAX_Base : public AuthenticatedSymmetricCipherBase
 public:
 	// AuthenticatedSymmetricCipher
 	std::string AlgorithmName() const
-		{return GetMAC().GetCipher().AlgorithmName() + std::string("/EAX");}
+	{
+		return GetMAC().GetCipher().AlgorithmName() + std::string("/EAX");
+	}
 	std::string AlgorithmProvider() const
-		{return GetMAC().GetCipher().AlgorithmProvider();}
+	{
+		return GetMAC().GetCipher().AlgorithmProvider();
+	}
 	size_t MinKeyLength() const
-		{return GetMAC().MinKeyLength();}
+	{
+		return GetMAC().MinKeyLength();
+	}
 	size_t MaxKeyLength() const
-		{return GetMAC().MaxKeyLength();}
+	{
+		return GetMAC().MaxKeyLength();
+	}
 	size_t DefaultKeyLength() const
-		{return GetMAC().DefaultKeyLength();}
+	{
+		return GetMAC().DefaultKeyLength();
+	}
 	size_t GetValidKeyLength(size_t n) const
-		{return GetMAC().GetValidKeyLength(n);}
+	{
+		return GetMAC().GetValidKeyLength(n);
+	}
 	bool IsValidKeyLength(size_t n) const
-		{return GetMAC().IsValidKeyLength(n);}
+	{
+		return GetMAC().IsValidKeyLength(n);
+	}
 	unsigned int OptimalDataAlignment() const
-		{return GetMAC().OptimalDataAlignment();}
+	{
+		return GetMAC().OptimalDataAlignment();
+	}
 	IV_Requirement IVRequirement() const
-		{return UNIQUE_IV;}
+	{
+		return UNIQUE_IV;
+	}
 	unsigned int IVSize() const
-		{return GetMAC().TagSize();}
+	{
+		return GetMAC().TagSize();
+	}
 	unsigned int MinIVLength() const
-		{return 0;}
+	{
+		return 0;
+	}
 	unsigned int MaxIVLength() const
-		{return UINT_MAX;}
+	{
+		return UINT_MAX;
+	}
 	unsigned int DigestSize() const
-		{return GetMAC().TagSize();}
+	{
+		return GetMAC().TagSize();
+	}
 	lword MaxHeaderLength() const
-		{return LWORD_MAX;}
+	{
+		return LWORD_MAX;
+	}
 	lword MaxMessageLength() const
-		{return LWORD_MAX;}
+	{
+		return LWORD_MAX;
+	}
 
 protected:
 	// AuthenticatedSymmetricCipherBase
 	bool AuthenticationIsOnPlaintext() const
-		{return false;}
+	{
+		return false;
+	}
 	unsigned int AuthenticationBlockSize() const
-		{return 1;}
+	{
+		return 1;
+	}
 	void SetKeyWithoutResync(const byte *userKey, size_t keylength, const NameValuePairs &params);
 	void Resync(const byte *iv, size_t len);
 	size_t AuthenticateBlocks(const byte *data, size_t len);
 	void AuthenticateLastHeaderBlock();
 	void AuthenticateLastFooterBlock(byte *mac, size_t macSize);
-	SymmetricCipher & AccessSymmetricCipher() {return m_ctr;}
-	const CMAC_Base & GetMAC() const {return const_cast<EAX_Base *>(this)->AccessMAC();}
-	virtual CMAC_Base & AccessMAC() =0;
+	SymmetricCipher &AccessSymmetricCipher() { return m_ctr; }
+	const CMAC_Base &GetMAC() const { return const_cast<EAX_Base *>(this)->AccessMAC(); }
+	virtual CMAC_Base &AccessMAC() = 0;
 
 	CTR_Mode_ExternalCipher::Encryption m_ctr;
 };
@@ -77,18 +111,24 @@ class EAX_Final : public EAX_Base
 {
 public:
 	static std::string StaticAlgorithmName()
-		{return T_BlockCipher::StaticAlgorithmName() + std::string("/EAX");}
+	{
+		return T_BlockCipher::StaticAlgorithmName() + std::string("/EAX");
+	}
 	std::string AlgorithmProvider() const
-		{return m_cmac.AlgorithmProvider();}
+	{
+		return m_cmac.AlgorithmProvider();
+	}
 	bool IsForwardTransformation() const
-		{return T_IsEncryption;}
+	{
+		return T_IsEncryption;
+	}
 
 private:
-	CMAC_Base & AccessMAC() {return m_cmac;}
+	CMAC_Base &AccessMAC() { return m_cmac; }
 	CMAC<T_BlockCipher> m_cmac;
 };
 
-#ifdef EAX	// EAX is defined to 11 on GCC 3.4.3, OpenSolaris 8.11
+#ifdef EAX // EAX is defined to 11 on GCC 3.4.3, OpenSolaris 8.11
 #undef EAX
 #endif
 
