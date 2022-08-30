@@ -82,18 +82,19 @@ public:
         char tmp[64];
         strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
         cloudEvent.set_time(tmp);
-        return msg->create(topic, Encrypt::aesCBCEncrypt(CloudEvent::cloudEventToJsonStr(cloudEvent), appSecret));
+        return msg->create(topic, CloudEvent::cloudEventToJsonStr(cloudEvent));
+//        return msg->create(topic, Encrypt::aesCBCEncrypt(CloudEvent::cloudEventToJsonStr(cloudEvent), appSecret));
     }
 
     google_function::CloudEvent static getCloudEventFromMsg(const const_message_ptr& msg, const string& appSecret) {
-        string payload;
-        try {
-            payload = Encrypt::aesCBCDecrypt(msg->get_payload_str(), appSecret);
-        } catch (std::exception e) {
-            payload = "";
-        }
+//        string payload;
+//        try {
+//            payload = Encrypt::aesCBCDecrypt(msg->get_payload_str(), appSecret);
+//        } catch (std::exception e) {
+//            payload = "";
+//        }
 
-        return CloudEvent::jsonStrToCloudEvent(payload);
+        return CloudEvent::jsonStrToCloudEvent(msg->get_payload_str());
     }
 };
 
