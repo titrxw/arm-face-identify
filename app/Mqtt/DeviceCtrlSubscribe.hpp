@@ -50,8 +50,8 @@ public:
         if (!flag.empty()) {
             payload["flag"] = flag;
         }
-        payload["identify_label"] = predictMat.label;
-        payload["identify_mat"] = remoteUrl;
+        payload["label"] = predictMat.label;
+        payload["mat"] = remoteUrl;
         cloudEvent.set_data(to_string(payload));
 
         Helper::publishReportMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
