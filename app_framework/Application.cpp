@@ -97,6 +97,10 @@ void Application::start() {
         this->afterStart();
     } catch (std::exception &e) {
         this->getExceptionHandler()->handle(e);
+
+        string msg = "error occur, reason: ";
+        std::cout<< msg.append(e.what()) << endl;
+
         throw e;
     }
 }
