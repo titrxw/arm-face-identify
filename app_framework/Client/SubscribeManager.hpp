@@ -50,6 +50,7 @@ namespace IOT {
                         }
                     }
                 });
+                this->subscribeClient->connect();
             }
 
         protected:

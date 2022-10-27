@@ -16,7 +16,7 @@ public:
     FaceIdentify faceIdentify;
     Server server;
 
-    CONFIGOR_BIND(json, Config, REQUIRED(server, "server"), REQUIRED(faceIdentify, "face_identify"));
+    CONFIGOR_BIND(json, Config, REQUIRED(server, "server"), REQUIRED(faceIdentify, "face_identify"), REQUIRED(mqtt, "mqtt"), REQUIRED(device, "device"));
 };
 
 #endif //ARM_FACE_IDENTIFY_CONFIG_H
