@@ -21,7 +21,7 @@ protected:
     Identify *getFaceIdentifyHandler();
 
 protected:
-    Config *config;
+    Config *config = nullptr;
     Identify *identify = nullptr;
 };
 

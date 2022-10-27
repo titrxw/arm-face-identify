@@ -5,7 +5,7 @@
 #include "IdentifyApplication.h"
 #include "./Mqtt/DeviceCtrlSubscribe.hpp"
 
-IdentifyApplication::IdentifyApplication(Config *config) : Application(config) {
+IdentifyApplication::IdentifyApplication(Config *config) : config(config), Application(config) {
 
 }
 

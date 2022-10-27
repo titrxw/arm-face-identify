@@ -12,11 +12,11 @@ namespace IOT {
     namespace CLIENT {
         class ClientManager {
         public:
-            void registerClientResolver(string channel, std::function<ClientAbstract *()> resolver) {
+            void registerClientResolver(const string& channel, std::function<ClientAbstract *()> resolver) {
                 this->clientResolverMap[channel] = resolver;
             }
 
-            ClientAbstract * getClient(string channel) {
+            ClientAbstract* getClient(const string& channel) {
                 if (this->clientMap.end() == this->clientMap.find(channel)) {
                     this->clientMap[channel] = this->clientResolverMap[channel]();
                 }

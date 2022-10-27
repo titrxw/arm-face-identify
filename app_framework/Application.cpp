@@ -56,7 +56,7 @@ IOT::CLIENT::ClientAbstract *IOT::Application::getDefaultClient() {
 }
 
 void IOT::Application::registerClient() {
-    this->getClientManager()->registerClientResolver("default", [this]() -> CLIENT::ClientAbstract * {
+    this->getClientManager()->registerClientResolver("default", [this]() -> CLIENT::ClientAbstract* {
         return new IOT::CLIENT::MQTT::Client(this->config->mqtt.mqttServerAddress, this->config->device.appId, this->config->device.appSecret);
     });
 }
@@ -69,7 +69,7 @@ IOT::CLIENT::ClientManager *IOT::Application::getClientManager() {
     return this->clientManager;
 }
 
-IOT::CLIENT::SubscribeManager *IOT::Application::getSubscribeManager() {
+IOT::CLIENT::SubscribeManager* IOT::Application::getSubscribeManager() {
     if (this->subscribeManager == nullptr) {
         this->subscribeManager = new IOT::CLIENT::SubscribeManager(this->getDefaultClient(), [this](std::exception &e) {
             this->getExceptionHandler()->handle(e);
@@ -94,8 +94,8 @@ void IOT::Application::afterStart() {
 void IOT::Application::start() {
     try {
         this->initAppEnv();
-        this->beforeStart();
         this->registerClient();
+        this->beforeStart();
         this->startSubscribe();
         this->afterStart();
     } catch (std::exception &e) {

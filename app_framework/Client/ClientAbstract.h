@@ -41,9 +41,9 @@ namespace IOT {
             }
 
         protected:
-            std::function<void (ClientAbstract *client, const string& cause)> onConnected;
-            std::function<void (ClientAbstract *client, string data)> onMessage;
-            std::function<void (ClientAbstract *client, string topic, string data)> onSubscribe;
+            std::function<void (ClientAbstract *client, const string& cause)> onConnected = nullptr;
+            std::function<void (ClientAbstract *client, string data)> onMessage = nullptr;
+            std::function<void (ClientAbstract *client, string topic, string data)> onSubscribe = nullptr;
         };
     }
 }
