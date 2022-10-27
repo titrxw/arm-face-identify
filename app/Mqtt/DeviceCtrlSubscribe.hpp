@@ -5,46 +5,55 @@
 #ifndef ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP
 #define ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP
 
-#include "../../app_framework/Mqtt/SubscriberAbstract.h"
-#include "../../app_framework/Mqtt/Helper.hpp"
+#include "../../app_framework/Client/SubscriberAbstract.hpp"
 #include "../../app_framework/Util/Base64.hpp"
 #include "../Face/Identify.hpp"
 #include "../Define.h"
+#include "../Helper.hpp"
+#include "../../app_framework/Http/HttpClient.hpp"
 
-class DeviceCtrlSubscribe : virtual public SubscriberAbstract{
+class DeviceCtrlSubscribe : virtual public IOT::CLIENT::SubscriberAbstract{
 public:
-    explicit DeviceCtrlSubscribe(Config config, Identify *identify) : SubscriberAbstract(config), identify(identify) {
+    explicit DeviceCtrlSubscribe(IOT::CONFIG::Device device, Identify *identify, IOT::CLIENT::ClientAbstract *publishClient, string httpServerAddress) : SubscriberAbstract(device), identify(identify), publishClient(publishClient), httpServerAddress(httpServerAddress) {
         this->identify->setPredictMatMapCallback(std::bind(&DeviceCtrlSubscribe::predictedMatCallback, this, std::placeholders::_1, std::placeholders::_2));
-        this->matIdentifyTmpFileDir = Filesystem::getCurUserDocDir() + "/" + this->config.device.appName + "/runtimes/identify/";
-        if (!Filesystem::dirExists(this->matIdentifyTmpFileDir )) {
-            Filesystem::createDir(this->matIdentifyTmpFileDir);
+        this->matIdentifyTmpFileDir = IOT::UTIL::Filesystem::getCurUserDocDir() + "/" + this->device.appName + "/runtimes/identify/";
+        if (!IOT::UTIL::Filesystem::dirExists(this->matIdentifyTmpFileDir )) {
+            IOT::UTIL::Filesystem::createDir(this->matIdentifyTmpFileDir);
         }
     }
     ~DeviceCtrlSubscribe() = default;
 
-    string getTopic() override {
-        return Helper::getDeviceCtrlTopic(this->config.device.appServerNamespace, this->config.device.appId);
+    string getTopic() {
+        return Helper::getDeviceCtrlTopic(this->device.appServerNamespace, this->device.appId);
+    }
+
+    IOT::HTTP::HttpClient *getHttpClient() {
+        if (this->httpClient == nullptr) {
+            this->httpClient = (new IOT::HTTP::HttpClient())->withAppId(this->device.appId)->withAppSecret(this->device.appSecret);
+        }
+
+        return this->httpClient;
     }
 
     void predictedMatCallback(ArmFaceIdentify::PredictMat predictMat, string flag) {
         string remoteUrl;
-        string matFilePath = this->matIdentifyTmpFileDir + Util::randomStr(16) + JPG_EXT;
+        string matFilePath = this->matIdentifyTmpFileDir + IOT::UTIL::Util::randomStr(16) + JPG_EXT;
         try {
             imwrite(matFilePath, predictMat.sourceMat);
 
             nlohmann::json result = this->getHttpClient()
-            ->uploadFile(this->config.server.httpServerAddress + "/api/util/attach/upload/image", matFilePath, {}, {}, true);
+            ->uploadFile(this->httpServerAddress + "/api/util/attach/upload/image", matFilePath, {}, {}, true);
 
             remoteUrl = result.at("url").get<std::string>();
-            Filesystem::unlink(matFilePath);
+            IOT::UTIL::Filesystem::unlink(matFilePath);
         } catch (std::exception &e) {
-            if (Filesystem::fileExists(matIdentifyTmpFileDir)) Filesystem::unlink(matFilePath);
+            if (IOT::UTIL::Filesystem::fileExists(matIdentifyTmpFileDir)) IOT::UTIL::Filesystem::unlink(matFilePath);
 
             this->exceptionHandler(e);
             return;
         }
 
-        google_function::CloudEvent cloudEvent = CloudEvent::makeNewCloudEvent(this->config.device.appId, this->config.device.appName, APP_OPERATE_IDENTIFY);
+        google_function::CloudEvent cloudEvent = IOT::UTIL::CloudEvent::makeNewCloudEvent(this->device.appId, this->device.appName, APP_OPERATE_IDENTIFY);
 
         nlohmann::json payload;
         if (!flag.empty()) {
@@ -54,7 +63,7 @@ public:
         payload["mat"] = remoteUrl;
         cloudEvent.set_data(to_string(payload));
 
-        Helper::publishReportMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        Helper::publishReportMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
     }
 
     void addFaceModel(google_function::CloudEvent cloudEvent) {
@@ -69,14 +78,14 @@ public:
             this->identify->addFaceModelFromRemoteImgUrls(label, jsonObj.at("urls").get<vector<std::string>>());
         } catch (std::exception &e) {
             string modelDir = this->identify->getFaceModelImgSavePathWithLabel(label);
-            if (Filesystem::dirExists(modelDir)) {
-                Filesystem::removeDir(modelDir);
+            if (IOT::UTIL::Filesystem::dirExists(modelDir)) {
+                IOT::UTIL::Filesystem::removeDir(modelDir);
             }
 
             throw e;
         }
 
-        Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        Helper::publishReplySuccessMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
     }
 
     void deleteFaceModel(google_function::CloudEvent cloudEvent) {
@@ -88,10 +97,10 @@ public:
 
         this->identify->deleteFaceModel(jsonObj.at("label").get<int64_t>());
 
-        Helper::publishReplySuccessMsg(this->publishClient->getClient(), this->getDevice(), cloudEvent, this->exceptionHandler);
+        Helper::publishReplySuccessMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
     }
 
-    void onSubscribe(async_client *client, const_message_ptr msg, google_function::CloudEvent cloudEvent) override {
+    void onSubscribe(IOT::CLIENT::ClientAbstract *client, google_function::CloudEvent cloudEvent) override {
         if (cloudEvent.type() == APP_OPERATE_ADD_FACE_MODEL) {
             this->addFaceModel(cloudEvent);
         }
@@ -102,8 +111,12 @@ public:
     }
 
 protected:
-    Identify *identify;
+    IOT::CLIENT::ClientAbstract *publishClient = nullptr;
+    Identify *identify = nullptr;
+    IOT::CONFIG::Device device;
     string matIdentifyTmpFileDir;
+    IOT::HTTP::HttpClient *httpClient = nullptr;
+    string httpServerAddress;
 };
 
 #endif //ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP

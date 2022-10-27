@@ -2,49 +2,50 @@
 // Created by rxwyun on 2022/7/23.
 //
 
-#ifndef ARM_FACE_IDENTIFY_APPLICATION_H
-#define ARM_FACE_IDENTIFY_APPLICATION_H
+#ifndef ARM_IOT_APPLICATION_H
+#define ARM_IOT_APPLICATION_H
 
 #include <sstream>
-#include "../config/Config.h"
-#include "Mqtt/Client.h"
-#include "Mqtt/SubscribeManager.h"
 #include "./Exception/ExceptionHandler.hpp"
+#include "./Config/Config.h"
 #include "spdlog/spdlog.h"
+#include "./Client/ClientManager.hpp"
+#include "Client/SubscribeManager.hpp"
 
 using namespace std;
 
-class Application {
-public:
-    Application(Config config);
-    ~Application();
 
-    Client* makeMqttClient(const string& channel, Mqtt mqtt, Device device);
-    Client* getPublishMqttClient();
-    Client* getSubscribeMqttClient();
-    SubscribeManager* getSubscribeManager();
+namespace IOT {
+    class Application {
+    public:
+        Application(CONFIG::Config *config);
+        ~Application();
 
-    void start();
+        CLIENT::ClientManager *getClientManager();
+        CLIENT::SubscribeManager *getSubscribeManager();
+        CLIENT::ClientAbstract *getDefaultClient();
+        void start();
 
-protected:
-    ExceptionHandler* getExceptionHandler();
-    shared_ptr<spdlog::logger> getLogger();
-    string getAppPath();
-    string getRuntimePath();
+    protected:
+        ExceptionHandler *getExceptionHandler();
+        shared_ptr<spdlog::logger> getLogger();
+        string getAppPath();
+        string getRuntimePath();
+        void initAppEnv();
 
-    void initAppEnv();
-    void startMqtt();
+        void registerClient();
+        void startSubscribe();
 
-    virtual void beforeStart();
-    virtual void afterStart();
+        virtual void beforeStart();
+        virtual void afterStart();
 
-protected:
-    Config config;
-    shared_ptr<spdlog::logger> logger;
-    ExceptionHandler *exceptionHandler = nullptr;
-    map<string, Client*>clientMap;
-    SubscribeManager *subscribeManager = nullptr;
-};
+    protected:
+        CONFIG::Config *config;
+        shared_ptr<spdlog::logger> logger;
+        ExceptionHandler *exceptionHandler = nullptr;
+        IOT::CLIENT::SubscribeManager *subscribeManager = nullptr;
+        CLIENT::ClientManager *clientManager = nullptr;
+    };
+}
 
-
-#endif //ARM_FACE_IDENTIFY_APPLICATION_H
+#endif //ARM_IOT_APPLICATION_H

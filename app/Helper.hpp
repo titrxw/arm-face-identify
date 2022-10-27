@@ -9,9 +9,10 @@
 #include <time.h>
 #include <utility>
 #include "mqtt/include/mqtt/message.h"
-#include "../Util/Encrypt.hpp"
-#include "../Util/CloudEvent.hpp"
+#include "../app_framework/Util/Encrypt.hpp"
+#include "../app_framework/Util/CloudEvent.hpp"
 #include "nlohmann/json.hpp"
+#include "../app_framework/Client/ClientAbstract.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
         return "/iot/" + topicNamespace + "/device/" + appid + "/report";
     }
 
-    void static exceptionReport(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::exception &e, string type, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static exceptionReport(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::exception &e, string type, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         try {
             nlohmann::json err;
             err["error"] = e.what();
@@ -37,7 +38,7 @@ public:
             err["payload"] = cloudEvent.data();
             cloudEvent.set_type(type + "_exception");
             cloudEvent.set_data(to_string(err));
-            client->publish(Helper::getMsgFromCloudEvent(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, device.appSecret));
+            client->publishMsg(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), Helper::getMsgFromCloudEvent(cloudEvent));
         } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
@@ -49,11 +50,11 @@ public:
         }
     }
 
-    void static publishReportMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishReportMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         Helper::publishMsg(client, device, Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
     }
 
-    void static publishReplySuccessMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishReplySuccessMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         nlohmann::json payload;
         payload["status"] = "success";
         cloudEvent.set_data(to_string(payload));
@@ -61,13 +62,13 @@ public:
         Helper::publishReplyMsg(client, device, cloudEvent, exceptionHandler);
     }
 
-    void static publishReplyMsg(async_client *client, Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishReplyMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
     }
 
-    void static publishMsg(async_client *client, Device device, string topic, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, string topic, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         try {
-            client->publish(Helper::getMsgFromCloudEvent(topic, cloudEvent, device.appSecret));
+            client->publishMsg(topic, Helper::getMsgFromCloudEvent(cloudEvent));
         } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
@@ -75,26 +76,14 @@ public:
         }
     }
 
-    const_message_ptr static getMsgFromCloudEvent(const string& topic, google_function::CloudEvent cloudEvent, const string& appSecret) {
-        const_message_ptr msg;
+    string static getMsgFromCloudEvent(google_function::CloudEvent cloudEvent) {
         time_t timep;
         time (&timep);
         char tmp[64];
         strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
         cloudEvent.set_time(tmp);
-        return msg->create(topic, CloudEvent::cloudEventToJsonStr(cloudEvent));
-//        return msg->create(topic, Encrypt::aesCBCEncrypt(CloudEvent::cloudEventToJsonStr(cloudEvent), appSecret));
-    }
 
-    google_function::CloudEvent static getCloudEventFromMsg(const const_message_ptr& msg, const string& appSecret) {
-//        string payload;
-//        try {
-//            payload = Encrypt::aesCBCDecrypt(msg->get_payload_str(), appSecret);
-//        } catch (std::exception e) {
-//            payload = "";
-//        }
-
-        return CloudEvent::jsonStrToCloudEvent(msg->get_payload_str());
+        return IOT::UTIL::CloudEvent::cloudEventToJsonStr(cloudEvent);
     }
 };
 

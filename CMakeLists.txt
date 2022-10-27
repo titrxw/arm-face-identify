@@ -38,14 +38,16 @@ add_executable(${projectName}
         identify_core/entity/Include/DetectedMat.h
 #
 
-        app_framework/Mqtt/Client.cpp
-        app_framework/Mqtt/Client.h
-        app_framework/Mqtt/SubscriberAbstract.cpp
-        app_framework/Mqtt/SubscriberAbstract.h
-        app_framework/Mqtt/SubscribeManager.cpp
-        app_framework/Mqtt/SubscribeManager.h
-        app_framework/Mqtt/ClientCallback.hpp
-        app_framework/Mqtt/Helper.hpp
+        app_framework/Client/Mqtt/Client.cpp
+        app_framework/Client/Mqtt/Client.h
+        app_framework/Client/Mqtt/ClientCallback.hpp
+        app_framework/Client/ClientAbstract.h
+        app_framework/Client/ClientManager.hpp
+        app_framework/Client/SubscribeManager.hpp
+        app_framework/Client/SubscriberAbstract.hpp
+        app_framework/Config/Config.h
+        app_framework/Config/Device.h
+        app_framework/Config/Mqtt.h
         app_framework/Util/Encrypt.hpp
         app_framework/Util/CloudEvent.hpp
         app_framework/Util/Filesystem.hpp
@@ -61,12 +63,10 @@ add_executable(${projectName}
         app/IdentifyApplication.h
         app/Mqtt/DeviceCtrlSubscribe.hpp
         config/Config.h
-        config/Mqtt.h
-        config/Device.h
         config/FaceIdentify.h
         app/Define.h
         config/Server.h
-        )
+        app/Helper.hpp)
 
 message(STATUS "Current path : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "current system: ${CMAKE_SYSTEM_NAME}")

@@ -2,8 +2,8 @@
 // Created by rxwyun on 2022/7/26.
 //
 
-#ifndef ARM_FACE_IDENTIFY_ENCRYPT_HPP
-#define ARM_FACE_IDENTIFY_ENCRYPT_HPP
+#ifndef ARM_IOT_ENCRYPT_HPP
+#define ARM_IOT_ENCRYPT_HPP
 
 #include <sstream>
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
@@ -22,59 +22,65 @@ using CryptoPP::AES;
 using CryptoPP::CBC_Mode;
 using namespace std;
 
-class Encrypt {
-public:
-    string static aesCBCEncrypt(const string& plain, const string& key) {
-        string cipher;
-        string iv = key.substr(0, 16);
 
-        CBC_Mode< AES >::Encryption e;
-        e.SetKeyWithIV((byte*)key.c_str(), key.size(), (byte*)iv.c_str());
+namespace IOT {
+    namespace UTIL {
+        class Encrypt {
+        public:
+            string static aesCBCEncrypt(const string &plain, const string &key) {
+                string cipher;
+                string iv = key.substr(0, 16);
 
-        // The StreamTransformationFilter removes
-        //  padding as required.
-        StringSource s(plain, true,
-                       new StreamTransformationFilter(e,
-                      new StringSink(cipher)
-                      ) // StreamTransformationFilter
-                      ); // StringSource
+                CBC_Mode<AES>::Encryption e;
+                e.SetKeyWithIV(reinterpret_cast<const CryptoPP::byte *>(key.c_str()), key.size(),
+                               reinterpret_cast<const CryptoPP::byte *>(iv.c_str()));
 
-                      // Pretty print
-                      return Base64::encode(cipher);
+                // The StreamTransformationFilter removes
+                //  padding as required.
+                StringSource s(plain, true,
+                               new StreamTransformationFilter(e,
+                                                              new StringSink(cipher)
+                               ) // StreamTransformationFilter
+                ); // StringSource
+
+                // Pretty print
+                return Base64::encode(cipher);
+            }
+
+            string static aesCBCDecrypt(const string &plain, const string &key) {
+                string iv = key.substr(0, 16);
+
+                string encodeByte = Base64::decode(plain);
+
+                string recovered;
+                CBC_Mode<AES>::Decryption d;
+                d.SetKeyWithIV(reinterpret_cast<const CryptoPP::byte *>(key.c_str()), key.size(),
+                               reinterpret_cast<const CryptoPP::byte *>(iv.c_str()));
+
+                // The StreamTransformationFilter removes
+                //  padding as required.
+                StringSource s(encodeByte, true,
+                               new StreamTransformationFilter(d,
+                                                              new StringSink(recovered)
+                               ) // StreamTransformationFilter
+                ); // StringSource
+
+                return recovered;
+            }
+
+            string static md5(const string &src) {
+                string dst;
+                CryptoPP::Weak::MD5 md5;
+                StringSource(src, true, new CryptoPP::HashFilter(md5, new CryptoPP::HexEncoder(new StringSink(dst))));
+
+                for (char &i: dst) {
+                    i = tolower(i);
+                }
+
+                return dst;
+            }
+        };
     }
+}
 
-    string static aesCBCDecrypt(const string& plain, const string& key) {
-        string iv = key.substr(0, 16);
-
-        string encodeByte = Base64::decode(plain);
-
-        string recovered;
-        CBC_Mode<AES>::Decryption d;
-        d.SetKeyWithIV((byte *) key.c_str(), key.size(), (byte *) iv.c_str());
-
-        // The StreamTransformationFilter removes
-        //  padding as required.
-        StringSource s(encodeByte, true,
-                       new StreamTransformationFilter(d,
-                                                      new StringSink(recovered)
-                                                      ) // StreamTransformationFilter
-                                                      ); // StringSource
-
-                                                      return recovered;
-    }
-
-    string static md5(const string& src) {
-        string dst;
-        CryptoPP::Weak::MD5 md5;
-        StringSource(src, true, new CryptoPP::HashFilter(md5, new CryptoPP::HexEncoder(new StringSink(dst))));
-
-        for(char & i : dst){
-            i = tolower(i);
-        }
-
-        return dst;
-    }
-};
-
-
-#endif //ARM_FACE_IDENTIFY_ENCRYPT_HPP
+#endif //ARM_IOT_ENCRYPT_HPP

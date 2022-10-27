@@ -9,9 +9,9 @@
 #include "../app_framework/Application.h"
 #include "./Face/Identify.hpp"
 
-class IdentifyApplication : public Application{
+class IdentifyApplication : public IOT::Application{
 public:
-    explicit IdentifyApplication(Config config);
+    explicit IdentifyApplication(Config *config);
     ~IdentifyApplication();
 
 protected:
@@ -21,6 +21,7 @@ protected:
     Identify *getFaceIdentifyHandler();
 
 protected:
+    Config *config;
     Identify *identify = nullptr;
 };
 

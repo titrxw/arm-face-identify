@@ -25,17 +25,17 @@ class Identify
 {
 public:
     Identify(const string& cascadeFilePath, string modelSaveDir, int videoCaptureIndex = 0) : cascadeFilePath(cascadeFilePath), modelSaveDir(modelSaveDir), videoCaptureIndex(videoCaptureIndex) {
-        if (!Filesystem::fileExists(this->cascadeFilePath)) {
+        if (!IOT::UTIL::Filesystem::fileExists(this->cascadeFilePath)) {
             throw std::logic_error("cascade file " + this->cascadeFilePath + " not exists");
         }
 
-        if (!Filesystem::dirExists(this->modelSaveDir)) {
-            Filesystem::createDir(this->modelSaveDir);
+        if (!IOT::UTIL::Filesystem::dirExists(this->modelSaveDir)) {
+            IOT::UTIL::Filesystem::createDir(this->modelSaveDir);
         }
 
         string modelImgSavePath = this->getFaceModelImgSavePath();
-        if (!Filesystem::dirExists(modelImgSavePath)) {
-            Filesystem::createDir(modelImgSavePath);
+        if (!IOT::UTIL::Filesystem::dirExists(modelImgSavePath)) {
+            IOT::UTIL::Filesystem::createDir(modelImgSavePath);
         }
 
         this->eventDispatcher = new EventDispatcher<int, void (ArmFaceIdentify::BaseEvent *event)>();
@@ -98,7 +98,7 @@ public:
         string appModelPath = this->getAppFaceModelFilePath();
 
         this->modelRecognizer->clear();
-        if (Filesystem::fileExists(appModelPath)) {
+        if (IOT::UTIL::Filesystem::fileExists(appModelPath)) {
             this->modelRecognizer->read(appModelPath);
         } else {
             string defaultModelPath = this->getFaceDefaultModelFilePath();
@@ -158,15 +158,15 @@ public:
         }
 
         string trainDir = this->getFaceModelImgSavePathWithLabel(label);
-        if (!Filesystem::dirExists(trainDir)) {
-            Filesystem::createDir(trainDir);
+        if (!IOT::UTIL::Filesystem::dirExists(trainDir)) {
+            IOT::UTIL::Filesystem::createDir(trainDir);
         }
 
         vector<std::string> localPaths;
         for (int i = 0; i < remoteUrlSize; ++i) {
-            string filePath = trainDir + Encrypt::md5(remoteUrls[i]) + JPG_EXT;
+            string filePath = trainDir + IOT::UTIL::Encrypt::md5(remoteUrls[i]) + JPG_EXT;
 
-            if (HttpClient::downloadFile(remoteUrls[i], filePath)) {
+            if (IOT::HTTP::HttpClient::downloadFile(remoteUrls[i], filePath)) {
                 localPaths.push_back(filePath);
             }
         }
@@ -184,8 +184,8 @@ public:
 
     void deleteFaceModel(int label) {
         string dirPath = this->getFaceModelImgSavePathWithLabel(label);
-        if (Filesystem::dirExists(dirPath)) {
-            Filesystem::removeDir(dirPath);
+        if (IOT::UTIL::Filesystem::dirExists(dirPath)) {
+            IOT::UTIL::Filesystem::removeDir(dirPath);
 
             this->reTrainFaceModel();
         }
@@ -193,13 +193,13 @@ public:
 
     void reTrainFaceModel() {
         string modelImgSavePath = this->getFaceModelImgSavePath();
-        vector<string> dirs = Filesystem::getChildDirs(modelImgSavePath);
+        vector<string> dirs = IOT::UTIL::Filesystem::getChildDirs(modelImgSavePath);
         int dirSize = dirs.size();
         string modelFileContent;
         for (int i = 0; i < dirSize; ++i) {
             int label = atoi(dirs[i].c_str());
             if (label > 0) {
-                vector<string> files = Filesystem::getDirFiles(modelImgSavePath + dirs[i]);
+                vector<string> files = IOT::UTIL::Filesystem::getDirFiles(modelImgSavePath + dirs[i]);
                 int fileSize = files.size();
                 if (fileSize <= 0) {
                     continue;
@@ -213,8 +213,8 @@ public:
         dirs.clear();
         if (modelFileContent.empty()) {
             string appModelPath = this->getAppFaceModelFilePath();
-            if (Filesystem::fileExists(appModelPath)) {
-                Filesystem::unlink(appModelPath);
+            if (IOT::UTIL::Filesystem::fileExists(appModelPath)) {
+                IOT::UTIL::Filesystem::unlink(appModelPath);
             }
 
             this->reloadModelRecognizer();
@@ -222,13 +222,13 @@ public:
         }
 
         string sampleFilePath = this->modelSaveDir +  "model.txt";
-        Filesystem::write(sampleFilePath, modelFileContent);
+        IOT::UTIL::Filesystem::write(sampleFilePath, modelFileContent);
 
         try {
             this->getFaceTrainHandler()->trainAndSave(sampleFilePath, this->getAppFaceModelFilePath());
-            Filesystem::unlink(sampleFilePath);
+            IOT::UTIL::Filesystem::unlink(sampleFilePath);
         } catch (std::exception &e) {
-            Filesystem::unlink(sampleFilePath);
+            IOT::UTIL::Filesystem::unlink(sampleFilePath);
             throw e;
         }
     }

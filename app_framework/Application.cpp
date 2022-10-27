@@ -4,27 +4,29 @@
 
 #include "Application.h"
 #include "spdlog/sinks/daily_file_sink.h"
+#include "Util/Filesystem.hpp"
+#include "./Client/Mqtt/Client.h"
 
-Application::Application(Config config) : config(config) {
+IOT::Application::Application(CONFIG::Config *config) : config(config) {
 
 }
 
-string Application::getAppPath() {
-    return Filesystem::getCurUserDocDir() + "/" + this->config.device.appName;
+string IOT::Application::getAppPath() {
+    return IOT::UTIL::Filesystem::getCurUserDocDir() + "/" + this->config->device.appName;
 }
 
-string Application::getRuntimePath() {
+string IOT::Application::getRuntimePath() {
     return this->getAppPath() + "/runtimes";
 }
 
-shared_ptr<spdlog::logger> Application::getLogger() {
+shared_ptr<spdlog::logger> IOT::Application::getLogger() {
     if (this->logger != nullptr) {
         return this->logger;
     }
 
     string logPath = this->getRuntimePath() + "/log";
-    if (!Filesystem::dirExists(logPath)) {
-        Filesystem::createDir(logPath);
+    if (!IOT::UTIL::Filesystem::dirExists(logPath)) {
+        IOT::UTIL::Filesystem::createDir(logPath);
     }
 
     this->logger = spdlog::daily_logger_mt("daily_logger", logPath + "/daily.txt", 0, 0);
@@ -35,7 +37,7 @@ shared_ptr<spdlog::logger> Application::getLogger() {
     return this->logger;
 }
 
-ExceptionHandler *Application::getExceptionHandler() {
+IOT::ExceptionHandler *IOT::Application::getExceptionHandler() {
     if (this->exceptionHandler == nullptr) {
         this->exceptionHandler = new ExceptionHandler(this->getLogger());
     }
@@ -43,32 +45,33 @@ ExceptionHandler *Application::getExceptionHandler() {
     return this->exceptionHandler;
 }
 
-void Application::initAppEnv() {
-    if (!Filesystem::dirExists(this->getRuntimePath())) {
-        Filesystem::createDir(this->getRuntimePath());
+void IOT::Application::initAppEnv() {
+    if (!IOT::UTIL::Filesystem::dirExists(this->getRuntimePath())) {
+        IOT::UTIL::Filesystem::createDir(this->getRuntimePath());
     }
 }
 
+IOT::CLIENT::ClientAbstract *IOT::Application::getDefaultClient() {
+    return this->getClientManager()->getClient("default");
+}
 
-Client *Application::makeMqttClient(const string& channel, Mqtt mqtt, Device device) {
-    if (this->clientMap.end() == this->clientMap.find(channel)) {
-        this->clientMap[channel] = new Client(mqtt.mqttServerAddress, device.appId, device.appSecret);
+void IOT::Application::registerClient() {
+    this->getClientManager()->registerClientResolver("default", [this]() -> CLIENT::ClientAbstract * {
+        return new IOT::CLIENT::MQTT::Client(this->config->mqtt.mqttServerAddress, this->config->device.appId, this->config->device.appSecret);
+    });
+}
+
+IOT::CLIENT::ClientManager *IOT::Application::getClientManager() {
+    if (this->clientManager == nullptr) {
+        this->clientManager = new CLIENT::ClientManager();
     }
 
-    return this->clientMap[channel];
+    return this->clientManager;
 }
 
-Client *Application::getPublishMqttClient() {
-    return this->makeMqttClient("publish", this->config.mqtt, this->config.device);
-}
-
-Client *Application::getSubscribeMqttClient() {
-    return this->makeMqttClient("subscribe", this->config.mqtt, this->config.device);
-}
-
-SubscribeManager *Application::getSubscribeManager() {
+IOT::CLIENT::SubscribeManager *IOT::Application::getSubscribeManager() {
     if (this->subscribeManager == nullptr) {
-        this->subscribeManager = new SubscribeManager(this->getSubscribeMqttClient(), this->getSubscribeMqttClient(), [this](std::exception &e) {
+        this->subscribeManager = new IOT::CLIENT::SubscribeManager(this->getDefaultClient(), [this](std::exception &e) {
             this->getExceptionHandler()->handle(e);
         });
     }
@@ -76,24 +79,24 @@ SubscribeManager *Application::getSubscribeManager() {
     return this->subscribeManager;
 }
 
-void Application::startMqtt() {
-    subscribeManager = this->getSubscribeManager();
-    subscribeManager->start();
+void IOT::Application::startSubscribe() {
+    this->getSubscribeManager()->start();
 }
 
-void Application::beforeStart() {
-
-}
-
-void Application::afterStart() {
+void IOT::Application::beforeStart() {
 
 }
 
-void Application::start() {
+void IOT::Application::afterStart() {
+
+}
+
+void IOT::Application::start() {
     try {
         this->initAppEnv();
         this->beforeStart();
-        this->startMqtt();
+        this->registerClient();
+        this->startSubscribe();
         this->afterStart();
     } catch (std::exception &e) {
         this->getExceptionHandler()->handle(e);
@@ -105,7 +108,10 @@ void Application::start() {
     }
 }
 
-Application::~Application() {
+IOT::Application::~Application() {
+    delete this->clientManager;
+    this->clientManager = nullptr;
+
     delete this->subscribeManager;
     this->subscribeManager = nullptr;
 
@@ -113,11 +119,4 @@ Application::~Application() {
     this->exceptionHandler = nullptr;
 
     spdlog::drop_all();
-
-    map<string, Client*>::iterator iter;
-    iter = this->clientMap.begin();
-    while(iter != this->clientMap.end()) {
-        delete iter->second;
-        iter++;
-    }
 }
