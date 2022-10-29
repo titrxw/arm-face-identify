@@ -23,7 +23,7 @@ public:
     }
     ~DeviceCtrlSubscribe() = default;
 
-    string getTopic() {
+    string getTopic() override {
         return Helper::getDeviceCtrlTopic(this->device.appServerNamespace, this->device.appId);
     }
 

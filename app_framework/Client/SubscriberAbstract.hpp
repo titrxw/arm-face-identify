@@ -17,7 +17,7 @@ namespace IOT {
 
             ~SubscriberAbstract() = default;
 
-            string getTopic() {
+            virtual string getTopic() {
                 return "";
             }
 
