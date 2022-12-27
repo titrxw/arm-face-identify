@@ -24,10 +24,6 @@ public:
         return "/iot/" + topicNamespace + "/device/" + appid + "/ctrl";
     }
 
-    string static getDeviceReplayTopic(const string& topicNamespace, const string& appid) {
-        return "/iot/" + topicNamespace + "/device/" + appid + "/reply";
-    }
-
     string static getDeviceReportTopic(const string& topicNamespace, const string& appid) {
         return "/iot/" + topicNamespace + "/device/" + appid + "/report";
     }
@@ -65,7 +61,7 @@ public:
     }
 
     void static publishReplyMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
-        Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), message, exceptionHandler);
+        Helper::publishMsg(client, device, Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), message, exceptionHandler);
     }
 
     void static publishMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, string topic, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
