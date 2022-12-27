@@ -8,6 +8,7 @@
 #include "../../../config/Config.h"
 #include "../Util/CloudEvent.hpp"
 #include "./ClientAbstract.h"
+#include "../Message/IotMessage.h"
 
 namespace IOT {
     namespace CLIENT {
@@ -25,7 +26,7 @@ namespace IOT {
                 this->exceptionHandler = exceptionHandler;
             }
 
-            virtual void onSubscribe(ClientAbstract *client, google_function::CloudEvent cloudEvent) {
+            virtual void onSubscribe(ClientAbstract *client, MESSAGE::IotMessage message) {
 
             }
 

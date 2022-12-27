@@ -53,21 +53,22 @@ public:
             return;
         }
 
-        google_function::CloudEvent cloudEvent = IOT::UTIL::CloudEvent::makeNewCloudEvent(this->device.appId, this->device.appName, APP_OPERATE_IDENTIFY);
-
+        IOT::MESSAGE::IotMessage message;
+        message.id = this->device.appId;
+        message.eventType = APP_OPERATE_IDENTIFY;
         nlohmann::json payload;
         if (!flag.empty()) {
             payload["flag"] = flag;
         }
         payload["label"] = predictMat.label;
         payload["mat"] = remoteUrl;
-        cloudEvent.set_data(to_string(payload));
+        message.payload = to_string(payload);
 
-        Helper::publishReportMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
+        Helper::publishReportMsg(this->publishClient, this->device, message, this->exceptionHandler);
     }
 
-    void addFaceModel(google_function::CloudEvent cloudEvent) {
-        nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
+    void addFaceModel(const IOT::MESSAGE::IotMessage& message) {
+        nlohmann::json jsonObj = nlohmann::json::parse(message.payload);
         if (!jsonObj.contains("label") || !jsonObj.contains("urls")) {
             throw nlohmann::json::other_error::create(400,
                                                       "JSON message missing `label`, `urls` fields", nullptr);
@@ -85,11 +86,11 @@ public:
             throw e;
         }
 
-        Helper::publishReplySuccessMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
+        Helper::publishReplySuccessMsg(this->publishClient, this->device, message, this->exceptionHandler);
     }
 
-    void deleteFaceModel(google_function::CloudEvent cloudEvent) {
-        nlohmann::json jsonObj = nlohmann::json::parse(cloudEvent.data());
+    void deleteFaceModel(const IOT::MESSAGE::IotMessage& message) {
+        nlohmann::json jsonObj = nlohmann::json::parse(message.payload);
         if (!jsonObj.contains("label")) {
             throw nlohmann::json::other_error::create(400,
                                                       "JSON message missing `label` fields", nullptr);
@@ -97,16 +98,16 @@ public:
 
         this->identify->deleteFaceModel(jsonObj.at("label").get<int64_t>());
 
-        Helper::publishReplySuccessMsg(this->publishClient, this->device, cloudEvent, this->exceptionHandler);
+        Helper::publishReplySuccessMsg(this->publishClient, this->device, message, this->exceptionHandler);
     }
 
-    void onSubscribe(IOT::CLIENT::ClientAbstract *client, google_function::CloudEvent cloudEvent) override {
-        if (cloudEvent.type() == APP_OPERATE_ADD_FACE_MODEL) {
-            this->addFaceModel(cloudEvent);
+    void onSubscribe(IOT::CLIENT::ClientAbstract *client, IOT::MESSAGE::IotMessage message) override {
+        if (message.eventType == APP_OPERATE_ADD_FACE_MODEL) {
+            this->addFaceModel(message);
         }
 
-        if (cloudEvent.type() == APP_OPERATE_DELETE_FACE_MODEL) {
-            this->deleteFaceModel(cloudEvent);
+        if (message.eventType == APP_OPERATE_DELETE_FACE_MODEL) {
+            this->deleteFaceModel(message);
         }
     }
 

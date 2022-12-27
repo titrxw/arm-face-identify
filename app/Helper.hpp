@@ -13,6 +13,8 @@
 #include "../app_framework/Util/CloudEvent.hpp"
 #include "nlohmann/json.hpp"
 #include "../app_framework/Client/ClientAbstract.h"
+#include "../app_framework/Message/IotMessage.h"
+#include "../app_framework/Message/MessagePack.h"
 
 using namespace std;
 
@@ -30,15 +32,15 @@ public:
         return "/iot/" + topicNamespace + "/device/" + appid + "/report";
     }
 
-    void static exceptionReport(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::exception &e, string type, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static exceptionReport(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, IOT::MESSAGE::IotMessage message, std::exception &e, string type, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         try {
             nlohmann::json err;
             err["error"] = e.what();
             err["error_code"] = 500;
-            err["payload"] = cloudEvent.data();
-            cloudEvent.set_type(type + "_exception");
-            cloudEvent.set_data(to_string(err));
-            client->publishMsg(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), Helper::getMsgFromCloudEvent(cloudEvent));
+            err["payload"] = message.payload;
+            message.eventType = type + "_exception";
+            message.payload = to_string(err);
+            client->publishMsg(Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), Helper::getMsgFromCloudEvent(message));
         } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
@@ -50,25 +52,25 @@ public:
         }
     }
 
-    void static publishReportMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
-        Helper::publishMsg(client, device, Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
+    void static publishReportMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        Helper::publishMsg(client, device, Helper::getDeviceReportTopic(device.appServerNamespace, device.appId), message, exceptionHandler);
     }
 
-    void static publishReplySuccessMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishReplySuccessMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         nlohmann::json payload;
         payload["status"] = "success";
-        cloudEvent.set_data(to_string(payload));
+        message.payload = to_string(payload);
 
-        Helper::publishReplyMsg(client, device, cloudEvent, exceptionHandler);
+        Helper::publishReplyMsg(client, device, message, exceptionHandler);
     }
 
-    void static publishReplyMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
-        Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), cloudEvent, exceptionHandler);
+    void static publishReplyMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+        Helper::publishMsg(client, device, Helper::getDeviceReplayTopic(device.appServerNamespace, device.appId), message, exceptionHandler);
     }
 
-    void static publishMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, string topic, google_function::CloudEvent cloudEvent, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
+    void static publishMsg(IOT::CLIENT::ClientAbstract *client, IOT::CONFIG::Device device, string topic, IOT::MESSAGE::IotMessage message, std::function<void (std::exception &e)> exceptionHandler = nullptr) {
         try {
-            client->publishMsg(topic, Helper::getMsgFromCloudEvent(cloudEvent));
+            client->publishMsg(topic, Helper::getMsgFromCloudEvent(message));
         } catch (std::exception &reportE) {
             if (exceptionHandler != nullptr) {
                 exceptionHandler(reportE);
@@ -76,14 +78,14 @@ public:
         }
     }
 
-    string static getMsgFromCloudEvent(google_function::CloudEvent cloudEvent) {
+    string static getMsgFromCloudEvent(IOT::MESSAGE::IotMessage message) {
         time_t timep;
         time (&timep);
         char tmp[64];
         strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
-        cloudEvent.set_time(tmp);
+        message.timestamp = tmp;
 
-        return IOT::UTIL::CloudEvent::cloudEventToJsonStr(cloudEvent);
+        return IOT::MESSAGE::MessagePack::pack(message);
     }
 };
 

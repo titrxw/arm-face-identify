@@ -8,6 +8,7 @@
 #include "map"
 #include "ClientAbstract.h"
 #include "SubscriberAbstract.hpp"
+#include "../Message/MessagePack.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ namespace IOT {
                     iter = this->subscriberMap.find(topic);
                     if(iter != this->subscriberMap.end()) {
                         try {
-                            iter->second->onSubscribe(client, IOT::UTIL::CloudEvent::jsonStrToCloudEvent(data));
+                            iter->second->onSubscribe(client, MESSAGE::MessagePack::unpack(std::move(data)));
                         } catch (std::exception &e) {
                             if (this->exceptionHandler != nullptr) {
                                 this->exceptionHandler(e);
