@@ -38,7 +38,6 @@ namespace IOT {
                 IotMessage message;
                 message.eventType = jsonObj.at("event_type").get<std::string>();
                 message.payload = jsonObj.at("payload").get<string>();
-                message.eventType = jsonObj.at("event_type").get<std::string>();
                 if (jsonObj.count("timestamp") != 0) {
                     message.timestamp = jsonObj.at("timestamp").get<std::string>();
                 }
