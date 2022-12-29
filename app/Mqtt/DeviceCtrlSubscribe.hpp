@@ -44,7 +44,7 @@ public:
             imwrite(matFilePath, predictMat.sourceMat);
 
             nlohmann::json result = this->getHttpClient()
-            ->uploadFile(this->httpServerAddress + "/api/util/attach/upload/image", matFilePath, {}, {}, true);
+            ->uploadFile(this->httpServerAddress + "/api/v1/util/attach/upload/image", matFilePath, {}, {}, true);
 
             remoteUrl = result.at("url").get<std::string>();
             IOT::UTIL::Filesystem::unlink(matFilePath);
@@ -56,7 +56,6 @@ public:
         }
 
         IOT::MESSAGE::IotMessage message;
-        message.id = this->device.appId;
         message.eventType = APP_OPERATE_IDENTIFY;
         nlohmann::json payload;
         if (!flag.empty()) {
