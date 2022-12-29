@@ -12,6 +12,6 @@
   },
   "face_identify": {
     "video_captcha_index": 0,
-    "predict_mat_confidence": 75
+    "predict_mat_confidence": 75.00
   }
 }
