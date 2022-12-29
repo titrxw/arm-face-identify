@@ -7,8 +7,8 @@
   },
   "device": {
     "app_server_namespace": "smart_home",
-    "app_id": "sdIN6YuUGoYVz6eCeg133ldP",
-    "app_secret": "156e8d2c664f4e67bb4d5239eb69a599"
+    "app_id": "sdWXvspwjdsq4RAlqKY38GnD",
+    "app_secret": "991779a0979043648b6cb7831bc6bdee"
   },
   "face_identify": {
     "video_captcha_index": 0,

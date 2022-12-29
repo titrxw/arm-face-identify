@@ -75,11 +75,7 @@ public:
     }
 
     string static getMsgFromCloudEvent(IOT::MESSAGE::IotMessage message) {
-        time_t timep;
-        time (&timep);
-        char tmp[64];
-        strftime(tmp, sizeof(tmp), "%FT%TZ",localtime(&timep));
-        message.timestamp = tmp;
+        message.timestamp = time(0);
 
         return IOT::MESSAGE::MessagePack::pack(message);
     }

@@ -5,6 +5,8 @@
 #ifndef ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP
 #define ARM_FACE_IDENTIFY_DEVICECTRLSUBSCRIBE_HPP
 
+#include <utility>
+
 #include "../../app_framework/Client/SubscriberAbstract.hpp"
 #include "../../app_framework/Util/Base64.hpp"
 #include "../Face/Identify.hpp"
@@ -14,7 +16,7 @@
 
 class DeviceCtrlSubscribe : virtual public IOT::CLIENT::SubscriberAbstract{
 public:
-    explicit DeviceCtrlSubscribe(IOT::CONFIG::Device device, Identify *identify, IOT::CLIENT::ClientAbstract *publishClient, string httpServerAddress) : SubscriberAbstract(device), identify(identify), publishClient(publishClient), httpServerAddress(httpServerAddress) {
+    explicit DeviceCtrlSubscribe(IOT::CONFIG::Device device, Identify *identify, IOT::CLIENT::ClientAbstract *publishClient, string httpServerAddress) : SubscriberAbstract(std::move(device)), identify(identify), publishClient(publishClient), httpServerAddress(httpServerAddress) {
         this->identify->setPredictMatMapCallback(std::bind(&DeviceCtrlSubscribe::predictedMatCallback, this, std::placeholders::_1, std::placeholders::_2));
         this->matIdentifyTmpFileDir = IOT::UTIL::Filesystem::getCurUserDocDir() + "/" + this->device.appName + "/runtimes/identify/";
         if (!IOT::UTIL::Filesystem::dirExists(this->matIdentifyTmpFileDir )) {
@@ -114,7 +116,6 @@ public:
 protected:
     IOT::CLIENT::ClientAbstract *publishClient = nullptr;
     Identify *identify = nullptr;
-    IOT::CONFIG::Device device;
     string matIdentifyTmpFileDir;
     IOT::HTTP::HttpClient *httpClient = nullptr;
     string httpServerAddress;

@@ -18,7 +18,7 @@ namespace IOT {
             string id;
             string eventType;
             string payload;
-            string timestamp;
+            int64_t timestamp;
         };
     }
 }

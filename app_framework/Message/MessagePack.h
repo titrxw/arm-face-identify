@@ -20,7 +20,8 @@ namespace IOT {
                 nlohmann::json jsonObj;
                 jsonObj["id"] = message.id;
                 jsonObj["event_type"] = message.eventType;
-                jsonObj["payload"] = message.payload;
+                nlohmann::json jsonData = nlohmann::json::parse(message.payload);
+                jsonObj["payload"] = jsonData;
                 jsonObj["timestamp"] = message.timestamp;
 
                 return to_string(jsonObj);
@@ -37,9 +38,14 @@ namespace IOT {
 
                 IotMessage message;
                 message.eventType = jsonObj.at("event_type").get<std::string>();
-                message.payload = jsonObj.at("payload").get<string>();
+                auto d = jsonObj.at("payload");
+                if (d.is_object()) {
+                    message.payload = d.dump();
+                } else {
+                    message.payload = d.get<std::string>();
+                }
                 if (jsonObj.count("timestamp") != 0) {
-                    message.timestamp = jsonObj.at("timestamp").get<std::string>();
+                    message.timestamp = jsonObj.at("timestamp").get<std::int64_t>();
                 }
                 if (jsonObj.count("id") != 0) {
                     message.id = jsonObj.at("id").get<std::string>();
